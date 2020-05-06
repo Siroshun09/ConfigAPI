@@ -61,6 +61,6 @@ Javadoc is [here](https://siroplugins.github.io/ConfigAPI/)
 
 ## License
 
-This project is licensed under the permissive GPL-3.0 license. Please see [LICENSE](LICENSE) for more info.
+This project is licensed under the permissive MIT license. Please see [LICENSE](LICENSE) for more info.
 
 Copyright © 2020, Siroshun09
