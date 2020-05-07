@@ -5,11 +5,18 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Utility class used for internal processing of this library
+ * <p>
+ * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
 public final class FileUtils {
+
+    private FileUtils() {
+        throw new UnsupportedOperationException("This class cannot be instantiated.");
+    }
 
     /**
      * Check if the parent directory of the given path exists.
@@ -20,6 +27,8 @@ public final class FileUtils {
      * @return True if it finally exists, false otherwise.
      */
     public static boolean checkParentDirectory(@NotNull Path path) {
+        Objects.requireNonNull(path);
+
         Path dir = path.getParent();
         if (!Files.exists(dir)) {
             try {
@@ -41,6 +50,8 @@ public final class FileUtils {
      * @return True if it finally exists and is readable and writable, false otherwise.
      */
     public static boolean checkFile(@NotNull Path path) {
+        Objects.requireNonNull(path);
+
         if (!Files.exists(path) && checkParentDirectory(path)) {
             try {
                 Files.createFile(path);

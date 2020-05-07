@@ -12,10 +12,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * This class implements {@link Yaml} on Bukkit.
+ * <p>
+ * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
 public class BukkitYaml implements Yaml {
 
@@ -41,6 +44,8 @@ public class BukkitYaml implements Yaml {
      * @param autoLoad True if automatically load, false otherwise.
      */
     public BukkitYaml(@NotNull Path filePath, boolean autoLoad) {
+        Objects.requireNonNull(filePath, "filePath must not be null.");
+
         this.filePath = filePath;
         if (autoLoad) load();
     }
@@ -140,6 +145,7 @@ public class BukkitYaml implements Yaml {
      */
     @Override
     public boolean getBoolean(@NotNull String path, boolean def) {
+        Objects.requireNonNull(path, "path must not be null.");
         return isLoaded() ? config.getBoolean(path, def) : def;
     }
 
@@ -165,6 +171,7 @@ public class BukkitYaml implements Yaml {
      */
     @Override
     public double getDouble(@NotNull String path, double def) {
+        Objects.requireNonNull(path, "path must not be null.");
         return isLoaded() ? config.getDouble(path, def) : def;
     }
 
@@ -190,6 +197,7 @@ public class BukkitYaml implements Yaml {
      */
     @Override
     public int getInt(@NotNull String path, int def) {
+        Objects.requireNonNull(path, "path must not be null.");
         return isLoaded() ? config.getInt(path, def) : def;
     }
 
@@ -215,6 +223,7 @@ public class BukkitYaml implements Yaml {
      */
     @Override
     public long getLong(@NotNull String path, long def) {
+        Objects.requireNonNull(path, "path must not be null.");
         return isLoaded() ? config.getLong(path, def) : def;
     }
 
@@ -242,6 +251,9 @@ public class BukkitYaml implements Yaml {
     @Override
     @NotNull
     public String getString(@NotNull String path, @NotNull String def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+
         String value = isLoaded() ? config.getString(path, def) : null;
         return value != null ? value : def;
     }
@@ -268,7 +280,11 @@ public class BukkitYaml implements Yaml {
      * @return Requested string list.
      */
     @Override
-    public @NotNull List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
+    @NotNull
+    public List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+
         List<String> list = isLoaded() ? config.getStringList(path) : Collections.emptyList();
         return !list.isEmpty() ? list : def;
     }
@@ -296,6 +312,8 @@ public class BukkitYaml implements Yaml {
      */
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
+        Objects.requireNonNull(path, "path must not be null.");
+
         if (isLoaded()) {
             config.set(path, value);
         }

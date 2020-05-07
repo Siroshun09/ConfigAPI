@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * An interface that gets the value by path.
+ * <p>
+ * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
 public interface Configuration {
 

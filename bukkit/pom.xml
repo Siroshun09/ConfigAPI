@@ -5,7 +5,7 @@
     <parent>
         <artifactId>configapi</artifactId>
         <groupId>com.github.siroshun09.configapi</groupId>
-        <version>1.0</version>
+        <version>1.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.github.siroshun09.configapi</groupId>
             <artifactId>common</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

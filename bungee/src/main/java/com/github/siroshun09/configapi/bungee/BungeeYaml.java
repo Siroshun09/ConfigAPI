@@ -15,9 +15,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class implements {@link Yaml} on BungeeCord.
+ * <p>
+ * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
 public class BungeeYaml implements Yaml {
 
@@ -43,6 +46,8 @@ public class BungeeYaml implements Yaml {
      * @param autoLoad True if automatically load, false otherwise.
      */
     public BungeeYaml(@NotNull Path filePath, boolean autoLoad) {
+        Objects.requireNonNull(filePath, "filePath must not be null.");
+
         this.filePath = filePath;
         if (autoLoad) load();
     }
@@ -146,6 +151,7 @@ public class BungeeYaml implements Yaml {
      */
     @Override
     public boolean getBoolean(@NotNull String path, boolean def) {
+        Objects.requireNonNull(path, "path must not be null.");
         return isLoaded() ? config.getBoolean(path, def) : def;
     }
 
@@ -171,6 +177,7 @@ public class BungeeYaml implements Yaml {
      */
     @Override
     public double getDouble(@NotNull String path, double def) {
+        Objects.requireNonNull(path, "path must not be null.");
         return isLoaded() ? config.getDouble(path, def) : def;
     }
 
@@ -196,6 +203,7 @@ public class BungeeYaml implements Yaml {
      */
     @Override
     public int getInt(@NotNull String path, int def) {
+        Objects.requireNonNull(path, "path must not be null.");
         return isLoaded() ? config.getInt(path, def) : def;
     }
 
@@ -221,6 +229,7 @@ public class BungeeYaml implements Yaml {
      */
     @Override
     public long getLong(@NotNull String path, long def) {
+        Objects.requireNonNull(path, "path must not be null.");
         return isLoaded() ? config.getLong(path, def) : def;
     }
 
@@ -248,6 +257,9 @@ public class BungeeYaml implements Yaml {
     @Override
     @NotNull
     public String getString(@NotNull String path, @NotNull String def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+
         String value = isLoaded() ? config.getString(path, def) : null;
         return value != null ? value : def;
     }
@@ -275,6 +287,9 @@ public class BungeeYaml implements Yaml {
      */
     @Override
     public @NotNull List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+
         List<String> list = isLoaded() ? config.getStringList(path) : Collections.emptyList();
         return !list.isEmpty() ? list : def;
     }
@@ -296,14 +311,14 @@ public class BungeeYaml implements Yaml {
      * Set the value to the specified path.
      * <p>
      * If given value is null, the path will be removed.
+     * If you want to save it to a file, call {@link BungeeYaml#save()}.
      *
      * @param path  Path of the object to set.
      * @param value New value to set the path to.
      */
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
-        if (isLoaded()) {
-            config.set(path, value);
-        }
+        Objects.requireNonNull(path, "path must not be null.");
+        if (isLoaded()) config.set(path, value);
     }
 }

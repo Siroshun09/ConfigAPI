@@ -5,9 +5,12 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Files;
+import java.util.Objects;
 
 /**
  * This class extends {@link BukkitYaml} to use plugin resources.
+ * <p>
+ * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
 public class BukkitConfig extends BukkitYaml {
 
@@ -27,6 +30,10 @@ public class BukkitConfig extends BukkitYaml {
      */
     public BukkitConfig(@NotNull Plugin plugin, @NotNull String fileName, boolean resource) {
         super(plugin.getDataFolder().toPath().resolve(fileName), false);
+
+        Objects.requireNonNull(plugin, "plugin must not be null.");
+        Objects.requireNonNull(fileName, "fileName must not be null.");
+
         this.plugin = plugin;
         this.fileName = fileName;
         this.resource = resource;
