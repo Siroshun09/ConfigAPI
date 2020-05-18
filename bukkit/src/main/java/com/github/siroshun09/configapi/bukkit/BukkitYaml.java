@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -284,9 +283,152 @@ public class BukkitYaml implements Yaml {
     public List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
+        return isLoaded() ? config.getStringList(path) : def;
+    }
 
-        List<String> list = isLoaded() ? config.getStringList(path) : Collections.emptyList();
-        return !list.isEmpty() ? list : def;
+    /**
+     * Gets the requested short list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty short list.
+     *
+     * @param path Path of the short list to get.
+     * @return Requested short list.
+     */
+    @Override
+    @NotNull
+    public List<Short> getShortList(@NotNull String path) {
+        return getShortList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested short list by path.
+     *
+     * @param path Path of the short list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested short list.
+     */
+    @Override
+    @NotNull
+    public List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+        return isLoaded() ? config.getShortList(path) : def;
+    }
+
+    /**
+     * Gets the requested integer list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty integer list.
+     *
+     * @param path Path of the integer list to get.
+     * @return Requested integer list.
+     */
+    @Override
+    @NotNull
+    public List<Integer> getIntegerList(@NotNull String path) {
+        return getIntegerList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested integer list by path.
+     *
+     * @param path Path of the integer list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested integer list.
+     */
+    @Override
+    @NotNull
+    public List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+        return isLoaded() ? config.getIntegerList(path) : def;
+    }
+
+    /**
+     * Gets the requested long list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty long list.
+     *
+     * @param path Path of the long list to get.
+     * @return Requested long list.
+     */
+    @Override
+    @NotNull
+    public List<Long> getLongList(@NotNull String path) {
+        return getLongList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested long list by path.
+     *
+     * @param path Path of the long list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested long list.
+     */
+    @Override
+    @NotNull
+    public List<Long> getLongList(@NotNull String path, @NotNull List<Long> def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+        return isLoaded() ? config.getLongList(path) : def;
+    }
+
+    /**
+     * Gets the requested float list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty float list.
+     *
+     * @param path Path of the float list to get.
+     * @return Requested float list.
+     */
+    @Override
+    @NotNull
+    public List<Float> getFloatList(@NotNull String path) {
+        return getFloatList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested float list by path.
+     *
+     * @param path Path of the float list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested float list.
+     */
+    @Override
+    @NotNull
+    public List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+        return isLoaded() ? config.getFloatList(path) : def;
+    }
+
+    /**
+     * Gets the requested double list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty double list.
+     *
+     * @param path Path of the double list to get.
+     * @return Requested double list.
+     */
+    @Override
+    @NotNull
+    public List<Double> getDoubleList(@NotNull String path) {
+        return getDoubleList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested double list by path.
+     *
+     * @param path Path of the double list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested double list.
+     */
+    @Override
+    @NotNull
+    public List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+        return isLoaded() ? config.getDoubleList(path) : def;
     }
 
     /**

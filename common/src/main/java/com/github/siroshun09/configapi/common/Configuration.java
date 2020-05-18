@@ -133,6 +133,111 @@ public interface Configuration {
     List<String> getStringList(@NotNull String path, @NotNull List<String> def);
 
     /**
+     * Gets the requested short list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty short list.
+     *
+     * @param path Path of the short list to get.
+     * @return Requested short list.
+     */
+    @NotNull
+    List<Short> getShortList(@NotNull String path);
+
+    /**
+     * Gets the requested short list by path.
+     *
+     * @param path Path of the short list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested short list.
+     */
+    @NotNull
+    List<Short> getShortList(@NotNull String path, @NotNull List<Short> def);
+
+    /**
+     * Gets the requested integer list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty integer list.
+     *
+     * @param path Path of the integer list to get.
+     * @return Requested integer list.
+     */
+    @NotNull
+    List<Integer> getIntegerList(@NotNull String path);
+
+    /**
+     * Gets the requested integer list by path.
+     *
+     * @param path Path of the integer list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested integer list.
+     */
+    @NotNull
+    List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def);
+
+    /**
+     * Gets the requested long list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty long list.
+     *
+     * @param path Path of the long list to get.
+     * @return Requested long list.
+     */
+    @NotNull
+    List<Long> getLongList(@NotNull String path);
+
+    /**
+     * Gets the requested long list by path.
+     *
+     * @param path Path of the long list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested long list.
+     */
+    @NotNull
+    List<Long> getLongList(@NotNull String path, @NotNull List<Long> def);
+
+    /**
+     * Gets the requested float list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty float list.
+     *
+     * @param path Path of the float list to get.
+     * @return Requested float list.
+     */
+    @NotNull
+    List<Float> getFloatList(@NotNull String path);
+
+    /**
+     * Gets the requested float list by path.
+     *
+     * @param path Path of the float list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested float list.
+     */
+    @NotNull
+    List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def);
+
+    /**
+     * Gets the requested double list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty double list.
+     *
+     * @param path Path of the double list to get.
+     * @return Requested double list.
+     */
+    @NotNull
+    List<Double> getDoubleList(@NotNull String path);
+
+    /**
+     * Gets the requested double list by path.
+     *
+     * @param path Path of the double list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested double list.
+     */
+    @NotNull
+    List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def);
+
+    /**
      * Gets a set containing keys in this yaml file.
      * <p>
      * The returned set does not include deep key.

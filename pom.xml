@@ -7,10 +7,10 @@
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi</artifactId>
     <packaging>pom</packaging>
-    <version>1.2</version>
+    <version>1.3</version>
 
     <name>ConfigAPI</name>
-    <url>https://github.com/SiroPlugins/Configapi</url>
+    <url>https://github.com/SiroPlugins/ConfigAPI</url>
 
     <distributionManagement>
         <repository>
@@ -140,7 +140,6 @@
                     <linksource>true</linksource>
                     <locale>en_US</locale>
                     <notimestamp>true</notimestamp>
-                    <outputDirectory>../docs</outputDirectory>
                     <show>protected</show>
                     <bottom>
                         <![CDATA[<p class="legalCopy">Copyright &#169;2020 <a href="https://github.com/Siroshun09">Siroshun09</a>. All rights reserved.</p>]]></bottom>
