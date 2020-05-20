@@ -33,12 +33,12 @@ public final class FileUtils {
         if (!Files.exists(dir)) {
             try {
                 Files.createDirectories(dir);
-                return true;
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**
