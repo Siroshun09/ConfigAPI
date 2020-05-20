@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"com.github.siroshun09.configapi.bungee"},{"l":"すべてのパッケージ","url":"allpackages-index.html"}]

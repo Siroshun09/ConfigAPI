@@ -1,1 +1,0 @@
-typeSearchIndex = [{"p":"com.github.siroshun09.configapi.bukkit","l":"BukkitConfig"},{"p":"com.github.siroshun09.configapi.bukkit","l":"BukkitYaml"},{"l":"すべてのクラス","url":"allclasses-index.html"}]
