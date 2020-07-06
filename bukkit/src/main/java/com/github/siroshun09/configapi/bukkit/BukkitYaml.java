@@ -2,7 +2,9 @@ package com.github.siroshun09.configapi.bukkit;
 
 import com.github.siroshun09.configapi.common.FileUtils;
 import com.github.siroshun09.configapi.common.Yaml;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -429,6 +431,41 @@ public class BukkitYaml implements Yaml {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
         return isLoaded() ? config.getDoubleList(path) : def;
+    }
+
+    /**
+     * Gets the requested {@link ItemStack} by path.
+     * <p>
+     * If the {@link ItemStack} could not be obtained, this method returns {@code new ItemStack(Material.AIR)}.
+     *
+     * @param path Path of the {@link ItemStack} to get.
+     * @return Requested {@link ItemStack}.
+     * @since 1.5
+     */
+    @NotNull
+    public ItemStack getItemStack(@NotNull String path) {
+        return getItemStack(path, new ItemStack(Material.AIR));
+    }
+
+    /**
+     * Gets the requested {@link ItemStack} by path.
+     *
+     * @param path Path of the {@link ItemStack} to get.
+     * @param def  The default {@link ItemStack} to return if the {@link ItemStack} could not be obtained.
+     * @return Requested {@link ItemStack}.
+     * @since 1.5
+     */
+    @NotNull
+    public ItemStack getItemStack(@NotNull String path, @NotNull ItemStack def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+
+        if (isLoaded()) {
+            ItemStack item = config.getItemStack(path);
+            return item != null ? item : def;
+        } else {
+            return def;
+        }
     }
 
     /**
