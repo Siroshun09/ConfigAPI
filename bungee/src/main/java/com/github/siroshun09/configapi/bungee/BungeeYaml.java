@@ -35,7 +35,6 @@ public class BungeeYaml implements Yaml {
      */
     public BungeeYaml(@NotNull Path filePath) {
         this(filePath, true);
-        config = null;
     }
 
     /**

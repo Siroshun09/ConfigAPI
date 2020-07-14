@@ -35,7 +35,6 @@ public class BukkitYaml implements Yaml {
      */
     public BukkitYaml(@NotNull Path filePath) {
         this(filePath, true);
-        config = null;
     }
 
     /**
