@@ -7,7 +7,7 @@
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi</artifactId>
     <packaging>pom</packaging>
-    <version>1.5</version>
+    <version>1.6</version>
 
     <name>ConfigAPI</name>
     <url>https://github.com/SiroPlugins/ConfigAPI</url>
