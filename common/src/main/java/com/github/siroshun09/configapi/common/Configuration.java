@@ -3,6 +3,7 @@ package com.github.siroshun09.configapi.common;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,7 +22,9 @@ public interface Configuration {
      * @param path Path of the boolean to get.
      * @return Requested boolean.
      */
-    boolean getBoolean(@NotNull String path);
+    default boolean getBoolean(@NotNull String path) {
+        return getBoolean(path, false);
+    }
 
     /**
      * Gets the requested boolean by path.
@@ -40,8 +43,9 @@ public interface Configuration {
      * @param path Path of the double to get.
      * @return Requested double.
      */
-    double getDouble(@NotNull String path);
-
+    default double getDouble(@NotNull String path) {
+        return getDouble(path, 0);
+    }
 
     /**
      * Gets the requested double by path.
@@ -60,7 +64,9 @@ public interface Configuration {
      * @param path Path of the integer to get.
      * @return Requested integer.
      */
-    int getInt(@NotNull String path);
+    default int getInt(@NotNull String path) {
+        return getInt(path, 0);
+    }
 
     /**
      * Gets the requested integer by path.
@@ -79,7 +85,9 @@ public interface Configuration {
      * @param path Path of the long to get.
      * @return Requested long.
      */
-    long getLong(@NotNull String path);
+    default long getLong(@NotNull String path) {
+        return getLong(path, 0);
+    }
 
     /**
      * Gets the requested long by path.
@@ -99,7 +107,9 @@ public interface Configuration {
      * @return Requested string.
      */
     @NotNull
-    String getString(@NotNull String path);
+    default String getString(@NotNull String path) {
+        return getString(path, "");
+    }
 
     /**
      * Gets the requested string by path.
@@ -120,7 +130,9 @@ public interface Configuration {
      * @return Requested string list.
      */
     @NotNull
-    List<String> getStringList(@NotNull String path);
+    default List<String> getStringList(@NotNull String path) {
+        return getStringList(path, new ArrayList<>());
+    }
 
     /**
      * Gets the requested string list by path.
@@ -141,7 +153,9 @@ public interface Configuration {
      * @return Requested short list.
      */
     @NotNull
-    List<Short> getShortList(@NotNull String path);
+    default List<Short> getShortList(@NotNull String path) {
+        return getShortList(path, new ArrayList<>());
+    }
 
     /**
      * Gets the requested short list by path.
@@ -162,7 +176,9 @@ public interface Configuration {
      * @return Requested integer list.
      */
     @NotNull
-    List<Integer> getIntegerList(@NotNull String path);
+    default List<Integer> getIntegerList(@NotNull String path) {
+        return getIntegerList(path, new ArrayList<>());
+    }
 
     /**
      * Gets the requested integer list by path.
@@ -183,7 +199,9 @@ public interface Configuration {
      * @return Requested long list.
      */
     @NotNull
-    List<Long> getLongList(@NotNull String path);
+    default List<Long> getLongList(@NotNull String path) {
+        return getLongList(path, new ArrayList<>());
+    }
 
     /**
      * Gets the requested long list by path.
@@ -204,7 +222,9 @@ public interface Configuration {
      * @return Requested float list.
      */
     @NotNull
-    List<Float> getFloatList(@NotNull String path);
+    default List<Float> getFloatList(@NotNull String path) {
+        return getFloatList(path, new ArrayList<>());
+    }
 
     /**
      * Gets the requested float list by path.
@@ -225,7 +245,9 @@ public interface Configuration {
      * @return Requested double list.
      */
     @NotNull
-    List<Double> getDoubleList(@NotNull String path);
+    default List<Double> getDoubleList(@NotNull String path) {
+        return getDoubleList(path, new ArrayList<>());
+    }
 
     /**
      * Gets the requested double list by path.
