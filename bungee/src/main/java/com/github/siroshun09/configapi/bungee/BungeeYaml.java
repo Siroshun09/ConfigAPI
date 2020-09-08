@@ -1,6 +1,7 @@
 package com.github.siroshun09.configapi.bungee;
 
 import com.github.siroshun09.configapi.common.FileUtils;
+import com.github.siroshun09.configapi.common.yaml.AbstractYaml;
 import com.github.siroshun09.configapi.common.yaml.Yaml;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -20,33 +21,17 @@ import java.util.Objects;
  * <p>
  * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
-public class BungeeYaml implements Yaml {
+public class BungeeYaml extends AbstractYaml {
 
-    protected final Path filePath;
     protected Configuration config;
 
     /**
-     * Creates an {@link BungeeYaml} with no default values.
-     * <p>
-     * This constructor loads the file automatically.
+     * Creates a {@link BungeeYaml} with no default values.
      *
-     * @param filePath File path to load or save.
+     * @param filePath the file path to load or save.
      */
     public BungeeYaml(@NotNull Path filePath) {
-        this(filePath, true);
-    }
-
-    /**
-     * Creates an {@link BungeeYaml} with no default values.
-     *
-     * @param filePath File path to load or save.
-     * @param autoLoad True if automatically load, false otherwise.
-     */
-    public BungeeYaml(@NotNull Path filePath, boolean autoLoad) {
-        Objects.requireNonNull(filePath, "filePath must not be null.");
-
-        this.filePath = filePath;
-        if (autoLoad) load();
+        super(filePath);
     }
 
     /**

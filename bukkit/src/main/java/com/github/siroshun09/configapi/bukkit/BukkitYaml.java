@@ -1,6 +1,7 @@
 package com.github.siroshun09.configapi.bukkit;
 
 import com.github.siroshun09.configapi.common.FileUtils;
+import com.github.siroshun09.configapi.common.yaml.AbstractYaml;
 import com.github.siroshun09.configapi.common.yaml.Yaml;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,33 +21,17 @@ import java.util.Set;
  * <p>
  * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
-public class BukkitYaml implements Yaml {
+public class BukkitYaml extends AbstractYaml {
 
-    protected final Path filePath;
     protected YamlConfiguration config;
 
     /**
-     * Creates an {@link BukkitYaml} with no default values.
-     * <p>
-     * This constructor loads the file automatically.
+     * Creates a {@link BukkitYaml} with no default values.
      *
-     * @param filePath File path to load or save.
+     * @param filePath the file to load or save.
      */
     public BukkitYaml(@NotNull Path filePath) {
-        this(filePath, true);
-    }
-
-    /**
-     * Creates an {@link BukkitYaml} with no default values.
-     *
-     * @param filePath File path to load or save.
-     * @param autoLoad True if automatically load, false otherwise.
-     */
-    public BukkitYaml(@NotNull Path filePath, boolean autoLoad) {
-        Objects.requireNonNull(filePath, "filePath must not be null.");
-
-        this.filePath = filePath;
-        if (autoLoad) load();
+        super(filePath);
     }
 
     /**
