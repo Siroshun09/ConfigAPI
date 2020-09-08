@@ -2,6 +2,7 @@ package com.github.siroshun09.configapi.common;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -15,10 +16,8 @@ public interface FileConfiguration extends Configuration {
      * Loads a yaml file.
      * <p>
      * If a yaml file is not found, this method will create one.
-     *
-     * @return True if the load is successful or false if it is failure.
      */
-    boolean load();
+    void load() throws IOException;
 
     /**
      * Checks if the file is loaded.
@@ -28,26 +27,23 @@ public interface FileConfiguration extends Configuration {
     boolean isLoaded();
 
     /**
-     * Reload a yaml file.
+     * Re-loads a yaml file.
      *
-     * @return True if the reload is successful or false if it is failure.
      * @see FileConfiguration#load()
      */
-    default boolean reload() {
-        return load();
+    default void reload() throws IOException {
+        load();
     }
 
     /**
-     * Save to yaml file.
+     * Saves to yaml file.
      * <p>
      * If a yaml file is not found, this method will create one.
-     *
-     * @return True if the save is successful or false if it is failure.
      */
-    boolean save();
+    void save() throws IOException;
 
     /**
-     * Get the path to a yaml file.
+     * Gets the path to a yaml file.
      *
      * @return The path to a yaml file.
      */
