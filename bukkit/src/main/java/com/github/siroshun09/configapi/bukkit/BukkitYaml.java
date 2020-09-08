@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -51,11 +50,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Loads a yaml file.
-     * <p>
-     * If a yaml file is not found, this method will create one.
-     *
-     * @return True if the load is successful or false if it is failure.
+     * {@inheritDoc}
      */
     @Override
     public boolean load() {
@@ -68,9 +63,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Checks if the file is loaded.
-     *
-     * @return True if the file is loaded or false if it is not loaded.
+     * {@inheritDoc}
      */
     @Override
     public boolean isLoaded() {
@@ -78,11 +71,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Save to yaml file.
-     * <p>
-     * If a yaml file is not found, this method will create one.
-     *
-     * @return True if the save is successful or false if it is failure.
+     * {@inheritDoc}
      */
     @Override
     public boolean save() {
@@ -98,9 +87,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Get the path to a yaml file.
-     *
-     * @return The path to a yaml file.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -124,24 +111,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets the requested boolean by path.
-     * <p>
-     * If the value could not be obtained, this method returns {@code false}.
-     *
-     * @param path Path of the boolean to get.
-     * @return Requested boolean.
-     */
-    @Override
-    public boolean getBoolean(@NotNull String path) {
-        return getBoolean(path, false);
-    }
-
-    /**
-     * Gets the requested boolean by path.
-     *
-     * @param path Path of the boolean to get.
-     * @param def  The default value to return if the value could not be obtained.
-     * @return Requested boolean.
+     * {@inheritDoc}
      */
     @Override
     public boolean getBoolean(@NotNull String path, boolean def) {
@@ -150,24 +120,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets the requested double by path.
-     * <p>
-     * If the value could not be obtained, this method returns 0.
-     *
-     * @param path Path of the double to get.
-     * @return Requested double.
-     */
-    @Override
-    public double getDouble(@NotNull String path) {
-        return getDouble(path, 0);
-    }
-
-    /**
-     * Gets the requested double by path.
-     *
-     * @param path Path of the double to get.
-     * @param def  The default value to return if the value could not be obtained.
-     * @return Requested double.
+     * {@inheritDoc}
      */
     @Override
     public double getDouble(@NotNull String path, double def) {
@@ -176,24 +129,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets the requested integer by path.
-     * <p>
-     * If the value could not be obtained, this method returns 0.
-     *
-     * @param path Path of the integer to get.
-     * @return Requested integer.
-     */
-    @Override
-    public int getInt(@NotNull String path) {
-        return getInt(path, 0);
-    }
-
-    /**
-     * Gets the requested integer by path.
-     *
-     * @param path Path of the integer to get.
-     * @param def  The default value to return if the value could not be obtained.
-     * @return Requested integer.
+     * {@inheritDoc}
      */
     @Override
     public int getInt(@NotNull String path, int def) {
@@ -202,24 +138,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets the requested long by path.
-     * <p>
-     * If the value could not be obtained, this method returns 0.
-     *
-     * @param path Path of the long to get.
-     * @return Requested long.
-     */
-    @Override
-    public long getLong(@NotNull String path) {
-        return getLong(path, 0);
-    }
-
-    /**
-     * Gets the requested long by path.
-     *
-     * @param path Path of the long to get.
-     * @param def  The default value to return if the value could not be obtained.
-     * @return Requested long.
+     * {@inheritDoc}
      */
     @Override
     public long getLong(@NotNull String path, long def) {
@@ -228,25 +147,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets the requested string by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty string.
-     *
-     * @param path Path of the string to get.
-     * @return Requested string.
-     */
-    @Override
-    @NotNull
-    public String getString(@NotNull String path) {
-        return getString(path, "");
-    }
-
-    /**
-     * Gets the requested string by path.
-     *
-     * @param path Path of the string to get.
-     * @param def  The default value to return if the value could not be obtained.
-     * @return Requested string.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -259,25 +160,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets the requested string list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty string list.
-     *
-     * @param path Path of the string list to get.
-     * @return Requested string list.
-     */
-    @Override
-    @NotNull
-    public List<String> getStringList(@NotNull String path) {
-        return getStringList(path, new ArrayList<>());
-    }
-
-    /**
-     * Gets the requested string list by path.
-     *
-     * @param path Path of the string list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested string list.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -288,25 +171,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets the requested short list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty short list.
-     *
-     * @param path Path of the short list to get.
-     * @return Requested short list.
-     */
-    @Override
-    @NotNull
-    public List<Short> getShortList(@NotNull String path) {
-        return getShortList(path, new ArrayList<>());
-    }
-
-    /**
-     * Gets the requested short list by path.
-     *
-     * @param path Path of the short list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested short list.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -316,26 +181,9 @@ public class BukkitYaml implements Yaml {
         return isLoaded() ? config.getShortList(path) : def;
     }
 
-    /**
-     * Gets the requested integer list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty integer list.
-     *
-     * @param path Path of the integer list to get.
-     * @return Requested integer list.
-     */
-    @Override
-    @NotNull
-    public List<Integer> getIntegerList(@NotNull String path) {
-        return getIntegerList(path, new ArrayList<>());
-    }
 
     /**
-     * Gets the requested integer list by path.
-     *
-     * @param path Path of the integer list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested integer list.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -345,26 +193,9 @@ public class BukkitYaml implements Yaml {
         return isLoaded() ? config.getIntegerList(path) : def;
     }
 
-    /**
-     * Gets the requested long list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty long list.
-     *
-     * @param path Path of the long list to get.
-     * @return Requested long list.
-     */
-    @Override
-    @NotNull
-    public List<Long> getLongList(@NotNull String path) {
-        return getLongList(path, new ArrayList<>());
-    }
 
     /**
-     * Gets the requested long list by path.
-     *
-     * @param path Path of the long list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested long list.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -374,26 +205,9 @@ public class BukkitYaml implements Yaml {
         return isLoaded() ? config.getLongList(path) : def;
     }
 
-    /**
-     * Gets the requested float list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty float list.
-     *
-     * @param path Path of the float list to get.
-     * @return Requested float list.
-     */
-    @Override
-    @NotNull
-    public List<Float> getFloatList(@NotNull String path) {
-        return getFloatList(path, new ArrayList<>());
-    }
 
     /**
-     * Gets the requested float list by path.
-     *
-     * @param path Path of the float list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested float list.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -404,25 +218,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets the requested double list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty double list.
-     *
-     * @param path Path of the double list to get.
-     * @return Requested double list.
-     */
-    @Override
-    @NotNull
-    public List<Double> getDoubleList(@NotNull String path) {
-        return getDoubleList(path, new ArrayList<>());
-    }
-
-    /**
-     * Gets the requested double list by path.
-     *
-     * @param path Path of the double list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested double list.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -468,11 +264,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Gets a set containing keys in this yaml file.
-     * <p>
-     * The returned set does not include deep key.
-     *
-     * @return Set of keys contained within this yaml file.
+     * {@inheritDoc}
      */
     @Override
     @NotNull
@@ -481,12 +273,7 @@ public class BukkitYaml implements Yaml {
     }
 
     /**
-     * Set the value to the specified path.
-     * <p>
-     * If given value is null, the path will be removed.
-     *
-     * @param path  Path of the object to set.
-     * @param value New value to set the path to.
+     * {@inheritDoc}
      */
     @Override
     public void set(@NotNull String path, @Nullable Object value) {

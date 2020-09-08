@@ -41,12 +41,7 @@ public class BukkitConfig extends BukkitYaml {
     }
 
     /**
-     * Loads a yaml file.
-     * <p>
-     * If a yaml file is not found, this method will create one.
-     * At that time, copy from plugin jar if resource is true.
-     *
-     * @return True if the load is successful or false if it is failure.
+     * {@inheritDoc}
      */
     @Override
     public boolean load() {
