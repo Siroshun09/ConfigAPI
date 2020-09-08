@@ -13,21 +13,19 @@ import java.nio.file.Path;
 public interface FileConfiguration extends Configuration {
 
     /**
-     * Loads a yaml file.
-     * <p>
-     * If a yaml file is not found, this method will create one.
+     * Loads from the file.
      */
     void load() throws IOException;
 
     /**
      * Checks if the file is loaded.
      *
-     * @return True if the file is loaded or false if it is not loaded.
+     * @return {@code true} if the file is loaded or {@code false} if it is not loaded.
      */
     boolean isLoaded();
 
     /**
-     * Re-loads a yaml file.
+     * Re-loads from the file.
      *
      * @see FileConfiguration#load()
      */
@@ -36,16 +34,14 @@ public interface FileConfiguration extends Configuration {
     }
 
     /**
-     * Saves to yaml file.
-     * <p>
-     * If a yaml file is not found, this method will create one.
+     * Saves to the file.
      */
     void save() throws IOException;
 
     /**
-     * Gets the path to a yaml file.
+     * Gets the path to the file.
      *
-     * @return The path to a yaml file.
+     * @return the path to the file.
      */
     @NotNull
     Path getPath();
