@@ -1,7 +1,7 @@
 package com.github.siroshun09.configapi.bungee;
 
 import com.github.siroshun09.configapi.common.FileUtils;
-import com.github.siroshun09.configapi.common.Yaml;
+import com.github.siroshun09.configapi.common.yaml.Yaml;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;

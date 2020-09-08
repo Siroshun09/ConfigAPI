@@ -1,7 +1,7 @@
 package com.github.siroshun09.configapi.bukkit;
 
 import com.github.siroshun09.configapi.common.FileUtils;
-import com.github.siroshun09.configapi.common.Yaml;
+import com.github.siroshun09.configapi.common.yaml.Yaml;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
