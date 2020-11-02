@@ -16,6 +16,11 @@ public final class BukkitYamlFactory {
         throw new UnsupportedOperationException();
     }
 
+    public static @NotNull BukkitYaml getBukkitYaml(@NotNull Path path) {
+        Objects.requireNonNull(path);
+        return new BukkitYaml(path);
+    }
+
     public static @NotNull BukkitYaml load(@NotNull Path path) throws IOException {
         BukkitYaml yaml = getBukkitYaml(path);
 
@@ -24,15 +29,33 @@ public final class BukkitYamlFactory {
         return yaml;
     }
 
-    public static @NotNull BukkitYaml getBukkitYaml(@NotNull Path path) {
-        Objects.requireNonNull(path);
-        return new BukkitYaml(path);
-    }
-
     public static @NotNull BukkitYaml load(@NotNull Plugin plugin, @NotNull String filePath) throws IOException {
         BukkitYaml yaml = getBukkitYaml(copyResourceIfNotExists(plugin, filePath));
 
         yaml.load();
+
+        return yaml;
+    }
+
+    public static @NotNull BukkitYaml loadUnsafe(@NotNull Plugin plugin, @NotNull String filePath) {
+        Path path = createFilePath(plugin, filePath);
+
+        try {
+            copyResourceIfNotExists(plugin, filePath, path);
+        } catch (IOException ignored) {
+        }
+
+
+        return loadUnsafe(path);
+    }
+
+    public static @NotNull BukkitYaml loadUnsafe(@NotNull Path path) {
+        BukkitYaml yaml = getBukkitYaml(path);
+
+        try {
+            yaml.load();
+        } catch (IOException ignored) {
+        }
 
         return yaml;
     }
@@ -78,28 +101,5 @@ public final class BukkitYamlFactory {
                 }
             }
         }
-    }
-
-    public static @NotNull BukkitYaml loadUnsafe(@NotNull Plugin plugin, @NotNull String filePath) {
-        Path path = createFilePath(plugin, filePath);
-
-        try {
-            copyResourceIfNotExists(plugin, filePath, path);
-        } catch (IOException ignored) {
-        }
-
-
-        return loadUnsafe(path);
-    }
-
-    public static @NotNull BukkitYaml loadUnsafe(@NotNull Path path) {
-        BukkitYaml yaml = getBukkitYaml(path);
-
-        try {
-            yaml.load();
-        } catch (IOException ignored) {
-        }
-
-        return yaml;
     }
 }
