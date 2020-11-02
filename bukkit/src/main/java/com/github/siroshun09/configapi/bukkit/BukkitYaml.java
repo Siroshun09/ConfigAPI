@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -23,7 +23,8 @@ import java.util.Set;
  */
 public class BukkitYaml extends AbstractYaml {
 
-    protected YamlConfiguration config;
+    protected YamlConfiguration config = new YamlConfiguration();
+    private boolean isLoaded;
 
     /**
      * Creates a {@link BukkitYaml} with no default values.
@@ -38,13 +39,14 @@ public class BukkitYaml extends AbstractYaml {
      * {@inheritDoc}
      */
     @Override
-    public boolean load() {
-        if (FileUtils.checkFile(filePath)) {
+    public void load() throws IOException {
+        FileUtils.createFileIfNotExists(filePath);
+
+        if (Files.isRegularFile(filePath) && Files.isReadable(filePath)) {
             config = YamlConfiguration.loadConfiguration(filePath.toFile());
-            return true;
-        } else {
-            return false;
         }
+
+        isLoaded = true;
     }
 
     /**
@@ -52,23 +54,19 @@ public class BukkitYaml extends AbstractYaml {
      */
     @Override
     public boolean isLoaded() {
-        return config != null;
+        return isLoaded;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean save() {
-        try {
-            if (FileUtils.checkFile(filePath)) {
-                getConfig().save(filePath.toFile());
-                return true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void save() throws IOException {
+        FileUtils.createFileIfNotExists(filePath);
+
+        if (Files.isRegularFile(filePath) && Files.isWritable(filePath)) {
+            config.save(filePath.toFile());
         }
-        return false;
     }
 
     /**
@@ -84,15 +82,10 @@ public class BukkitYaml extends AbstractYaml {
      * Gets {@link YamlConfiguration}.
      *
      * @return {@link YamlConfiguration}
-     * @throws IllegalStateException Throws when a yaml file is not loaded.
      */
     @NotNull
-    public YamlConfiguration getConfig() throws IllegalStateException {
-        if (isLoaded()) {
-            return config;
-        } else {
-            throw new IllegalStateException("A yaml file is not loaded.");
-        }
+    public YamlConfiguration getConfig() {
+        return config;
     }
 
     /**
@@ -101,7 +94,7 @@ public class BukkitYaml extends AbstractYaml {
     @Override
     public boolean getBoolean(@NotNull String path, boolean def) {
         Objects.requireNonNull(path, "path must not be null.");
-        return isLoaded() ? config.getBoolean(path, def) : def;
+        return config.getBoolean(path, def);
     }
 
     /**
@@ -110,7 +103,7 @@ public class BukkitYaml extends AbstractYaml {
     @Override
     public double getDouble(@NotNull String path, double def) {
         Objects.requireNonNull(path, "path must not be null.");
-        return isLoaded() ? config.getDouble(path, def) : def;
+        return config.getDouble(path, def);
     }
 
     /**
@@ -119,7 +112,7 @@ public class BukkitYaml extends AbstractYaml {
     @Override
     public int getInt(@NotNull String path, int def) {
         Objects.requireNonNull(path, "path must not be null.");
-        return isLoaded() ? config.getInt(path, def) : def;
+        return config.getInt(path, def);
     }
 
     /**
@@ -128,7 +121,7 @@ public class BukkitYaml extends AbstractYaml {
     @Override
     public long getLong(@NotNull String path, long def) {
         Objects.requireNonNull(path, "path must not be null.");
-        return isLoaded() ? config.getLong(path, def) : def;
+        return config.getLong(path, def);
     }
 
     /**
@@ -140,7 +133,7 @@ public class BukkitYaml extends AbstractYaml {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
 
-        String value = isLoaded() ? config.getString(path, def) : null;
+        String value = config.getString(path, def);
         return value != null ? value : def;
     }
 
@@ -152,7 +145,7 @@ public class BukkitYaml extends AbstractYaml {
     public List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getStringList(path) : def;
+        return config.getStringList(path);
     }
 
     /**
@@ -163,7 +156,7 @@ public class BukkitYaml extends AbstractYaml {
     public List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getShortList(path) : def;
+        return config.getShortList(path);
     }
 
 
@@ -175,7 +168,7 @@ public class BukkitYaml extends AbstractYaml {
     public List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getIntegerList(path) : def;
+        return config.getIntegerList(path);
     }
 
 
@@ -187,7 +180,7 @@ public class BukkitYaml extends AbstractYaml {
     public List<Long> getLongList(@NotNull String path, @NotNull List<Long> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getLongList(path) : def;
+        return config.getLongList(path);
     }
 
 
@@ -199,7 +192,7 @@ public class BukkitYaml extends AbstractYaml {
     public List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getFloatList(path) : def;
+        return config.getFloatList(path);
     }
 
     /**
@@ -210,7 +203,7 @@ public class BukkitYaml extends AbstractYaml {
     public List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getDoubleList(path) : def;
+        return config.getDoubleList(path);
     }
 
     /**
@@ -228,6 +221,24 @@ public class BukkitYaml extends AbstractYaml {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull
+    public Set<String> getKeys() {
+        return config.getKeys(false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void set(@NotNull String path, @Nullable Object value) {
+        Objects.requireNonNull(path, "path must not be null.");
+        config.set(path, value);
+    }
+
+    /**
      * Gets the requested {@link ItemStack} by path.
      *
      * @param path Path of the {@link ItemStack} to get.
@@ -240,32 +251,7 @@ public class BukkitYaml extends AbstractYaml {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
 
-        if (isLoaded()) {
-            ItemStack item = config.getItemStack(path);
-            return item != null ? item : def;
-        } else {
-            return def;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull
-    public Set<String> getKeys() {
-        return isLoaded() ? config.getKeys(false) : new LinkedHashSet<>();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void set(@NotNull String path, @Nullable Object value) {
-        Objects.requireNonNull(path, "path must not be null.");
-
-        if (isLoaded()) {
-            config.set(path, value);
-        }
+        ItemStack item = config.getItemStack(path);
+        return item != null ? item : def;
     }
 }
