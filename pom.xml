@@ -14,9 +14,8 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray-siroplugins-maven-repo</id>
-            <name>siroplugins-maven-repo</name>
-            <url>https://api.bintray.com/maven/siroplugins/maven-repo/ConfigAPI/;publish=1</url>
+            <id>siroshun09-maven-repo</id>
+            <url>https://api.bintray.com/maven/siroshun09/maven/ConfigAPI/;publish=1</url>
         </repository>
     </distributionManagement>
 
