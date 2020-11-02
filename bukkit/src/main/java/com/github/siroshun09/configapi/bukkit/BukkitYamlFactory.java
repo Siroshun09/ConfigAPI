@@ -72,10 +72,10 @@ public final class BukkitYamlFactory {
         if (!Files.exists(path)) {
             FileUtils.createDirectoriesIfNotExists(path.getParent());
 
-            InputStream resourceFile = plugin.getResource(filePath);
-
-            if (resourceFile != null) {
-                Files.copy(resourceFile, path);
+            try (InputStream resourceFile = plugin.getResource(filePath)) {
+                if (resourceFile != null) {
+                    Files.copy(resourceFile, path);
+                }
             }
         }
     }
