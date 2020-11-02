@@ -24,7 +24,7 @@ import java.util.Set;
 public class BukkitYaml extends AbstractYaml {
 
     protected YamlConfiguration config = new YamlConfiguration();
-    private boolean isLoaded;
+    private boolean isLoaded = false;
 
     /**
      * Creates a {@link BukkitYaml} with no default values.
@@ -44,9 +44,8 @@ public class BukkitYaml extends AbstractYaml {
 
         if (Files.isRegularFile(filePath) && Files.isReadable(filePath)) {
             config = YamlConfiguration.loadConfiguration(filePath.toFile());
+            isLoaded = true;
         }
-
-        isLoaded = true;
     }
 
     /**
