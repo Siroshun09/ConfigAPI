@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.siroshun09.configapi.bukkit"},{"l":"com.github.siroshun09.configapi.bungee"},{"l":"com.github.siroshun09.configapi.common"},{"l":"com.github.siroshun09.configapi.common.util"},{"l":"com.github.siroshun09.configapi.common.yaml"}];updateSearchResults();
