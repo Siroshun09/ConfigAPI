@@ -92,6 +92,14 @@ public class BukkitYaml extends AbstractYaml {
      * {@inheritDoc}
      */
     @Override
+    public @Nullable Object get(@NotNull String path) {
+        return config.get(path);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean getBoolean(@NotNull String path, boolean def) {
         Objects.requireNonNull(path, "path must not be null.");
         return config.getBoolean(path, def);

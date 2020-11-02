@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An interface that gets the value by path.
@@ -13,6 +14,33 @@ import java.util.List;
  * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
 public interface Configuration {
+
+    /**
+     * Gets the requested Object by path.
+     * <p>
+     * If the value could not be obtained, this method returns {@code null}.
+     *
+     * @param path Path of the Object to get.
+     * @return Requested Object.
+     */
+    @Nullable
+    Object get(@NotNull String path);
+
+    /**
+     * Gets the requested Object by path.
+     *
+     * @param path Path of the Object to get.
+     * @param def  The default value to return if the value could not be obtained.
+     * @return Requested Object.
+     */
+    @NotNull
+    default Object get(@NotNull String path, @NotNull Object def) {
+        Objects.requireNonNull(path, "path must not be null.");
+        Objects.requireNonNull(def, "def must not be null.");
+
+        Object value = get(path);
+        return value != null ? value : def;
+    }
 
     /**
      * Gets the requested boolean by path.
