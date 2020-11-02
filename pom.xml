@@ -54,7 +54,7 @@
 
     <distributionManagement>
         <repository>
-            <id>siroshun09-maven-repo</id>
+            <id>bintray-siroshun09-maven</id>
             <url>https://api.bintray.com/maven/siroshun09/maven/ConfigAPI/;publish=1</url>
         </repository>
     </distributionManagement>
