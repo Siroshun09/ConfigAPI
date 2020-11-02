@@ -1,6 +1,6 @@
 package com.github.siroshun09.configapi.bukkit;
 
-import com.github.siroshun09.configapi.common.FileUtils;
+import com.github.siroshun09.configapi.common.util.FileUtils;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 

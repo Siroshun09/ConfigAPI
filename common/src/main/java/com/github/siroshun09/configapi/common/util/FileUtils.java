@@ -1,4 +1,4 @@
-package com.github.siroshun09.configapi.common;
+package com.github.siroshun09.configapi.common.util;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
 package com.github.siroshun09.configapi.bungee;
 
-import com.github.siroshun09.configapi.common.FileUtils;
+import com.github.siroshun09.configapi.common.util.FileUtils;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
