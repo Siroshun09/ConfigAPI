@@ -1,13 +1,11 @@
 # ConfigAPI
 
-[![Download](https://api.bintray.com/packages/siroplugins/maven-repo/ConfigAPI/images/download.svg) ](https://bintray.com/siroshun/maven-repo/ConfigAPI/_latestVersion)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/SiroPlugins/ConfigAPI/Java%20CI)
-![GitHub](https://img.shields.io/github/license/SiroPlugins/ConfigAPI)
-[![Bintray](https://img.shields.io/bintray/v/siroplugins/maven-repo/ConfigAPI?color=orange&label=Javadoc)](https://siroplugins.github.io/ConfigAPI/)
+[![Download](https://api.bintray.com/packages/siroshun09/maven/ConfigAPI/images/download.svg) ](https://bintray.com/siroshun09/maven/ConfigAPI/_latestVersion)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Siroshun09/ConfigAPI/Java%20CI)
+![GitHub](https://img.shields.io/github/license/Siroshun09/ConfigAPI)
+[![Bintray](https://img.shields.io/bintray/v/siroshun09/maven/ConfigAPI?color=orange&label=Javadoc)](https://siroshun09.github.io/ConfigAPI/)
 
-A library for handling configuration files with Spigot and BungeeCord.
-
-Currently only Yaml files can be used.
+A configuration library for Spigot and BungeeCord.
 
 ## Requirements
 
@@ -15,15 +13,15 @@ Currently only Yaml files can be used.
 
 ## Usage (Maven)
 
-Javadoc is [here](https://siroplugins.github.io/ConfigAPI/)
+Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
 
 ### Maven Repository
 
 ```xml
-        <repository>
-            <id>bintray-siroplugins-maven-repo</id>
-            <url>https://dl.bintray.com/siroplugins/maven-repo</url>
-        </repository>
+    <repository>
+        <id>jcenter</id>
+        <url>https://jcenter.bintray.com</url>
+    </repository>
 ```
 
 ### For Bukkit (Spigot)
@@ -61,6 +59,6 @@ Javadoc is [here](https://siroplugins.github.io/ConfigAPI/)
 
 ## License
 
-This project is licensed under the permissive MIT license. Please see [LICENSE](LICENSE) for more info.
+This project is under the Apache License version 2.0. Please see [LICENSE](LICENSE) for more info.
 
 Copyright © 2020, Siroshun09
