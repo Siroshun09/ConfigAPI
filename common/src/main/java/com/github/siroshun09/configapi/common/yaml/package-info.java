@@ -14,28 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.yaml;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.nio.file.Path;
-
 /**
- * An abstract class that implements {@link Yaml}.
+ * The package that holds {@link com.github.siroshun09.configapi.common.yaml.Yaml} and {@link com.github.siroshun09.configapi.common.yaml.AbstractYaml}.
  */
-public abstract class AbstractYaml implements Yaml {
-
-    /**
-     * The given file path.
-     */
-    protected final Path filePath;
-
-    /**
-     * Creates the {@link AbstractYaml}.
-     *
-     * @param filePath the file to load or save.
-     */
-    protected AbstractYaml(@NotNull Path filePath) {
-        this.filePath = filePath;
-    }
-}
+package com.github.siroshun09.configapi.common.yaml;

@@ -129,17 +129,11 @@
                 <executions>
                     <execution>
                         <id>attach-docs</id>
-                        <phase>post-integration-test</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>jar</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>aggregate</id>
-                        <goals>
                             <goal>aggregate</goal>
                         </goals>
-                        <phase>package</phase>
                     </execution>
                 </executions>
                 <configuration>
@@ -151,11 +145,11 @@
                     <locale>en_US</locale>
                     <notimestamp>true</notimestamp>
                     <show>protected</show>
+                    <quiet>true</quiet>
                     <bottom>
                         <![CDATA[<p class="legalCopy">Copyright &#169;2020 <a href="https://github.com/Siroshun09">Siroshun09</a>. All rights reserved.</p>]]></bottom>
                     <links>
-                        <link>https://docs.oracle.com/javase/9/docs/api/</link>
-                        <link>https://hub.spigotmc.org/javadocs/spigot/</link>
+                        <link>https://papermc.io/javadocs/paper/1.16/</link>
                         <link>https://papermc.io/javadocs/waterfall/</link>
                     </links>
                 </configuration>

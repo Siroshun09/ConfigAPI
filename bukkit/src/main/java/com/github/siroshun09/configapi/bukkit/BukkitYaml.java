@@ -37,11 +37,11 @@ import java.util.Set;
  */
 public class BukkitYaml extends AbstractYaml {
 
-    protected YamlConfiguration config = new YamlConfiguration();
+    private YamlConfiguration config = new YamlConfiguration();
     private boolean isLoaded = false;
 
     /**
-     * Creates a {@link BukkitYaml} with no default values.
+     * Creates a {@link BukkitYaml}.
      *
      * @param filePath the file to load or save.
      */

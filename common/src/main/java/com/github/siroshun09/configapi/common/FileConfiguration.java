@@ -28,6 +28,8 @@ public interface FileConfiguration extends Configuration {
 
     /**
      * Loads from the file.
+     *
+     * @throws IOException if an I/O error occurs
      */
     void load() throws IOException;
 
@@ -41,6 +43,7 @@ public interface FileConfiguration extends Configuration {
     /**
      * Re-loads from the file.
      *
+     * @throws IOException if an I/O error occurs
      * @see FileConfiguration#load()
      */
     default void reload() throws IOException {
@@ -49,6 +52,8 @@ public interface FileConfiguration extends Configuration {
 
     /**
      * Saves to the file.
+     *
+     * @throws IOException if an I/O error occurs
      */
     void save() throws IOException;
 

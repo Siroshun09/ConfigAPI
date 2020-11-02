@@ -39,11 +39,11 @@ public class BungeeYaml extends AbstractYaml {
 
     private static final ConfigurationProvider PROVIDER = ConfigurationProvider.getProvider(YamlConfiguration.class);
 
-    protected Configuration config = new Configuration();
+    private Configuration config = new Configuration();
     private boolean isLoaded = false;
 
     /**
-     * Creates a {@link BungeeYaml} with no default values.
+     * Creates a {@link BungeeYaml}.
      *
      * @param filePath the file path to load or save.
      */
