@@ -10,8 +10,6 @@ import java.util.Objects;
 
 /**
  * Utility class used for internal processing of this library
- * <p>
- * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
 public final class FileUtils {
 
@@ -56,47 +54,5 @@ public final class FileUtils {
         }
 
         return path;
-    }
-
-    /**
-     * Deletes the file.
-     *
-     * @param path file path
-     * @throws IOException          if an I/O error occurs
-     * @throws NullPointerException if the path is null
-     */
-    public static void deleteFile(@NotNull Path path) throws IOException {
-        Objects.requireNonNull(path, "path");
-
-        if (Files.exists(path) && Files.isRegularFile(path)) {
-            Files.delete(path);
-        }
-    }
-
-    /**
-     * Deletes the given directory and all directories and files under it.
-     *
-     * @param path given directory path
-     * @throws IOException          if an I/O error occurs
-     * @throws NullPointerException if the path is null
-     */
-    public static void deleteDirectory(@NotNull Path path) throws IOException {
-        Objects.requireNonNull(path, "path");
-
-        if (!Files.exists(path) || !Files.isDirectory(path)) {
-            return;
-        }
-
-        try (DirectoryStream<Path> contents = Files.newDirectoryStream(path)) {
-            for (Path file : contents) {
-                if (Files.isDirectory(file)) {
-                    deleteDirectory(file);
-                } else {
-                    Files.delete(file);
-                }
-            }
-        }
-
-        Files.delete(path);
     }
 }

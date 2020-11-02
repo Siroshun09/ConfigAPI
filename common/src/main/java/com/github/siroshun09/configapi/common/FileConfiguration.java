@@ -7,8 +7,6 @@ import java.nio.file.Path;
 
 /**
  * An interface that extends {@link Configuration} to get from a file.
- * <p>
- * Using null for @NotNull argument will cause a {@link NullPointerException}.
  */
 public interface FileConfiguration extends Configuration {
 

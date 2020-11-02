@@ -17,9 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * This class implements {@link Yaml} on BungeeCord.
- * <p>
- * Using null for @NotNull argument will cause a {@link NullPointerException}.
+ * This class that implements {@link Yaml} on BungeeCord.
  */
 public class BungeeYaml extends AbstractYaml {
 

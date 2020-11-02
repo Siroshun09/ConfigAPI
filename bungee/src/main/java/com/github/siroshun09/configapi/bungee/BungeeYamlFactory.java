@@ -10,17 +10,35 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * A factory class for creating {@link BungeeYaml}.
+ */
 public final class BungeeYamlFactory {
 
     private BungeeYamlFactory() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Creates a {@link BungeeYaml} instance.
+     * <p>
+     * This method will not load the file.
+     *
+     * @param path the file path
+     * @return {@link BungeeYaml} instance
+     */
     public static @NotNull BungeeYaml getBungeeYaml(@NotNull Path path) {
         Objects.requireNonNull(path);
         return new BungeeYaml(path);
     }
 
+    /**
+     * Creates a loaded {@link BungeeYaml} instance.
+     *
+     * @param path the file path
+     * @return loaded {@link BungeeYaml} instance
+     * @throws IOException if an I/O error occurs
+     */
     public static @NotNull BungeeYaml load(@NotNull Path path) throws IOException {
         BungeeYaml yaml = getBungeeYaml(path);
 
@@ -29,6 +47,18 @@ public final class BungeeYamlFactory {
         return yaml;
     }
 
+    /**
+     * Creates a loaded {@link BungeeYaml} instance.
+     * <p>
+     * This method will copy from the plugin resource if the file does not exists,
+     * or create the empty file if the file does not exists and the plugin resource was not found.
+     *
+     * @param plugin   the plugin instance
+     * @param filePath the file path with the plugin directory as the root
+     * @return loaded {@link BungeeYaml} instance
+     * @throws IOException if an I/O error occurs
+     * @see BungeeYamlFactory#createFilePath(Plugin, String)
+     */
     public static @NotNull BungeeYaml load(@NotNull Plugin plugin, @NotNull String filePath) throws IOException {
         BungeeYaml yaml = getBungeeYaml(copyResourceIfNotExists(plugin, filePath));
 
@@ -37,6 +67,35 @@ public final class BungeeYamlFactory {
         return yaml;
     }
 
+    /**
+     * Creates a loaded {@link BungeeYaml} instance.
+     * <p>
+     * If an {@link IOException} occurs, this method ignores it.
+     *
+     * @param path the file path
+     * @return loaded {@link BungeeYaml} instance
+     */
+    public static @NotNull BungeeYaml loadUnsafe(@NotNull Path path) {
+        BungeeYaml yaml = getBungeeYaml(path);
+
+        try {
+            yaml.load();
+        } catch (IOException ignored) {
+        }
+
+        return yaml;
+    }
+
+    /**
+     * Creates a loaded {@link BungeeYaml} instance.
+     * <p>
+     * If an {@link IOException} occurs, this method ignores it.
+     *
+     * @param plugin   the plugin instance
+     * @param filePath the file path with the plugin directory as the root
+     * @return loaded {@link BungeeYaml} instance
+     * @see BungeeYamlFactory#createFilePath(Plugin, String)
+     */
     public static @NotNull BungeeYaml loadUnsafe(@NotNull Plugin plugin, @NotNull String filePath) {
         Path path = createFilePath(plugin, filePath);
 
@@ -49,17 +108,15 @@ public final class BungeeYamlFactory {
         return loadUnsafe(path);
     }
 
-    public static @NotNull BungeeYaml loadUnsafe(@NotNull Path path) {
-        BungeeYaml yaml = getBungeeYaml(path);
-
-        try {
-            yaml.load();
-        } catch (IOException ignored) {
-        }
-
-        return yaml;
-    }
-
+    /**
+     * Copies the plugin resource if the file does not exists.
+     *
+     * @param plugin   the plugin instance
+     * @param filePath the file path with the plugin directory as the root
+     * @return loaded {@link BungeeYaml} instance
+     * @throws IOException if an I/O error occurs
+     * @see BungeeYamlFactory#createFilePath(Plugin, String)
+     */
     @NotNull
     public static Path copyResourceIfNotExists(@NotNull Plugin plugin, @NotNull String filePath) throws IOException {
         Path path = createFilePath(plugin, filePath);
@@ -69,6 +126,15 @@ public final class BungeeYamlFactory {
         return path;
     }
 
+    /**
+     * Creates the file path.
+     * <p>
+     * The returns path is {@code SERVER_ROOT/plugins/PLUGIN_NAME/FILE_PATH}.
+     *
+     * @param plugin   the plugin instance
+     * @param filePath the file path with the plugin directory as the root
+     * @return the file path
+     */
     @NotNull
     public static Path createFilePath(@NotNull Plugin plugin, @NotNull String filePath) {
         Objects.requireNonNull(plugin);

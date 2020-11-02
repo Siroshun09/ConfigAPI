@@ -10,17 +10,35 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * A factory class for creating {@link BukkitYaml}.
+ */
 public final class BukkitYamlFactory {
 
     private BukkitYamlFactory() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Creates a {@link BukkitYaml} instance.
+     * <p>
+     * This method will not load the file.
+     *
+     * @param path the file path
+     * @return {@link BukkitYaml} instance
+     */
     public static @NotNull BukkitYaml getBukkitYaml(@NotNull Path path) {
         Objects.requireNonNull(path);
         return new BukkitYaml(path);
     }
 
+    /**
+     * Creates a loaded {@link BukkitYaml} instance.
+     *
+     * @param path the file path
+     * @return loaded {@link BukkitYaml} instance
+     * @throws IOException if an I/O error occurs
+     */
     public static @NotNull BukkitYaml load(@NotNull Path path) throws IOException {
         BukkitYaml yaml = getBukkitYaml(path);
 
@@ -29,6 +47,18 @@ public final class BukkitYamlFactory {
         return yaml;
     }
 
+    /**
+     * Creates a loaded {@link BukkitYaml} instance.
+     * <p>
+     * This method will copy from the plugin resource if the file does not exists,
+     * or create the empty file if the file does not exists and the plugin resource was not found.
+     *
+     * @param plugin   the plugin instance
+     * @param filePath the file path with the plugin directory as the root
+     * @return loaded {@link BukkitYaml} instance
+     * @throws IOException if an I/O error occurs
+     * @see BukkitYamlFactory#createFilePath(Plugin, String)
+     */
     public static @NotNull BukkitYaml load(@NotNull Plugin plugin, @NotNull String filePath) throws IOException {
         BukkitYaml yaml = getBukkitYaml(copyResourceIfNotExists(plugin, filePath));
 
@@ -37,6 +67,35 @@ public final class BukkitYamlFactory {
         return yaml;
     }
 
+    /**
+     * Creates a loaded {@link BukkitYaml} instance.
+     * <p>
+     * If an {@link IOException} occurs, this method ignores it.
+     *
+     * @param path the file path
+     * @return loaded {@link BukkitYaml} instance
+     */
+    public static @NotNull BukkitYaml loadUnsafe(@NotNull Path path) {
+        BukkitYaml yaml = getBukkitYaml(path);
+
+        try {
+            yaml.load();
+        } catch (IOException ignored) {
+        }
+
+        return yaml;
+    }
+
+    /**
+     * Creates a loaded {@link BukkitYaml} instance.
+     * <p>
+     * If an {@link IOException} occurs, this method ignores it.
+     *
+     * @param plugin   the plugin instance
+     * @param filePath the file path with the plugin directory as the root
+     * @return loaded {@link BukkitYaml} instance
+     * @see BukkitYamlFactory#createFilePath(Plugin, String)
+     */
     public static @NotNull BukkitYaml loadUnsafe(@NotNull Plugin plugin, @NotNull String filePath) {
         Path path = createFilePath(plugin, filePath);
 
@@ -49,17 +108,15 @@ public final class BukkitYamlFactory {
         return loadUnsafe(path);
     }
 
-    public static @NotNull BukkitYaml loadUnsafe(@NotNull Path path) {
-        BukkitYaml yaml = getBukkitYaml(path);
-
-        try {
-            yaml.load();
-        } catch (IOException ignored) {
-        }
-
-        return yaml;
-    }
-
+    /**
+     * Copies the plugin resource if the file does not exists.
+     *
+     * @param plugin   the plugin instance
+     * @param filePath the file path with the plugin directory as the root
+     * @return loaded {@link BukkitYaml} instance
+     * @throws IOException if an I/O error occurs
+     * @see BukkitYamlFactory#createFilePath(Plugin, String)
+     */
     @NotNull
     public static Path copyResourceIfNotExists(@NotNull Plugin plugin, @NotNull String filePath) throws IOException {
         Path path = createFilePath(plugin, filePath);
@@ -69,6 +126,15 @@ public final class BukkitYamlFactory {
         return path;
     }
 
+    /**
+     * Creates the file path.
+     * <p>
+     * The returns path is {@code SERVER_ROOT/plugins/PLUGIN_NAME/FILE_PATH}.
+     *
+     * @param plugin   the plugin instance
+     * @param filePath the file path with the plugin directory as the root
+     * @return the file path
+     */
     @NotNull
     public static Path createFilePath(@NotNull Plugin plugin, @NotNull String filePath) {
         Objects.requireNonNull(plugin);

@@ -17,9 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * This class implements {@link Yaml} on Bukkit.
- * <p>
- * Using null for @NotNull argument will cause a {@link NullPointerException}.
+ * This class that implements {@link Yaml} on Bukkit.
  */
 public class BukkitYaml extends AbstractYaml {
 

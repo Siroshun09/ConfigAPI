@@ -4,6 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
+/**
+ * An abstract class that implements {@link Yaml}.
+ */
 public abstract class AbstractYaml implements Yaml {
 
     protected final Path filePath;
