@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +23,10 @@ import java.util.Objects;
  */
 public class BungeeYaml extends AbstractYaml {
 
-    protected Configuration config;
+    private static final ConfigurationProvider PROVIDER = ConfigurationProvider.getProvider(YamlConfiguration.class);
+
+    protected Configuration config = new Configuration();
+    private boolean isLoaded = false;
 
     /**
      * Creates a {@link BungeeYaml} with no default values.
@@ -38,17 +41,13 @@ public class BungeeYaml extends AbstractYaml {
      * {@inheritDoc}
      */
     @Override
-    public boolean load() {
-        if (FileUtils.checkFile(filePath)) {
-            try {
-                config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(filePath.toFile());
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
+    public void load() throws IOException {
+        FileUtils.createFileIfNotExists(filePath);
 
+        if (Files.isRegularFile(filePath) && Files.isReadable(filePath)) {
+            config = PROVIDER.load(filePath.toFile());
+            isLoaded = true;
+        }
     }
 
     /**
@@ -56,23 +55,19 @@ public class BungeeYaml extends AbstractYaml {
      */
     @Override
     public boolean isLoaded() {
-        return config != null;
+        return isLoaded;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean save() {
-        try {
-            if (FileUtils.checkFile(filePath)) {
-                ConfigurationProvider.getProvider(YamlConfiguration.class).save(getConfig(), filePath.toFile());
-                return true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void save() throws IOException {
+        FileUtils.createFileIfNotExists(filePath);
+
+        if (Files.isRegularFile(filePath) && Files.isWritable(filePath)) {
+            PROVIDER.save(config, filePath.toFile());
         }
-        return false;
     }
 
     /**
@@ -92,11 +87,7 @@ public class BungeeYaml extends AbstractYaml {
      */
     @NotNull
     public Configuration getConfig() throws IllegalStateException {
-        if (isLoaded()) {
-            return config;
-        } else {
-            throw new IllegalStateException("A yaml file is not loaded.");
-        }
+        return config;
     }
 
     /**
@@ -105,7 +96,7 @@ public class BungeeYaml extends AbstractYaml {
     @Override
     public boolean getBoolean(@NotNull String path, boolean def) {
         Objects.requireNonNull(path, "path must not be null.");
-        return isLoaded() ? config.getBoolean(path, def) : def;
+        return config.getBoolean(path, def);
     }
 
     /**
@@ -114,7 +105,7 @@ public class BungeeYaml extends AbstractYaml {
     @Override
     public double getDouble(@NotNull String path, double def) {
         Objects.requireNonNull(path, "path must not be null.");
-        return isLoaded() ? config.getDouble(path, def) : def;
+        return config.getDouble(path, def);
     }
 
     /**
@@ -123,7 +114,7 @@ public class BungeeYaml extends AbstractYaml {
     @Override
     public int getInt(@NotNull String path, int def) {
         Objects.requireNonNull(path, "path must not be null.");
-        return isLoaded() ? config.getInt(path, def) : def;
+        return config.getInt(path, def);
     }
 
     /**
@@ -132,7 +123,7 @@ public class BungeeYaml extends AbstractYaml {
     @Override
     public long getLong(@NotNull String path, long def) {
         Objects.requireNonNull(path, "path must not be null.");
-        return isLoaded() ? config.getLong(path, def) : def;
+        return config.getLong(path, def);
     }
 
     /**
@@ -144,7 +135,7 @@ public class BungeeYaml extends AbstractYaml {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
 
-        String value = isLoaded() ? config.getString(path, def) : null;
+        String value = config.getString(path, def);
         return value != null ? value : def;
     }
 
@@ -156,7 +147,7 @@ public class BungeeYaml extends AbstractYaml {
     public List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getStringList(path) : def;
+        return config.getStringList(path);
     }
 
     /**
@@ -167,7 +158,7 @@ public class BungeeYaml extends AbstractYaml {
     public List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getShortList(path) : def;
+        return config.getShortList(path);
     }
 
     /**
@@ -178,7 +169,7 @@ public class BungeeYaml extends AbstractYaml {
     public List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getIntList(path) : def;
+        return config.getIntList(path);
     }
 
     /**
@@ -189,7 +180,7 @@ public class BungeeYaml extends AbstractYaml {
     public List<Long> getLongList(@NotNull String path, @NotNull List<Long> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getLongList(path) : def;
+        return config.getLongList(path);
     }
 
     /**
@@ -200,7 +191,7 @@ public class BungeeYaml extends AbstractYaml {
     public List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getFloatList(path) : def;
+        return config.getFloatList(path);
     }
 
     /**
@@ -211,7 +202,7 @@ public class BungeeYaml extends AbstractYaml {
     public List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
         Objects.requireNonNull(path, "path must not be null.");
         Objects.requireNonNull(def, "def must not be null.");
-        return isLoaded() ? config.getDoubleList(path) : def;
+        return config.getDoubleList(path);
     }
 
     /**
@@ -220,7 +211,7 @@ public class BungeeYaml extends AbstractYaml {
     @Override
     @NotNull
     public Collection<String> getKeys() {
-        return isLoaded() ? config.getKeys() : new LinkedHashSet<>();
+        return config.getKeys();
     }
 
     /**
@@ -229,6 +220,6 @@ public class BungeeYaml extends AbstractYaml {
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
         Objects.requireNonNull(path, "path must not be null.");
-        if (isLoaded()) config.set(path, value);
+        config.set(path, value);
     }
 }
