@@ -32,7 +32,7 @@ Javadoc is [here](https://siroplugins.github.io/ConfigAPI/)
         <dependency>
             <groupId>com.github.siroshun09.configapi</groupId>
             <artifactId>bukkit</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1</version>
             <scope>compile</scope>
         </dependency>
 ```
@@ -43,7 +43,7 @@ Javadoc is [here](https://siroplugins.github.io/ConfigAPI/)
         <dependency>
             <groupId>com.github.siroshun09.configapi</groupId>
             <artifactId>bungee</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1</version>
             <scope>compile</scope>
         </dependency>
 ```
@@ -54,7 +54,7 @@ Javadoc is [here](https://siroplugins.github.io/ConfigAPI/)
         <dependency>
             <groupId>com.github.siroshun09.configapi</groupId>
             <artifactId>common</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1</version>
             <scope>compile</scope>
         </dependency>
 ```
