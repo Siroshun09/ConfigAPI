@@ -20,51 +20,6 @@ public final class FileUtils {
     }
 
     /**
-     * Check if the parent directory of the given path exists.
-     * <p>
-     * If the parent directory is not found, this method will create one.
-     *
-     * @param path File path to check.
-     * @return True if it finally exists, false otherwise.
-     */
-    public static boolean checkParentDirectory(@NotNull Path path) {
-        Objects.requireNonNull(path);
-
-        Path dir = path.getParent();
-        if (!Files.exists(dir)) {
-            try {
-                Files.createDirectories(dir);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Check that the file exists and is readable and writable.
-     * <p>
-     * If the file is not found, this method will create one.
-     *
-     * @param path File path to check.
-     * @return True if it finally exists and is readable and writable, false otherwise.
-     */
-    public static boolean checkFile(@NotNull Path path) {
-        Objects.requireNonNull(path);
-
-        if (!Files.exists(path) && checkParentDirectory(path)) {
-            try {
-                Files.createFile(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return Files.isRegularFile(path) && Files.isReadable(path) && Files.isWritable(path);
-    }
-
-    /**
      * If the file does not exist in the specified path, creates its parent directory and it.
      *
      * @param path file path
@@ -72,10 +27,12 @@ public final class FileUtils {
      * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if the path is null
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static Path createFileIfNotExists(@NotNull Path path) throws IOException {
         Objects.requireNonNull(path, "path");
 
         if (!Files.exists(path)) {
+            createDirectoriesIfNotExists(path.getParent());
             Files.createFile(path);
         }
 
@@ -90,6 +47,7 @@ public final class FileUtils {
      * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if the path is null
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static Path createDirectoriesIfNotExists(@NotNull Path path) throws IOException {
         Objects.requireNonNull(path, "path");
 
