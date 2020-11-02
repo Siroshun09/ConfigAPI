@@ -112,7 +112,7 @@ public class BungeeYaml extends AbstractYaml {
      * {@inheritDoc}
      */
     @Override
-    public int getInt(@NotNull String path, int def) {
+    public int getInteger(@NotNull String path, int def) {
         Objects.requireNonNull(path, "path must not be null.");
         return config.getInt(path, def);
     }

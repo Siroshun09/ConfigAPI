@@ -64,8 +64,8 @@ public interface Configuration {
      * @param path Path of the integer to get.
      * @return Requested integer.
      */
-    default int getInt(@NotNull String path) {
-        return getInt(path, 0);
+    default int getInteger(@NotNull String path) {
+        return getInteger(path, 0);
     }
 
     /**
@@ -75,7 +75,7 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested integer.
      */
-    int getInt(@NotNull String path, int def);
+    int getInteger(@NotNull String path, int def);
 
     /**
      * Gets the requested long by path.
