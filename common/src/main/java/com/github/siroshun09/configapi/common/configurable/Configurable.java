@@ -32,6 +32,17 @@ import java.util.Optional;
 public interface Configurable<T> {
 
     /**
+     * Creates {@link BooleanValue}.
+     *
+     * @param path The path
+     * @param def The default boolean value
+     * @return {@link BooleanValue}
+     */
+    static @NotNull BooleanValue create(@NotNull String path, boolean def) {
+        return new BooleanValue(path, def);
+    }
+
+    /**
      * Creates {@link DoubleValue}.
      *
      * @param path The path
