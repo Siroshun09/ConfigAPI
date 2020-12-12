@@ -16,11 +16,13 @@
 
 package com.github.siroshun09.configapi.common;
 
+import com.github.siroshun09.configapi.common.configurable.Configurable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,6 +56,31 @@ public interface Configuration {
 
         Object value = get(path);
         return value != null ? value : def;
+    }
+
+    /**
+     * Gets the requested value by {@link Configurable#getKey()}
+     *
+     * @param configurable The configurable to get the path.
+     * @param <T>          The value type.
+     * @return Requested value.
+     */
+    default @NotNull <T> T get(@NotNull Configurable<T> configurable) {
+        Objects.requireNonNull(configurable);
+        return configurable.getValue(this);
+    }
+
+
+    /**
+     * Gets the requested value by {@link Configurable#getKey()}
+     *
+     * @param configurable The configurable to get the path.
+     * @param <T>          The value type.
+     * @return Requested value or {@code null}.
+     */
+    default @Nullable <T> T getOrNull(@NotNull Configurable<T> configurable) {
+        Objects.requireNonNull(configurable);
+        return configurable.getValueOrNull(this);
     }
 
     /**
@@ -320,4 +347,24 @@ public interface Configuration {
      * @param value New value to set the path to.
      */
     void set(@NotNull String path, @Nullable Object value);
+
+    /**
+     * Sets the default value to the specified path.
+     *
+     * @param configurable The configurable to get the path and the default value.
+     */
+    default void setDefault(@NotNull Configurable<?> configurable) {
+        Objects.requireNonNull(configurable);
+        set(configurable.getKey(), configurable.getDefault());
+    }
+
+
+    /**
+     * Sets the default values to the specified path.
+     *
+     * @param configurableIterator The configurable to get the path and the default value.
+     */
+    default void setDefault(@NotNull Iterator<Configurable<?>> configurableIterator) {
+        Objects.requireNonNull(configurableIterator).forEachRemaining(this::setDefault);
+    }
 }
