@@ -194,4 +194,18 @@ public interface Configurable<T> {
      * @return The requested value, or {@code null} if could not get.
      */
     @Nullable T getValueOrNull(@NotNull Configuration configuration);
+
+    /**
+     * Serialize the value.
+     *
+     * The default implementation of this method returns the arguments as is.
+     *
+     * This method will be used when {@link Configuration#setValue(Configurable, Object)} is called.
+     * 
+     * @param value The value to serialize.
+     * @return The serialized value or the arguments as is.
+     */
+    default @NotNull Object serialize(@NotNull T value) {
+        return value;
+    }
 }
