@@ -357,25 +357,37 @@
 <span class="sourceLineNo">349</span>    void set(@NotNull String path, @Nullable Object value);<a name="line.349"></a>
 <span class="sourceLineNo">350</span><a name="line.350"></a>
 <span class="sourceLineNo">351</span>    /**<a name="line.351"></a>
-<span class="sourceLineNo">352</span>     * Sets the default value to the specified path.<a name="line.352"></a>
+<span class="sourceLineNo">352</span>     * Sets the value to the specified path.<a name="line.352"></a>
 <span class="sourceLineNo">353</span>     *<a name="line.353"></a>
-<span class="sourceLineNo">354</span>     * @param configurable The configurable to get the path and the default value.<a name="line.354"></a>
-<span class="sourceLineNo">355</span>     */<a name="line.355"></a>
-<span class="sourceLineNo">356</span>    default void setDefault(@NotNull Configurable&lt;?&gt; configurable) {<a name="line.356"></a>
-<span class="sourceLineNo">357</span>        Objects.requireNonNull(configurable);<a name="line.357"></a>
-<span class="sourceLineNo">358</span>        set(configurable.getKey(), configurable.getDefault());<a name="line.358"></a>
-<span class="sourceLineNo">359</span>    }<a name="line.359"></a>
-<span class="sourceLineNo">360</span><a name="line.360"></a>
-<span class="sourceLineNo">361</span><a name="line.361"></a>
-<span class="sourceLineNo">362</span>    /**<a name="line.362"></a>
-<span class="sourceLineNo">363</span>     * Sets the default values to the specified path.<a name="line.363"></a>
-<span class="sourceLineNo">364</span>     *<a name="line.364"></a>
-<span class="sourceLineNo">365</span>     * @param configurableIterator The configurable to get the path and the default value.<a name="line.365"></a>
-<span class="sourceLineNo">366</span>     */<a name="line.366"></a>
-<span class="sourceLineNo">367</span>    default void setDefault(@NotNull Iterator&lt;Configurable&lt;?&gt;&gt; configurableIterator) {<a name="line.367"></a>
-<span class="sourceLineNo">368</span>        Objects.requireNonNull(configurableIterator).forEachRemaining(this::setDefault);<a name="line.368"></a>
-<span class="sourceLineNo">369</span>    }<a name="line.369"></a>
-<span class="sourceLineNo">370</span>}<a name="line.370"></a>
+<span class="sourceLineNo">354</span>     * @param configurable The configurable to get the path.<a name="line.354"></a>
+<span class="sourceLineNo">355</span>     * @param value        The value to set.<a name="line.355"></a>
+<span class="sourceLineNo">356</span>     * @param &lt;T&gt;          The value type<a name="line.356"></a>
+<span class="sourceLineNo">357</span>     */<a name="line.357"></a>
+<span class="sourceLineNo">358</span>    default &lt;T&gt; void setValue(@NotNull Configurable&lt;T&gt; configurable, @NotNull T value) {<a name="line.358"></a>
+<span class="sourceLineNo">359</span>        Objects.requireNonNull(configurable);<a name="line.359"></a>
+<span class="sourceLineNo">360</span>        Objects.requireNonNull(value);<a name="line.360"></a>
+<span class="sourceLineNo">361</span>        set(configurable.getKey(), configurable.serialize(value));<a name="line.361"></a>
+<span class="sourceLineNo">362</span>    }<a name="line.362"></a>
+<span class="sourceLineNo">363</span><a name="line.363"></a>
+<span class="sourceLineNo">364</span>    /**<a name="line.364"></a>
+<span class="sourceLineNo">365</span>     * Sets the default value to the specified path.<a name="line.365"></a>
+<span class="sourceLineNo">366</span>     *<a name="line.366"></a>
+<span class="sourceLineNo">367</span>     * @param configurable The configurable to get the path and the default value.<a name="line.367"></a>
+<span class="sourceLineNo">368</span>     */<a name="line.368"></a>
+<span class="sourceLineNo">369</span>    default &lt;T&gt; void setDefault(@NotNull Configurable&lt;T&gt; configurable) {<a name="line.369"></a>
+<span class="sourceLineNo">370</span>        Objects.requireNonNull(configurable);<a name="line.370"></a>
+<span class="sourceLineNo">371</span>        setValue(configurable, configurable.getDefault());<a name="line.371"></a>
+<span class="sourceLineNo">372</span>    }<a name="line.372"></a>
+<span class="sourceLineNo">373</span><a name="line.373"></a>
+<span class="sourceLineNo">374</span>    /**<a name="line.374"></a>
+<span class="sourceLineNo">375</span>     * Sets the default values to the specified path.<a name="line.375"></a>
+<span class="sourceLineNo">376</span>     *<a name="line.376"></a>
+<span class="sourceLineNo">377</span>     * @param configurableIterator The configurable to get the path and the default value.<a name="line.377"></a>
+<span class="sourceLineNo">378</span>     */<a name="line.378"></a>
+<span class="sourceLineNo">379</span>    default void setDefault(@NotNull Iterator&lt;Configurable&lt;?&gt;&gt; configurableIterator) {<a name="line.379"></a>
+<span class="sourceLineNo">380</span>        Objects.requireNonNull(configurableIterator).forEachRemaining(this::setDefault);<a name="line.380"></a>
+<span class="sourceLineNo">381</span>    }<a name="line.381"></a>
+<span class="sourceLineNo">382</span>}<a name="line.382"></a>
 
 
 
