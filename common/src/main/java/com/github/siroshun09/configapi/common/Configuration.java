@@ -352,8 +352,8 @@ public interface Configuration {
      * Sets the value to the specified path.
      *
      * @param configurable The configurable to get the path.
-     * @param value The value to set.
-     * @param <T> The value type
+     * @param value        The value to set.
+     * @param <T>          The value type
      */
     default <T> void setValue(@NotNull Configurable<T> configurable, @NotNull T value) {
         Objects.requireNonNull(configurable);

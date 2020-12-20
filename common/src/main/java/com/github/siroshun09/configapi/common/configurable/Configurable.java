@@ -35,7 +35,7 @@ public interface Configurable<T> {
      * Creates {@link BooleanValue}.
      *
      * @param path The path
-     * @param def The default boolean value
+     * @param def  The default boolean value
      * @return {@link BooleanValue}
      */
     static @NotNull BooleanValue create(@NotNull String path, boolean def) {
@@ -46,7 +46,7 @@ public interface Configurable<T> {
      * Creates {@link DoubleValue}.
      *
      * @param path The path
-     * @param def The default double value
+     * @param def  The default double value
      * @return {@link DoubleValue}
      */
     @Contract("_, _ -> new")
@@ -58,7 +58,7 @@ public interface Configurable<T> {
      * Creates {@link FloatValue}.
      *
      * @param path The path
-     * @param def The default float value
+     * @param def  The default float value
      * @return {@link FloatValue}
      */
     @Contract("_, _ -> new")
@@ -70,7 +70,7 @@ public interface Configurable<T> {
      * Creates {@link IntegerValue}.
      *
      * @param path The path
-     * @param def The default integer value
+     * @param def  The default integer value
      * @return {@link IntegerValue}
      */
     @Contract("_, _ -> new")
@@ -82,7 +82,7 @@ public interface Configurable<T> {
      * Creates {@link LongValue}.
      *
      * @param path The path
-     * @param def The default long value
+     * @param def  The default long value
      * @return {@link LongValue}
      */
     @Contract("_, _ -> new")
@@ -94,7 +94,7 @@ public interface Configurable<T> {
      * Creates {@link StringValue}.
      *
      * @param path The path
-     * @param def The default string value
+     * @param def  The default string value
      * @return {@link StringValue}
      */
     @Contract("_, _ -> new")
@@ -106,7 +106,7 @@ public interface Configurable<T> {
      * Creates {@link DoubleList}.
      *
      * @param path The path
-     * @param def The default double list
+     * @param def  The default double list
      * @return {@link DoubleList}
      */
     @Contract("_, _ -> new")
@@ -118,7 +118,7 @@ public interface Configurable<T> {
      * Creates {@link FloatList}.
      *
      * @param path The path
-     * @param def The default float list
+     * @param def  The default float list
      * @return {@link FloatList}
      */
     @Contract("_, _ -> new")
@@ -130,7 +130,7 @@ public interface Configurable<T> {
      * Creates {@link IntegerList}.
      *
      * @param path The path
-     * @param def The default integer list
+     * @param def  The default integer list
      * @return {@link IntegerList}
      */
     @Contract("_, _ -> new")
@@ -138,11 +138,11 @@ public interface Configurable<T> {
         return new IntegerList(path, def);
     }
 
-     /**
+    /**
      * Creates {@link LongList}.
      *
      * @param path The path
-     * @param def The default long list
+     * @param def  The default long list
      * @return {@link LongList}
      */
     @Contract("_, _ -> new")
@@ -154,7 +154,7 @@ public interface Configurable<T> {
      * Creates {@link StringList}.
      *
      * @param path The path
-     * @param def The default string list
+     * @param def  The default string list
      * @return {@link StringList}
      */
     @Contract("_, _ -> new")
@@ -190,18 +190,18 @@ public interface Configurable<T> {
     /**
      * Gets the value from {@link Configuration}.
      *
-     * @param configuration  The configuration.
+     * @param configuration The configuration.
      * @return The requested value, or {@code null} if could not get.
      */
     @Nullable T getValueOrNull(@NotNull Configuration configuration);
 
     /**
      * Serialize the value.
-     *
+     * <p>
      * The default implementation of this method returns the arguments as is.
-     *
+     * <p>
      * This method will be used when {@link Configuration#setValue(Configurable, Object)} is called.
-     * 
+     *
      * @param value The value to serialize.
      * @return The serialized value or the arguments as is.
      */
