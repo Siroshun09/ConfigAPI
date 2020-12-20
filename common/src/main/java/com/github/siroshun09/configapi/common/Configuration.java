@@ -349,15 +349,27 @@ public interface Configuration {
     void set(@NotNull String path, @Nullable Object value);
 
     /**
+     * Sets the value to the specified path.
+     *
+     * @param configurable The configurable to get the path.
+     * @param value The value to set.
+     * @param <T> The value type
+     */
+    default <T> void setValue(@NotNull Configurable<T> configurable, @NotNull T value) {
+        Objects.requireNonNull(configurable);
+        Objects.requireNonNull(value);
+        set(configurable.getKey(), configurable.serialize(value));
+    }
+
+    /**
      * Sets the default value to the specified path.
      *
      * @param configurable The configurable to get the path and the default value.
      */
-    default void setDefault(@NotNull Configurable<?> configurable) {
+    default <T> void setDefault(@NotNull Configurable<T> configurable) {
         Objects.requireNonNull(configurable);
-        set(configurable.getKey(), configurable.getDefault());
+        setValue(configurable, configurable.getDefault());
     }
-
 
     /**
      * Sets the default values to the specified path.
