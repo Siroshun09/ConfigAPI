@@ -71,7 +71,6 @@ public interface Configuration {
         return configurable.getValue(this);
     }
 
-
     /**
      * Gets the requested value by {@link Configurable#getKey()}
      *
@@ -266,33 +265,33 @@ public interface Configuration {
     }
 
     /**
-     * Gets the requested string list by path.
+     * Gets the requested boolean list by path.
      * <p>
-     * If the value could not be obtained, this method returns an empty string list.
+     * If the value could not be obtained, this method returns an empty boolean list.
      *
-     * @param path Path of the string list to get.
-     * @return Requested string list.
+     * @param path Path of the boolean list to get.
+     * @return Requested boolean list.
      */
     @NotNull
-    default List<String> getStringList(@NotNull String path) {
-        return getStringList(path, new ArrayList<>());
+    default List<Boolean> getBooleanList(@NotNull String path) {
+        return getBooleanList(path, new ArrayList<>());
     }
 
     /**
-     * Gets the requested string list by path.
+     * Gets the requested boolean list by path.
      *
-     * @param path Path of the string list to get.
+     * @param path Path of the boolean list to get.
      * @param def  The default list to return if the value could not be obtained.
-     * @return Requested string list.
+     * @return Requested boolean list.
      */
     @NotNull
-    default List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
+    default List<Boolean> getBooleanList(@NotNull String path, @NotNull List<Boolean> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
             return list.stream()
-                    .filter(e -> e instanceof String)
-                    .map(e -> (String) e)
+                    .filter(e -> e instanceof Boolean)
+                    .map(e -> (Boolean) e)
                     .collect(Collectors.toList());
         } else {
             return def;
@@ -300,34 +299,105 @@ public interface Configuration {
     }
 
     /**
-     * Gets the requested short list by path.
+     * Gets the requested byte list by path.
      * <p>
-     * If the value could not be obtained, this method returns an empty short list.
+     * If the value could not be obtained, this method returns an empty byte list.
      *
-     * @param path Path of the short list to get.
-     * @return Requested short list.
+     * @param path Path of the byte list to get.
+     * @return Requested byte list.
      */
     @NotNull
-    default List<Short> getShortList(@NotNull String path) {
-        return getShortList(path, new ArrayList<>());
+    default List<Byte> getByteList(@NotNull String path) {
+        return getByteList(path, new ArrayList<>());
     }
 
     /**
-     * Gets the requested short list by path.
+     * Gets the requested byte list by path.
      *
-     * @param path Path of the short list to get.
+     * @param path Path of the byte list to get.
      * @param def  The default list to return if the value could not be obtained.
-     * @return Requested short list.
+     * @return Requested byte list.
      */
     @NotNull
-    default List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
+    default List<Byte> getByteList(@NotNull String path, @NotNull List<Byte> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
             return list.stream()
                     .filter(e -> e instanceof Number)
                     .map(e -> (Number) e)
-                    .map(Number::shortValue)
+                    .map(Number::byteValue)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
+
+
+    /**
+     * Gets the requested double list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty double list.
+     *
+     * @param path Path of the double list to get.
+     * @return Requested double list.
+     */
+    @NotNull
+    default List<Double> getDoubleList(@NotNull String path) {
+        return getDoubleList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested double list by path.
+     *
+     * @param path Path of the double list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested double list.
+     */
+    @NotNull
+    default List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::doubleValue)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
+
+    /**
+     * Gets the requested float list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty float list.
+     *
+     * @param path Path of the float list to get.
+     * @return Requested float list.
+     */
+    @NotNull
+    default List<Float> getFloatList(@NotNull String path) {
+        return getFloatList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested float list by path.
+     *
+     * @param path Path of the float list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested float list.
+     */
+    @NotNull
+    default List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::floatValue)
                     .collect(Collectors.toList());
         } else {
             return def;
@@ -405,34 +475,34 @@ public interface Configuration {
     }
 
     /**
-     * Gets the requested float list by path.
+     * Gets the requested short list by path.
      * <p>
-     * If the value could not be obtained, this method returns an empty float list.
+     * If the value could not be obtained, this method returns an empty short list.
      *
-     * @param path Path of the float list to get.
-     * @return Requested float list.
+     * @param path Path of the short list to get.
+     * @return Requested short list.
      */
     @NotNull
-    default List<Float> getFloatList(@NotNull String path) {
-        return getFloatList(path, new ArrayList<>());
+    default List<Short> getShortList(@NotNull String path) {
+        return getShortList(path, new ArrayList<>());
     }
 
     /**
-     * Gets the requested float list by path.
+     * Gets the requested short list by path.
      *
-     * @param path Path of the float list to get.
+     * @param path Path of the short list to get.
      * @param def  The default list to return if the value could not be obtained.
-     * @return Requested float list.
+     * @return Requested short list.
      */
     @NotNull
-    default List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
+    default List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
             return list.stream()
                     .filter(e -> e instanceof Number)
                     .map(e -> (Number) e)
-                    .map(Number::floatValue)
+                    .map(Number::shortValue)
                     .collect(Collectors.toList());
         } else {
             return def;
@@ -440,103 +510,33 @@ public interface Configuration {
     }
 
     /**
-     * Gets the requested double list by path.
+     * Gets the requested string list by path.
      * <p>
-     * If the value could not be obtained, this method returns an empty double list.
+     * If the value could not be obtained, this method returns an empty string list.
      *
-     * @param path Path of the double list to get.
-     * @return Requested double list.
+     * @param path Path of the string list to get.
+     * @return Requested string list.
      */
     @NotNull
-    default List<Double> getDoubleList(@NotNull String path) {
-        return getDoubleList(path, new ArrayList<>());
+    default List<String> getStringList(@NotNull String path) {
+        return getStringList(path, new ArrayList<>());
     }
 
     /**
-     * Gets the requested double list by path.
+     * Gets the requested string list by path.
      *
-     * @param path Path of the double list to get.
+     * @param path Path of the string list to get.
      * @param def  The default list to return if the value could not be obtained.
-     * @return Requested double list.
+     * @return Requested string list.
      */
     @NotNull
-    default List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
+    default List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
             return list.stream()
-                    .filter(e -> e instanceof Number)
-                    .map(e -> (Number) e)
-                    .map(Number::doubleValue)
-                    .collect(Collectors.toList());
-        } else {
-            return def;
-        }
-    }
-
-    /**
-     * Gets the requested boolean list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty boolean list.
-     *
-     * @param path Path of the boolean list to get.
-     * @return Requested boolean list.
-     */
-    @NotNull
-    default List<Boolean> getBooleanList(@NotNull String path) {
-        return getBooleanList(path, new ArrayList<>());
-    }
-
-    /**
-     * Gets the requested boolean list by path.
-     *
-     * @param path Path of the boolean list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested boolean list.
-     */
-    @NotNull
-    default List<Boolean> getBooleanList(@NotNull String path, @NotNull List<Boolean> def) {
-        List<?> list = getListOrNull(path);
-
-        if (list != null) {
-            return list.stream()
-                    .filter(e -> e instanceof Boolean)
-                    .map(e -> (Boolean) e)
-                    .collect(Collectors.toList());
-        } else {
-            return def;
-        }
-    }
-
-    /**
-     * Gets the requested byte list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty byte list.
-     *
-     * @param path Path of the byte list to get.
-     * @return Requested byte list.
-     */
-    @NotNull
-    default List<Byte> getByteList(@NotNull String path) {
-        return getByteList(path, new ArrayList<>());
-    }
-
-    /**
-     * Gets the requested byte list by path.
-     *
-     * @param path Path of the byte list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested byte list.
-     */
-    @NotNull
-    default List<Byte> getByteList(@NotNull String path, @NotNull List<Byte> def) {
-        List<?> list = getListOrNull(path);
-
-        if (list != null) {
-            return list.stream()
-                    .filter(e -> e instanceof Number)
-                    .map(e -> (Number) e)
-                    .map(Number::byteValue)
+                    .filter(e -> e instanceof String)
+                    .map(e -> (String) e)
                     .collect(Collectors.toList());
         } else {
             return def;
