@@ -253,7 +253,10 @@ public interface Configuration {
         return value instanceof String ? (String) value : def;
     }
 
-    @Nullable List<?> getListOrNull(@NotNull String path);
+    default @Nullable List<?> getListOrNull(@NotNull String path) {
+        Object value = get(path);
+        return value instanceof List<?> ? (List<?>) value : null;
+    }
 
     default @NotNull List<?> getList(@NotNull String path) {
         return getList(path, new ArrayList<>());
