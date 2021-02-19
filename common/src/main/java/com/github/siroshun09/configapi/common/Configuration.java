@@ -109,6 +109,30 @@ public interface Configuration {
     }
 
     /**
+     * Gets the requested byte by path.
+     * <p>
+     * If the value could not be obtained, this method returns 0.
+     *
+     * @param path Path of the byte to get.
+     * @return Requested byte.
+     */
+    default byte getByte(@NotNull String path) {
+        return getByte(path, (byte) 0);
+    }
+
+    /**
+     * Gets the requested byte by path.
+     *
+     * @param path Path of the byte to get.
+     * @param def  The default value to return if the value could not be obtained.
+     * @return Requested byte.
+     */
+    default byte getByte(@NotNull String path, byte def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).byteValue() : def;
+    }
+
+    /**
      * Gets the requested double by path.
      * <p>
      * If the value could not be obtained, this method returns 0.
@@ -130,6 +154,30 @@ public interface Configuration {
     default double getDouble(@NotNull String path, double def) {
         Object value = get(path);
         return value instanceof Number ? ((Number) value).doubleValue() : def;
+    }
+
+    /**
+     * Gets the requested float by path.
+     * <p>
+     * If the value could not be obtained, this method returns 0.
+     *
+     * @param path Path of the float to get.
+     * @return Requested float.
+     */
+    default float getFloat(@NotNull String path) {
+        return getFloat(path, 0);
+    }
+
+    /**
+     * Gets the requested float by path.
+     *
+     * @param path Path of the float to get.
+     * @param def  The default value to return if the value could not be obtained.
+     * @return Requested float.
+     */
+    default float getFloat(@NotNull String path, float def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).floatValue() : def;
     }
 
     /**
