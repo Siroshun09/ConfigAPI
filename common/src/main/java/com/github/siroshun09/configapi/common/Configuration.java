@@ -190,6 +190,17 @@ public interface Configuration {
     @NotNull
     String getString(@NotNull String path, @NotNull String def);
 
+    @Nullable List<?> getListOrNull(@NotNull String path);
+
+    default @NotNull List<?> getList(@NotNull String path) {
+        return getList(path, new ArrayList<>());
+    }
+
+    default @NotNull List<?> getList(@NotNull String path, @NotNull List<?> def) {
+        List<?> list = getListOrNull(path);
+        return list != null ? list : Objects.requireNonNull(def);
+    }
+
     /**
      * Gets the requested string list by path.
      * <p>
