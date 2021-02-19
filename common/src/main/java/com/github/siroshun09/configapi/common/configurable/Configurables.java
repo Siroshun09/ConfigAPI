@@ -40,6 +40,18 @@ public final class Configurables {
     }
 
     /**
+     * Creates {@link ByteValue}.
+     *
+     * @param path The path
+     * @param def  The default byte value
+     * @return {@link ByteValue}
+     */
+    @Contract("_, _ -> new")
+    public static @NotNull ByteValue create(@NotNull String path, byte def) {
+        return new ByteValue(path, def);
+    }
+
+    /**
      * Creates {@link DoubleValue}.
      *
      * @param path The path
@@ -97,6 +109,30 @@ public final class Configurables {
     @Contract("_, _ -> new")
     public static @NotNull StringValue create(@NotNull String path, @NotNull String def) {
         return new StringValue(path, def);
+    }
+
+    /**
+     * Creates {@link ByteList}.
+     * <p>
+     * Default list is {@link Collections#emptyList()}.
+     *
+     * @param path The path
+     * @return {@link ByteList}
+     */
+    public static @NotNull ByteList createByteList(@NotNull String path) {
+        return createByteList(path, Collections.emptyList());
+    }
+
+    /**
+     * Creates {@link ByteList}.
+     *
+     * @param path The path
+     * @param def  The default byte list
+     * @return {@link ByteList}
+     */
+    @Contract("_, _ -> new")
+    public static @NotNull ByteList createByteList(@NotNull String path, @NotNull List<Byte> def) {
+        return new ByteList(path, def);
     }
 
     /**
