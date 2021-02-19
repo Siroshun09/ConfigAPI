@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * An interface that gets the value by path.
@@ -102,7 +103,10 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested boolean.
      */
-    boolean getBoolean(@NotNull String path, boolean def);
+    default boolean getBoolean(@NotNull String path, boolean def) {
+        Object value = get(path);
+        return value instanceof Boolean ? (Boolean) value : def;
+    }
 
     /**
      * Gets the requested double by path.
@@ -123,7 +127,10 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested double.
      */
-    double getDouble(@NotNull String path, double def);
+    default double getDouble(@NotNull String path, double def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).doubleValue() : def;
+    }
 
     /**
      * Gets the requested integer by path.
@@ -144,7 +151,10 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested integer.
      */
-    int getInteger(@NotNull String path, int def);
+    default int getInteger(@NotNull String path, int def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).intValue() : def;
+    }
 
     /**
      * Gets the requested long by path.
@@ -165,7 +175,10 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested long.
      */
-    long getLong(@NotNull String path, long def);
+    default long getLong(@NotNull String path, long def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).longValue() : def;
+    }
 
     /**
      * Gets the requested string by path.
@@ -188,7 +201,10 @@ public interface Configuration {
      * @return Requested string.
      */
     @NotNull
-    String getString(@NotNull String path, @NotNull String def);
+    default String getString(@NotNull String path, @NotNull String def) {
+        Object value = get(path);
+        return value instanceof String ? (String) value : def;
+    }
 
     @Nullable List<?> getListOrNull(@NotNull String path);
 
@@ -222,7 +238,18 @@ public interface Configuration {
      * @return Requested string list.
      */
     @NotNull
-    List<String> getStringList(@NotNull String path, @NotNull List<String> def);
+    default List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof String)
+                    .map(e -> (String) e)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
 
     /**
      * Gets the requested short list by path.
@@ -245,7 +272,19 @@ public interface Configuration {
      * @return Requested short list.
      */
     @NotNull
-    List<Short> getShortList(@NotNull String path, @NotNull List<Short> def);
+    default List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::shortValue)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
 
     /**
      * Gets the requested integer list by path.
@@ -268,7 +307,19 @@ public interface Configuration {
      * @return Requested integer list.
      */
     @NotNull
-    List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def);
+    default List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::intValue)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
 
     /**
      * Gets the requested long list by path.
@@ -291,7 +342,19 @@ public interface Configuration {
      * @return Requested long list.
      */
     @NotNull
-    List<Long> getLongList(@NotNull String path, @NotNull List<Long> def);
+    default List<Long> getLongList(@NotNull String path, @NotNull List<Long> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::longValue)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
 
     /**
      * Gets the requested float list by path.
@@ -314,7 +377,19 @@ public interface Configuration {
      * @return Requested float list.
      */
     @NotNull
-    List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def);
+    default List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::floatValue)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
 
     /**
      * Gets the requested double list by path.
@@ -337,7 +412,19 @@ public interface Configuration {
      * @return Requested double list.
      */
     @NotNull
-    List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def);
+    default List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::doubleValue)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
 
     /**
      * Gets a set containing keys in this yaml file.
