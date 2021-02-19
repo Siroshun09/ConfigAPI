@@ -19,6 +19,7 @@ package com.github.siroshun09.configapi.common.configurable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 public final class Configurables {
@@ -100,6 +101,18 @@ public final class Configurables {
 
     /**
      * Creates {@link DoubleList}.
+     * <p>
+     * Default list is {@link Collections#emptyList()}.
+     *
+     * @param path The path
+     * @return {@link DoubleList}
+     */
+    public static @NotNull DoubleList createDoubleList(@NotNull String path) {
+        return createDoubleList(path, Collections.emptyList());
+    }
+
+    /**
+     * Creates {@link DoubleList}.
      *
      * @param path The path
      * @param def  The default double list
@@ -108,6 +121,18 @@ public final class Configurables {
     @Contract("_, _ -> new")
     public static @NotNull DoubleList createDoubleList(@NotNull String path, @NotNull List<Double> def) {
         return new DoubleList(path, def);
+    }
+
+    /**
+     * Creates {@link FloatList}.
+     * <p>
+     * Default list is {@link Collections#emptyList()}.
+     *
+     * @param path The path
+     * @return {@link FloatList}
+     */
+    public static @NotNull FloatList createFloatList(@NotNull String path) {
+        return createFloatList(path, Collections.emptyList());
     }
 
     /**
@@ -124,6 +149,18 @@ public final class Configurables {
 
     /**
      * Creates {@link IntegerList}.
+     * <p>
+     * Default list is {@link Collections#emptyList()}.
+     *
+     * @param path The path
+     * @return {@link IntegerList}
+     */
+    public static @NotNull IntegerList createIntegerList(@NotNull String path) {
+        return createIntegerList(path, Collections.emptyList());
+    }
+
+    /**
+     * Creates {@link IntegerList}.
      *
      * @param path The path
      * @param def  The default integer list
@@ -136,6 +173,18 @@ public final class Configurables {
 
     /**
      * Creates {@link LongList}.
+     * <p>
+     * Default list is {@link Collections#emptyList()}.
+     *
+     * @param path The path
+     * @return {@link LongList}
+     */
+    public static @NotNull LongList createLongList(@NotNull String path) {
+        return createLongList(path, Collections.emptyList());
+    }
+
+    /**
+     * Creates {@link LongList}.
      *
      * @param path The path
      * @param def  The default long list
@@ -144,6 +193,18 @@ public final class Configurables {
     @Contract("_, _ -> new")
     public static @NotNull LongList createLongList(@NotNull String path, @NotNull List<Long> def) {
         return new LongList(path, def);
+    }
+
+    /**
+     * Creates {@link StringList}.
+     * <p>
+     * Default list is {@link Collections#emptyList()}.
+     *
+     * @param path The path
+     * @return {@link StringList}
+     */
+    public static @NotNull StringList createStringList(@NotNull String path) {
+        return createStringList(path, Collections.emptyList());
     }
 
     /**
