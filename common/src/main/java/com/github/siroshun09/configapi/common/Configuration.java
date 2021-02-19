@@ -475,6 +475,40 @@ public interface Configuration {
     }
 
     /**
+     * Gets the requested boolean list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty boolean list.
+     *
+     * @param path Path of the boolean list to get.
+     * @return Requested boolean list.
+     */
+    @NotNull
+    default List<Boolean> getBooleanList(@NotNull String path) {
+        return getBooleanList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested boolean list by path.
+     *
+     * @param path Path of the boolean list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested boolean list.
+     */
+    @NotNull
+    default List<Boolean> getBooleanList(@NotNull String path, @NotNull List<Boolean> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Boolean)
+                    .map(e -> (Boolean) e)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
+
+    /**
      * Gets the requested byte list by path.
      * <p>
      * If the value could not be obtained, this method returns an empty byte list.
