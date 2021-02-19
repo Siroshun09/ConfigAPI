@@ -475,6 +475,41 @@ public interface Configuration {
     }
 
     /**
+     * Gets the requested byte list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty byte list.
+     *
+     * @param path Path of the byte list to get.
+     * @return Requested byte list.
+     */
+    @NotNull
+    default List<Byte> getByteList(@NotNull String path) {
+        return getByteList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested byte list by path.
+     *
+     * @param path Path of the byte list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested byte list.
+     */
+    @NotNull
+    default List<Byte> getByteList(@NotNull String path, @NotNull List<Byte> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::byteValue)
+                    .collect(Collectors.toList());
+        } else {
+            return def;
+        }
+    }
+
+    /**
      * Gets a set containing keys in this yaml file.
      * <p>
      * The returned set does not include deep key.
