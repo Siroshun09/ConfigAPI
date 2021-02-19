@@ -112,6 +112,30 @@ public final class Configurables {
     }
 
     /**
+     * Creates {@link BooleanList}.
+     * <p>
+     * Default list is {@link Collections#emptyList()}.
+     *
+     * @param path The path
+     * @return {@link BooleanList}
+     */
+    public static @NotNull BooleanList createBooleanList(@NotNull String path) {
+        return createBooleanList(path, Collections.emptyList());
+    }
+
+    /**
+     * Creates {@link BooleanList}.
+     *
+     * @param path The path
+     * @param def  The default byte list
+     * @return {@link BooleanList}
+     */
+    @Contract("_, _ -> new")
+    public static @NotNull BooleanList createBooleanList(@NotNull String path, @NotNull List<Boolean> def) {
+        return new BooleanList(path, def);
+    }
+
+    /**
      * Creates {@link ByteList}.
      * <p>
      * Default list is {@link Collections#emptyList()}.
