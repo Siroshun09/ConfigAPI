@@ -149,8 +149,9 @@ public class ConfigurationImpl implements Configuration {
             current = parent.getDirectChild(keys[i]);
 
             if (current == null) {
-                parent.map.put(keys[i], new LinkedHashMap<>());
-                current = new ConfigurationImpl();
+                Map<String, Object> childMap = new LinkedHashMap<>();
+                parent.map.put(keys[i], childMap);
+                current = new ConfigurationImpl(childMap);
             }
 
             parent = current;
