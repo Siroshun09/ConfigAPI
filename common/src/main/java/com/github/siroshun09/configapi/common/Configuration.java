@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.common;
 
 import com.github.siroshun09.configapi.common.configurable.Configurable;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,18 @@ import java.util.stream.Collectors;
  * An interface that gets the value by path.
  */
 public interface Configuration {
+
+    char KEY_SEPARATOR = '.';
+
+    @Contract(value = " -> new", pure = true)
+    static @NotNull Configuration create() {
+        return ConfigurationImpl.createEmpty();
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    static @NotNull Configuration create(@NotNull Map<String, Object> map) {
+        return ConfigurationImpl.createNew(map);
+    }
 
     /**
      * Gets the requested Object by path.
@@ -555,6 +569,8 @@ public interface Configuration {
      */
     @NotNull
     Collection<String> getKeys();
+
+    @Nullable Configuration getSection(@NotNull String path);
 
     /**
      * Set the value to the specified path.
