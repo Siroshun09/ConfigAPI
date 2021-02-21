@@ -49,6 +49,10 @@ public class ConfigurationImpl implements Configuration {
         this.map = map;
     }
 
+    protected ConfigurationImpl(@NotNull ConfigurationImpl other) {
+        this.map = other.getMap();
+    }
+
     protected @NotNull Map<String, Object> getMap() {
         return map;
     }
