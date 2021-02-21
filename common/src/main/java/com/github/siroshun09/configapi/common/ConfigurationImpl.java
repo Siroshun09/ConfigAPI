@@ -120,6 +120,13 @@ public class ConfigurationImpl implements Configuration {
         return current;
     }
 
+    @Override
+    public String toString() {
+        return "ConfigurationImpl{" +
+                "map=" + map +
+                '}';
+    }
+
     @SuppressWarnings("unchecked")
     private @Nullable ConfigurationImpl getDirectChild(@NotNull String key) {
         Object object = get(key);
