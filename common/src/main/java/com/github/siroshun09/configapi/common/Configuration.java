@@ -613,4 +613,13 @@ public interface Configuration {
     default void setDefault(@NotNull Iterator<Configurable<?>> configurableIterator) {
         Objects.requireNonNull(configurableIterator).forEachRemaining(this::setDefault);
     }
+
+    /**
+     * Sets the default values to the specified path.
+     *
+     * @param configurableIterable The configurable to get the path and the default value.
+     */
+    default void setDefault(@NotNull Iterable<Configurable<?>> configurableIterable) {
+        setDefault(configurableIterable.iterator());
+    }
 }
