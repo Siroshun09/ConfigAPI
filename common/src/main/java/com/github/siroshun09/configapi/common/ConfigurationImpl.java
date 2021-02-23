@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ConfigurationImpl implements Configuration {
 
@@ -129,6 +130,19 @@ public class ConfigurationImpl implements Configuration {
         return "ConfigurationImpl{" +
                 "map=" + map +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ConfigurationImpl)) return false;
+        ConfigurationImpl that = (ConfigurationImpl) o;
+        return getMap().equals(that.getMap());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMap());
     }
 
     @SuppressWarnings("unchecked")
