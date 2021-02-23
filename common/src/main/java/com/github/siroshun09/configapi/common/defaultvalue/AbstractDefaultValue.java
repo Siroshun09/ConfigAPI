@@ -14,18 +14,18 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 /**
- * An abstract class that implements {@link Configurable}
+ * An abstract class that implements {@link DefaultValue}
  *
  * @param <T> The value type.
  */
-public abstract class AbstractConfigurableValue<T> implements Configurable<T> {
+public abstract class AbstractDefaultValue<T> implements DefaultValue<T> {
 
     private final String key;
     private final T def;
@@ -36,7 +36,7 @@ public abstract class AbstractConfigurableValue<T> implements Configurable<T> {
      * @param key The key to get the value from {@link com.github.siroshun09.configapi.common.Configuration}.
      * @param def The default value that use if the value could not be get from {@link com.github.siroshun09.configapi.common.Configuration}.
      */
-    protected AbstractConfigurableValue(@NotNull String key, @NotNull T def) {
+    protected AbstractDefaultValue(@NotNull String key, @NotNull T def) {
         this.key = Objects.requireNonNull(key);
         this.def = Objects.requireNonNull(def);
     }
@@ -63,8 +63,8 @@ public abstract class AbstractConfigurableValue<T> implements Configurable<T> {
             return true;
         }
 
-        if (o instanceof Configurable) {
-            Configurable<?> that = (Configurable<?>) o;
+        if (o instanceof DefaultValue) {
+            DefaultValue<?> that = (DefaultValue<?>) o;
             return key.equals(that.getKey()) && def.equals(that.getDefault());
         } else {
             return false;
@@ -78,7 +78,7 @@ public abstract class AbstractConfigurableValue<T> implements Configurable<T> {
 
     @Override
     public String toString() {
-        return "AbstractConfigurableValue{" +
+        return "AbstractDefaultValue{" +
                 "key='" + key + '\'' +
                 ", def=" + def +
                 '}';

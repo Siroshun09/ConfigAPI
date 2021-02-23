@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
@@ -23,11 +23,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
- * An interface that represents configurable value and their configuration path.
+ * An interface that represents default value and their configuration path.
  *
  * @param <T> The value type.
  */
-public interface Configurable<T> {
+public interface DefaultValue<T> {
 
     /**
      * Gets the key to get the value from {@link Configuration}.
@@ -37,7 +37,7 @@ public interface Configurable<T> {
     @NotNull String getKey();
 
     /**
-     * Gets the default value of this configurable value.
+     * Gets the default value.
      *
      * @return The default value
      */
@@ -67,7 +67,7 @@ public interface Configurable<T> {
      * <p>
      * The default implementation of this method returns the arguments as is.
      * <p>
-     * This method will be used when {@link Configuration#setValue(Configurable, Object)} is called.
+     * This method will be used when {@link Configuration#setValue(DefaultValue, Object)} is called.
      *
      * @param value The value to serialize.
      * @return The serialized value or the arguments as is.

@@ -1,5 +1,5 @@
 /*
- *     Copyright 2021 Siroshun09
+ *     Copyright 2020 Siroshun09
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -14,19 +14,17 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 /**
- * A class that represents the list that can be set with {@link Byte} and their keys.
+ * A class that represents the value that can be set with {@link Double} and their keys.
  */
-public class ByteList extends AbstractConfigurableValue<List<Byte>> {
+public class DoubleValue extends AbstractDefaultValue<Double> {
 
-    ByteList(@NotNull String key, @NotNull List<Byte> def) {
+    DoubleValue(@NotNull String key, @NotNull Double def) {
         super(key, def);
     }
 
@@ -34,7 +32,7 @@ public class ByteList extends AbstractConfigurableValue<List<Byte>> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull List<Byte> getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getByteList(getKey(), getDefault());
+    public @NotNull Double getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getDouble(getKey(), getDefault());
     }
 }

@@ -14,17 +14,19 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * A class that represents the value that can be set with {@link Byte} and their keys.
- */
-public class ByteValue extends AbstractConfigurableValue<Byte> {
+import java.util.List;
 
-    ByteValue(@NotNull String key, @NotNull Byte def) {
+/**
+ * A class that represents the list that can be set with {@link Boolean} and their keys.
+ */
+public class BooleanList extends AbstractDefaultValue<List<Boolean>> {
+
+    BooleanList(@NotNull String key, @NotNull List<Boolean> def) {
         super(key, def);
     }
 
@@ -32,7 +34,7 @@ public class ByteValue extends AbstractConfigurableValue<Byte> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Byte getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getByte(getKey(), getDefault());
+    public @NotNull List<Boolean> getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getBooleanList(getKey(), getDefault());
     }
 }

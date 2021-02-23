@@ -14,7 +14,25 @@
  *     limitations under the License.
  */
 
+package com.github.siroshun09.configapi.common.defaultvalue;
+
+import com.github.siroshun09.configapi.common.Configuration;
+import org.jetbrains.annotations.NotNull;
+
 /**
- * The package that holds {@link com.github.siroshun09.configapi.common.configurable.Configurable} and its implemented class.
+ * A class that represents the value that can be set with {@link String} and their keys.
  */
-package com.github.siroshun09.configapi.common.configurable;
+public class StringValue extends AbstractDefaultValue<String> {
+
+    StringValue(@NotNull String key, @NotNull String def) {
+        super(key, def);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull String getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getString(getKey(), getDefault());
+    }
+}

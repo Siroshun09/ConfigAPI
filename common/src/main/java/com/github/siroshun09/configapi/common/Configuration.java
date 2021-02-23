@@ -16,7 +16,7 @@
 
 package com.github.siroshun09.configapi.common;
 
-import com.github.siroshun09.configapi.common.configurable.Configurable;
+import com.github.siroshun09.configapi.common.defaultvalue.DefaultValue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -74,27 +74,27 @@ public interface Configuration {
     }
 
     /**
-     * Gets the requested value by {@link Configurable#getKey()}
+     * Gets the requested value by {@link DefaultValue#getKey()}
      *
-     * @param configurable The configurable to get the path.
+     * @param defaultValue The default value to get the path.
      * @param <T>          The value type.
      * @return Requested value.
      */
-    default @NotNull <T> T get(@NotNull Configurable<T> configurable) {
-        Objects.requireNonNull(configurable);
-        return configurable.getValue(this);
+    default @NotNull <T> T get(@NotNull DefaultValue<T> defaultValue) {
+        Objects.requireNonNull(defaultValue);
+        return defaultValue.getValue(this);
     }
 
     /**
-     * Gets the requested value by {@link Configurable#getKey()}
+     * Gets the requested value by {@link DefaultValue#getKey()}
      *
-     * @param configurable The configurable to get the path.
+     * @param defaultValue The default value to get the path.
      * @param <T>          The value type.
      * @return Requested value or {@code null}.
      */
-    default @Nullable <T> T getOrNull(@NotNull Configurable<T> configurable) {
-        Objects.requireNonNull(configurable);
-        return configurable.getValueOrNull(this);
+    default @Nullable <T> T getOrNull(@NotNull DefaultValue<T> defaultValue) {
+        Objects.requireNonNull(defaultValue);
+        return defaultValue.getValueOrNull(this);
     }
 
     /**
@@ -585,42 +585,42 @@ public interface Configuration {
     /**
      * Sets the value to the specified path.
      *
-     * @param configurable The configurable to get the path.
+     * @param defaultValue The default value to get the path.
      * @param value        The value to set.
      * @param <T>          The value type
      */
-    default <T> void setValue(@NotNull Configurable<T> configurable, @NotNull T value) {
-        Objects.requireNonNull(configurable);
+    default <T> void setValue(@NotNull DefaultValue<T> defaultValue, @NotNull T value) {
+        Objects.requireNonNull(defaultValue);
         Objects.requireNonNull(value);
-        set(configurable.getKey(), configurable.serialize(value));
+        set(defaultValue.getKey(), defaultValue.serialize(value));
     }
 
     /**
      * Sets the default value to the specified path.
      *
-     * @param configurable The configurable to get the path and the default value.
+     * @param defaultValue The default value to get the path and the default value.
      * @param <T>          The value type.
      */
-    default <T> void setDefault(@NotNull Configurable<T> configurable) {
-        Objects.requireNonNull(configurable);
-        setValue(configurable, configurable.getDefault());
+    default <T> void setDefault(@NotNull DefaultValue<T> defaultValue) {
+        Objects.requireNonNull(defaultValue);
+        setValue(defaultValue, defaultValue.getDefault());
     }
 
     /**
      * Sets the default values to the specified path.
      *
-     * @param configurableIterator The configurable to get the path and the default value.
+     * @param defaultValueIterator The default values to get the path and the default value.
      */
-    default void setDefault(@NotNull Iterator<Configurable<?>> configurableIterator) {
-        Objects.requireNonNull(configurableIterator).forEachRemaining(this::setDefault);
+    default void setDefault(@NotNull Iterator<DefaultValue<?>> defaultValueIterator) {
+        Objects.requireNonNull(defaultValueIterator).forEachRemaining(this::setDefault);
     }
 
     /**
      * Sets the default values to the specified path.
      *
-     * @param configurableIterable The configurable to get the path and the default value.
+     * @param defaultValueIterable The default values to get the path and the default value.
      */
-    default void setDefault(@NotNull Iterable<Configurable<?>> configurableIterable) {
-        setDefault(configurableIterable.iterator());
+    default void setDefault(@NotNull Iterable<DefaultValue<?>> defaultValueIterable) {
+        setDefault(defaultValueIterable.iterator());
     }
 }

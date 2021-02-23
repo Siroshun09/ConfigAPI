@@ -14,19 +14,17 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 /**
- * A class that represents the list that can be set with {@link Long} and their keys.
+ * A class that represents the value that can be set with {@link Boolean} and their keys.
  */
-public class LongList extends AbstractConfigurableValue<List<Long>> {
+public class BooleanValue extends AbstractDefaultValue<Boolean> {
 
-    LongList(@NotNull String key, @NotNull List<Long> def) {
+    BooleanValue(@NotNull String key, @NotNull Boolean def) {
         super(key, def);
     }
 
@@ -34,7 +32,7 @@ public class LongList extends AbstractConfigurableValue<List<Long>> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull List<Long> getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getLongList(getKey(), getDefault());
+    public @NotNull Boolean getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getBoolean(getKey(), getDefault());
     }
 }

@@ -14,17 +14,19 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * A class that represents the value that can be set with {@link String} and their keys.
- */
-public class StringValue extends AbstractConfigurableValue<String> {
+import java.util.List;
 
-    StringValue(@NotNull String key, @NotNull String def) {
+/**
+ * A class that represents the list that can be set with {@link Integer} and their keys.
+ */
+public class IntegerList extends AbstractDefaultValue<List<Integer>> {
+
+    IntegerList(@NotNull String key, @NotNull List<Integer> def) {
         super(key, def);
     }
 
@@ -32,7 +34,7 @@ public class StringValue extends AbstractConfigurableValue<String> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull String getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getString(getKey(), getDefault());
+    public @NotNull List<Integer> getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getIntegerList(getKey(), getDefault());
     }
 }

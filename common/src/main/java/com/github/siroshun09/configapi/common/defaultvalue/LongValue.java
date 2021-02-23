@@ -14,19 +14,17 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 /**
- * A class that represents the list that can be set with {@link Double} and their keys.
+ * A class that represents the value that can be set with {@link Long} and their keys.
  */
-public class DoubleList extends AbstractConfigurableValue<List<Double>> {
+public class LongValue extends AbstractDefaultValue<Long> {
 
-    DoubleList(@NotNull String key, @NotNull List<Double> def) {
+    LongValue(@NotNull String key, @NotNull Long def) {
         super(key, def);
     }
 
@@ -34,7 +32,7 @@ public class DoubleList extends AbstractConfigurableValue<List<Double>> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull List<Double> getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getDoubleList(getKey(), getDefault());
+    public @NotNull Long getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getLong(getKey(), getDefault());
     }
 }

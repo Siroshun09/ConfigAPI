@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -22,9 +22,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-public final class Configurables {
+public final class DefaultValueFactory {
 
-    private Configurables() {
+    private DefaultValueFactory() {
         throw new UnsupportedOperationException("This class cannot be instantiated.");
     }
 

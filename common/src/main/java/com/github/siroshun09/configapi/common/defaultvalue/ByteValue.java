@@ -1,5 +1,5 @@
 /*
- *     Copyright 2020 Siroshun09
+ *     Copyright 2021 Siroshun09
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A class that represents the value that can be set with {@link Long} and their keys.
+ * A class that represents the value that can be set with {@link Byte} and their keys.
  */
-public class LongValue extends AbstractConfigurableValue<Long> {
+public class ByteValue extends AbstractDefaultValue<Byte> {
 
-    LongValue(@NotNull String key, @NotNull Long def) {
+    ByteValue(@NotNull String key, @NotNull Byte def) {
         super(key, def);
     }
 
@@ -32,7 +32,7 @@ public class LongValue extends AbstractConfigurableValue<Long> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Long getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getLong(getKey(), getDefault());
+    public @NotNull Byte getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getByte(getKey(), getDefault());
     }
 }

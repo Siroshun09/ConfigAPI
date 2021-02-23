@@ -1,5 +1,5 @@
 /*
- *     Copyright 2021 Siroshun09
+ *     Copyright 2020 Siroshun09
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * A class that represents the list that can be set with {@link Boolean} and their keys.
+ * A class that represents the list that can be set with {@link Float} and their keys.
  */
-public class BooleanList extends AbstractConfigurableValue<List<Boolean>> {
+public class FloatList extends AbstractDefaultValue<List<Float>> {
 
-    BooleanList(@NotNull String key, @NotNull List<Boolean> def) {
+    FloatList(@NotNull String key, @NotNull List<Float> def) {
         super(key, def);
     }
 
@@ -34,7 +34,7 @@ public class BooleanList extends AbstractConfigurableValue<List<Boolean>> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull List<Boolean> getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getBooleanList(getKey(), getDefault());
+    public @NotNull List<Float> getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getFloatList(getKey(), getDefault());
     }
 }

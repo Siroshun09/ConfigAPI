@@ -14,25 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
-
-import com.github.siroshun09.configapi.common.Configuration;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * A class that represents the value that can be set with {@link Integer} and their keys.
+ * The package that holds {@link com.github.siroshun09.configapi.common.defaultvalue.DefaultValue} and its implemented class.
  */
-public class IntegerValue extends AbstractConfigurableValue<Integer> {
-
-    IntegerValue(@NotNull String key, @NotNull Integer def) {
-        super(key, def);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull Integer getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getInteger(getKey(), getDefault());
-    }
-}
+package com.github.siroshun09.configapi.common.defaultvalue;

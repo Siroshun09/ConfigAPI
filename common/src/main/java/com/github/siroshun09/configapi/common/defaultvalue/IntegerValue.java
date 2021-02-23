@@ -14,17 +14,17 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A class that represents the value that can be set with {@link Float} and their keys.
+ * A class that represents the value that can be set with {@link Integer} and their keys.
  */
-public class FloatValue extends AbstractConfigurableValue<Float> {
+public class IntegerValue extends AbstractDefaultValue<Integer> {
 
-    FloatValue(@NotNull String key, @NotNull Float def) {
+    IntegerValue(@NotNull String key, @NotNull Integer def) {
         super(key, def);
     }
 
@@ -32,7 +32,7 @@ public class FloatValue extends AbstractConfigurableValue<Float> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull Float getValueOrNull(@NotNull Configuration configuration) {
-        return (float) configuration.getDouble(getKey(), getDefault());
+    public @NotNull Integer getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getInteger(getKey(), getDefault());
     }
 }

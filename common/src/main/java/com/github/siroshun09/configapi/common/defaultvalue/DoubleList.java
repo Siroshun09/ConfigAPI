@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.common.configurable;
+package com.github.siroshun09.configapi.common.defaultvalue;
 
 import com.github.siroshun09.configapi.common.Configuration;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * A class that represents the list that can be set with {@link Float} and their keys.
+ * A class that represents the list that can be set with {@link Double} and their keys.
  */
-public class FloatList extends AbstractConfigurableValue<List<Float>> {
+public class DoubleList extends AbstractDefaultValue<List<Double>> {
 
-    FloatList(@NotNull String key, @NotNull List<Float> def) {
+    DoubleList(@NotNull String key, @NotNull List<Double> def) {
         super(key, def);
     }
 
@@ -34,7 +34,7 @@ public class FloatList extends AbstractConfigurableValue<List<Float>> {
      * {@inheritDoc}
      */
     @Override
-    public @NotNull List<Float> getValueOrNull(@NotNull Configuration configuration) {
-        return configuration.getFloatList(getKey(), getDefault());
+    public @NotNull List<Double> getValueOrNull(@NotNull Configuration configuration) {
+        return configuration.getDoubleList(getKey(), getDefault());
     }
 }
