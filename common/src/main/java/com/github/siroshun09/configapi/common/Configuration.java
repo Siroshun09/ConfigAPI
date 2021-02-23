@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -599,6 +600,7 @@ public interface Configuration {
      * Sets the default value to the specified path.
      *
      * @param configurable The configurable to get the path and the default value.
+     * @param <T> The value type.
      */
     default <T> void setDefault(@NotNull Configurable<T> configurable) {
         Objects.requireNonNull(configurable);
