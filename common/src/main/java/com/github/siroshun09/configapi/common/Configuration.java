@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.common;
 
 import com.github.siroshun09.configapi.common.defaultvalue.DefaultValue;
+import com.github.siroshun09.configapi.common.serialize.Serializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +57,18 @@ public interface Configuration {
      */
     @Nullable
     Object get(@NotNull String path);
+
+    @SuppressWarnings("unchecked")
+    default  <T> @Nullable T get(@NotNull String path, @NotNull Serializer<T> deserializer) {
+        Object object = get(path);
+
+        if (object instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) object;
+            return deserializer.deserialize(map);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Gets the requested Object by path.
@@ -581,6 +594,8 @@ public interface Configuration {
      * @param value New value to set the path to.
      */
     void set(@NotNull String path, @Nullable Object value);
+
+    <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer);
 
     /**
      * Sets the value to the specified path.

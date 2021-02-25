@@ -16,6 +16,8 @@
 
 package com.github.siroshun09.configapi.common;
 
+import com.github.siroshun09.configapi.common.serialize.Serializer;
+import com.github.siroshun09.configapi.common.util.KeyValidator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -103,6 +105,27 @@ public class ConfigurationImpl implements Configuration {
         }
 
         getParentOfPathOrCreate(keys, lastIndex).map.put(keys[lastIndex], value);
+    }
+
+    @Override
+    public <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer) {
+        Configuration target;
+
+        if (path.contains(KEY_SEPARATOR_STRING)) {
+            String[] keys = path.split(KEY_SEPARATOR_REGEX);
+            target = getParentOfPathOrCreate(keys, keys.length - 1);
+        } else {
+            target = this;
+        }
+
+        Map<String, Object> serialized = serializer.serialize(value);
+
+        for (Map.Entry<String, Object> entry : serialized.entrySet()) {
+            String k = KeyValidator.notEmpty(entry.getKey());
+            Object v = Objects.requireNonNull(entry.getValue());
+
+            target.set(k, v);
+        }
     }
 
     @Override
