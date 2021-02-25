@@ -55,20 +55,7 @@ public interface Configuration {
      * @param path Path of the Object to get.
      * @return Requested Object.
      */
-    @Nullable
-    Object get(@NotNull String path);
-
-    @SuppressWarnings("unchecked")
-    default  <T> @Nullable T get(@NotNull String path, @NotNull Serializer<T> deserializer) {
-        Object object = get(path);
-
-        if (object instanceof Map) {
-            Map<String, Object> map = (Map<String, Object>) object;
-            return deserializer.deserialize(map);
-        } else {
-            return null;
-        }
-    }
+    @Nullable Object get(@NotNull String path);
 
     /**
      * Gets the requested Object by path.
@@ -85,6 +72,41 @@ public interface Configuration {
         Object value = get(path);
         return value != null ? value : def;
     }
+
+    @SuppressWarnings("unchecked")
+    default <T> @Nullable T get(@NotNull String path, @NotNull Serializer<T> deserializer) {
+        Object object = get(path);
+
+        if (object instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) object;
+            return deserializer.deserialize(map);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets a set containing keys in this yaml file.
+     * <p>
+     * The returned set does not include deep key.
+     *
+     * @return Set of keys contained within this yaml file.
+     */
+    @NotNull Collection<String> getKeys();
+
+    @Nullable Configuration getSection(@NotNull String path);
+
+    /**
+     * Set the value to the specified path.
+     * <p>
+     * If given value is null, the path will be removed.
+     *
+     * @param path  Path of the object to set.
+     * @param value New value to set the path to.
+     */
+    void set(@NotNull String path, @Nullable Object value);
+
+    <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer);
 
     /**
      * Gets the requested value by {@link DefaultValue#getKey()}
@@ -572,30 +594,6 @@ public interface Configuration {
             return def;
         }
     }
-
-    /**
-     * Gets a set containing keys in this yaml file.
-     * <p>
-     * The returned set does not include deep key.
-     *
-     * @return Set of keys contained within this yaml file.
-     */
-    @NotNull
-    Collection<String> getKeys();
-
-    @Nullable Configuration getSection(@NotNull String path);
-
-    /**
-     * Set the value to the specified path.
-     * <p>
-     * If given value is null, the path will be removed.
-     *
-     * @param path  Path of the object to set.
-     * @param value New value to set the path to.
-     */
-    void set(@NotNull String path, @Nullable Object value);
-
-    <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer);
 
     /**
      * Sets the value to the specified path.
