@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -316,6 +317,21 @@ public interface Configuration {
         return list != null ? list : Objects.requireNonNull(def);
     }
 
+    @SuppressWarnings("unchecked")
+    default <T> @NotNull List<T> getList(@NotNull String path, @NotNull Serializer<T> deserializer) {
+        List<?> list = getListOrNull(path);
+
+        if (list == null) {
+            return Collections.emptyList();
+        }
+
+        return list.stream()
+                .filter(e -> e instanceof Map)
+                .map(e -> (Map<String, Object>) e)
+                .map(deserializer::deserialize)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Gets the requested boolean list by path.
      * <p>
@@ -593,6 +609,13 @@ public interface Configuration {
         } else {
             return def;
         }
+    }
+
+    default <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T> serializer) {
+        List<Map<String, Object>> serializedList =
+                list.stream().map(serializer::serialize).collect(Collectors.toList());
+
+        set(path, serializedList);
     }
 
     /**
