@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class AbstractConfiguration implements Configuration {
+public abstract class AbstractConfiguration implements Configuration {
 
     protected static final String KEY_SEPARATOR_STRING = String.valueOf(KEY_SEPARATOR);
     protected static final String KEY_SEPARATOR_REGEX = "\\" + KEY_SEPARATOR;
@@ -155,7 +155,7 @@ public class AbstractConfiguration implements Configuration {
         Object object = get(key);
 
         if (object instanceof Map) {
-            return new AbstractConfiguration((Map<String, Object>) object);
+            return new ConfigurationImpl((Map<String, Object>) object);
         } else {
             return null;
         }
@@ -181,7 +181,7 @@ public class AbstractConfiguration implements Configuration {
             if (current == null) {
                 Map<String, Object> childMap = new LinkedHashMap<>();
                 parent.map.put(keys[i], childMap);
-                current = new AbstractConfiguration(childMap);
+                current = new ConfigurationImpl(childMap);
             }
 
             parent = current;
