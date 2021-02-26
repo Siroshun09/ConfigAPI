@@ -16,7 +16,7 @@
 
 package com.github.siroshun09.configapi.yaml;
 
-import com.github.siroshun09.configapi.common.ConfigurationImpl;
+import com.github.siroshun09.configapi.common.AbstractConfiguration;
 import com.github.siroshun09.configapi.common.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
@@ -31,7 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-class YamlConfigurationImpl extends ConfigurationImpl implements YamlConfiguration {
+class YamlConfigurationImpl extends AbstractConfiguration implements YamlConfiguration {
 
     private final Path filePath;
     private final ThreadLocal<Yaml> yamlThreadLocal;
@@ -48,7 +48,7 @@ class YamlConfigurationImpl extends ConfigurationImpl implements YamlConfigurati
         this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);
     }
 
-    YamlConfigurationImpl(@NotNull Path filePath, @NotNull ConfigurationImpl original, @NotNull Supplier<Yaml> yamlSupplier) {
+    YamlConfigurationImpl(@NotNull Path filePath, @NotNull AbstractConfiguration original, @NotNull Supplier<Yaml> yamlSupplier) {
         super(original);
         this.filePath = filePath;
         this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);

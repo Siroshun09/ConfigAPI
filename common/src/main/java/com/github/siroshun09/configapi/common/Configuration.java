@@ -38,12 +38,12 @@ public interface Configuration {
 
     @Contract(value = " -> new", pure = true)
     static @NotNull Configuration create() {
-        return ConfigurationImpl.createEmpty();
+        return new ConfigurationImpl();
     }
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull Configuration create(@NotNull Map<String, Object> map) {
-        return ConfigurationImpl.createNew(map);
+        return new ConfigurationImpl(map);
     }
 
     /**

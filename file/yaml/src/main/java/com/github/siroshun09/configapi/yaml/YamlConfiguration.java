@@ -17,7 +17,7 @@
 package com.github.siroshun09.configapi.yaml;
 
 import com.github.siroshun09.configapi.common.Configuration;
-import com.github.siroshun09.configapi.common.ConfigurationImpl;
+import com.github.siroshun09.configapi.common.AbstractConfiguration;
 import com.github.siroshun09.configapi.common.FileConfiguration;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -57,8 +57,8 @@ public interface YamlConfiguration extends FileConfiguration {
     @Contract("_, _, _ -> new")
     static @NotNull YamlConfiguration create(@NotNull Path filePath, @NotNull Configuration original,
                                              @NotNull Supplier<Yaml> yamlSupplier) throws UnsupportedOperationException {
-        if (original instanceof ConfigurationImpl) {
-            return new YamlConfigurationImpl(filePath, (ConfigurationImpl) original, yamlSupplier);
+        if (original instanceof AbstractConfiguration) {
+            return new YamlConfigurationImpl(filePath, (AbstractConfiguration) original, yamlSupplier);
         } else {
             throw new UnsupportedOperationException("original configuration should be extended ConfigurationImpl");
         }
