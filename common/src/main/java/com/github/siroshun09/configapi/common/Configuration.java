@@ -108,6 +108,12 @@ public interface Configuration {
 
     <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer);
 
+    default <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T> serializer) {
+        List<Configuration> serializedList =
+                list.stream().map(serializer::serialize).collect(Collectors.toList());
+        set(path, serializedList);
+    }
+
     /**
      * Gets the requested boolean by path.
      * <p>
@@ -585,11 +591,5 @@ public interface Configuration {
         } else {
             return def;
         }
-    }
-
-    default <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T> serializer) {
-        List<Configuration> serializedList =
-                list.stream().map(serializer::serialize).collect(Collectors.toList());
-        set(path, serializedList);
     }
 }
