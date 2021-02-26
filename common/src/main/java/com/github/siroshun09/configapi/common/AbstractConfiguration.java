@@ -88,34 +88,17 @@ public class AbstractConfiguration implements Configuration {
             if (parent != null) {
                 parent.map.remove(keys[lastIndex]);
             }
-
-            return;
+        } else {
+            getOrCreateParentOfPath(keys, lastIndex).putValue(keys[lastIndex], value);
         }
-
-        getParentOfPathOrCreate(keys, lastIndex).map.put(keys[lastIndex], value);
     }
 
     @Override
     public <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer) {
-        String root;
-        Configuration target;
-
-        if (path.contains(KEY_SEPARATOR_STRING)) {
-            String[] keys = path.split(KEY_SEPARATOR_REGEX);
-            int lastIndex = keys.length - 1;
-
-            target = getParentOfPathOrCreate(keys, lastIndex);
-            root = keys[lastIndex];
-        } else {
-            target = this;
-            root = path;
-        }
-
         Configuration serialized = serializer.serialize(value);
 
         if (serialized instanceof AbstractConfiguration) {
-            Map<String, Object> map = ((AbstractConfiguration) serialized).getMap();
-            target.set(root, map);
+            set(path, serialized);
         }
     }
 
@@ -159,6 +142,14 @@ public class AbstractConfiguration implements Configuration {
         return Objects.hash(getMap());
     }
 
+    private void putValue(@NotNull String key, @NotNull Object object) {
+        if (object instanceof AbstractConfiguration) {
+            map.put(key, ((AbstractConfiguration) object).map);
+        } else {
+            map.put(key, object);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private @Nullable AbstractConfiguration getDirectChild(@NotNull String key) {
         Object object = get(key);
@@ -180,7 +171,7 @@ public class AbstractConfiguration implements Configuration {
         return current;
     }
 
-    private @NotNull AbstractConfiguration getParentOfPathOrCreate(@NotNull String[] keys, int lastIndex) {
+    private @NotNull AbstractConfiguration getOrCreateParentOfPath(@NotNull String[] keys, int lastIndex) {
         AbstractConfiguration parent = this;
         AbstractConfiguration current;
 
