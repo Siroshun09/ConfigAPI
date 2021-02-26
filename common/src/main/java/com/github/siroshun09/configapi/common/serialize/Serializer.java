@@ -16,15 +16,16 @@
 
 package com.github.siroshun09.configapi.common.serialize;
 
+import com.github.siroshun09.configapi.common.Configuration;
 import com.github.siroshun09.configapi.common.serialize.exception.DeserializationException;
 import com.github.siroshun09.configapi.common.serialize.exception.SerializationException;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 public interface Serializer<T> {
 
-    @NotNull Map<String, Object> serialize(@NotNull T object) throws SerializationException;
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull Configuration serialize(@NotNull T object) throws SerializationException;
 
-    @NotNull T deserialize(@NotNull Map<String, Object> source) throws DeserializationException;
+    @NotNull T deserialize(@NotNull Configuration source) throws DeserializationException;
 }

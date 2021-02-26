@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.configapi.common;
 
-import com.github.siroshun09.configapi.common.defaultvalue.DefaultValue;
 import com.github.siroshun09.configapi.common.serialize.Serializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -80,7 +78,8 @@ public interface Configuration {
 
         if (object instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) object;
-            return deserializer.deserialize(map);
+            Configuration source = create(map);
+            return deserializer.deserialize(source);
         } else {
             return null;
         }
@@ -108,30 +107,6 @@ public interface Configuration {
     void set(@NotNull String path, @Nullable Object value);
 
     <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer);
-
-    /**
-     * Gets the requested value by {@link DefaultValue#getKey()}
-     *
-     * @param defaultValue The default value to get the path.
-     * @param <T>          The value type.
-     * @return Requested value.
-     */
-    default @NotNull <T> T get(@NotNull DefaultValue<T> defaultValue) {
-        Objects.requireNonNull(defaultValue);
-        return defaultValue.getValue(this);
-    }
-
-    /**
-     * Gets the requested value by {@link DefaultValue#getKey()}
-     *
-     * @param defaultValue The default value to get the path.
-     * @param <T>          The value type.
-     * @return Requested value or {@code null}.
-     */
-    default @Nullable <T> T getOrNull(@NotNull DefaultValue<T> defaultValue) {
-        Objects.requireNonNull(defaultValue);
-        return defaultValue.getValueOrNull(this);
-    }
 
     /**
      * Gets the requested boolean by path.
@@ -328,6 +303,7 @@ public interface Configuration {
         return list.stream()
                 .filter(e -> e instanceof Map)
                 .map(e -> (Map<String, Object>) e)
+                .map(Configuration::create)
                 .map(deserializer::deserialize)
                 .collect(Collectors.toList());
     }
@@ -612,51 +588,8 @@ public interface Configuration {
     }
 
     default <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T> serializer) {
-        List<Map<String, Object>> serializedList =
+        List<Configuration> serializedList =
                 list.stream().map(serializer::serialize).collect(Collectors.toList());
-
         set(path, serializedList);
-    }
-
-    /**
-     * Sets the value to the specified path.
-     *
-     * @param defaultValue The default value to get the path.
-     * @param value        The value to set.
-     * @param <T>          The value type
-     */
-    default <T> void setValue(@NotNull DefaultValue<T> defaultValue, @NotNull T value) {
-        Objects.requireNonNull(defaultValue);
-        Objects.requireNonNull(value);
-        set(defaultValue.getKey(), defaultValue.serialize(value));
-    }
-
-    /**
-     * Sets the default value to the specified path.
-     *
-     * @param defaultValue The default value to get the path and the default value.
-     * @param <T>          The value type.
-     */
-    default <T> void setDefault(@NotNull DefaultValue<T> defaultValue) {
-        Objects.requireNonNull(defaultValue);
-        setValue(defaultValue, defaultValue.getDefault());
-    }
-
-    /**
-     * Sets the default values to the specified path.
-     *
-     * @param defaultValueIterator The default values to get the path and the default value.
-     */
-    default void setDefault(@NotNull Iterator<DefaultValue<?>> defaultValueIterator) {
-        Objects.requireNonNull(defaultValueIterator).forEachRemaining(this::setDefault);
-    }
-
-    /**
-     * Sets the default values to the specified path.
-     *
-     * @param defaultValueIterable The default values to get the path and the default value.
-     */
-    default void setDefault(@NotNull Iterable<DefaultValue<?>> defaultValueIterable) {
-        setDefault(defaultValueIterable.iterator());
     }
 }
