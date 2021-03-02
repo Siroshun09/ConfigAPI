@@ -65,15 +65,14 @@ public interface Configuration {
      */
     @NotNull
     default Object get(@NotNull String path, @NotNull Object def) {
-        Objects.requireNonNull(path, "path must not be null.");
-        Objects.requireNonNull(def, "def must not be null.");
-
         Object value = get(path);
-        return value != null ? value : def;
+        return value != null ? value : Objects.requireNonNull(def);
     }
 
     @SuppressWarnings("unchecked")
     default <T> @Nullable T get(@NotNull String path, @NotNull Serializer<T> deserializer) {
+        Objects.requireNonNull(deserializer);
+
         Object object = get(path);
 
         if (object instanceof Map) {
@@ -109,6 +108,9 @@ public interface Configuration {
     <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer);
 
     default <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T> serializer) {
+        Objects.requireNonNull(list);
+        Objects.requireNonNull(serializer);
+
         List<Configuration> serializedList =
                 list.stream().map(serializer::serialize).collect(Collectors.toList());
         set(path, serializedList);
@@ -281,7 +283,7 @@ public interface Configuration {
     @NotNull
     default String getString(@NotNull String path, @NotNull String def) {
         Object value = get(path);
-        return value instanceof String ? (String) value : def;
+        return value instanceof String ? (String) value : Objects.requireNonNull(def);
     }
 
     default @Nullable List<?> getListOrNull(@NotNull String path) {
@@ -344,7 +346,7 @@ public interface Configuration {
                     .map(e -> (Boolean) e)
                     .collect(Collectors.toList());
         } else {
-            return def;
+            return Objects.requireNonNull(def);
         }
     }
 
@@ -379,7 +381,7 @@ public interface Configuration {
                     .map(Number::byteValue)
                     .collect(Collectors.toList());
         } else {
-            return def;
+            return Objects.requireNonNull(def);
         }
     }
 
@@ -415,7 +417,7 @@ public interface Configuration {
                     .map(Number::doubleValue)
                     .collect(Collectors.toList());
         } else {
-            return def;
+            return Objects.requireNonNull(def);
         }
     }
 
@@ -450,7 +452,7 @@ public interface Configuration {
                     .map(Number::floatValue)
                     .collect(Collectors.toList());
         } else {
-            return def;
+            return Objects.requireNonNull(def);
         }
     }
 
@@ -485,7 +487,7 @@ public interface Configuration {
                     .map(Number::intValue)
                     .collect(Collectors.toList());
         } else {
-            return def;
+            return Objects.requireNonNull(def);
         }
     }
 
@@ -520,7 +522,7 @@ public interface Configuration {
                     .map(Number::longValue)
                     .collect(Collectors.toList());
         } else {
-            return def;
+            return Objects.requireNonNull(def);
         }
     }
 
@@ -555,7 +557,7 @@ public interface Configuration {
                     .map(Number::shortValue)
                     .collect(Collectors.toList());
         } else {
-            return def;
+            return Objects.requireNonNull(def);
         }
     }
 
@@ -589,7 +591,7 @@ public interface Configuration {
                     .map(e -> (String) e)
                     .collect(Collectors.toList());
         } else {
-            return def;
+            return Objects.requireNonNull(def);
         }
     }
 }
