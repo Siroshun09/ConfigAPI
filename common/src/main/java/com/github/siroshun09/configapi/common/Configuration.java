@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.common;
 
 import com.github.siroshun09.configapi.common.serialize.Serializer;
+import com.github.siroshun09.configapi.common.value.ConfigValue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,6 +82,10 @@ public interface Configuration {
         } else {
             return null;
         }
+    }
+
+    default <T> @NotNull T get(@NotNull ConfigValue<T> configValue) {
+        return configValue.get(this);
     }
 
     default @Nullable List<?> getListOrNull(@NotNull String path) {
