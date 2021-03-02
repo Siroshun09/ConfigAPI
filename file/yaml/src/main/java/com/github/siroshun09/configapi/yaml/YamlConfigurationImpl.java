@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 class YamlConfigurationImpl extends AbstractConfiguration implements YamlConfiguration {
@@ -38,19 +39,25 @@ class YamlConfigurationImpl extends AbstractConfiguration implements YamlConfigu
     private boolean isLoaded;
 
     YamlConfigurationImpl(@NotNull Path filePath, @NotNull Supplier<Yaml> yamlSupplier) {
-        this.filePath = filePath;
+        this.filePath = Objects.requireNonNull(filePath);
+
+        Objects.requireNonNull(yamlSupplier);
         this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);
     }
 
     YamlConfigurationImpl(@NotNull Path filePath, @NotNull Map<String, Object> map, @NotNull Supplier<Yaml> yamlSupplier) {
         super(map);
-        this.filePath = filePath;
+        this.filePath = Objects.requireNonNull(filePath);
+
+        Objects.requireNonNull(yamlSupplier);
         this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);
     }
 
     YamlConfigurationImpl(@NotNull Path filePath, @NotNull AbstractConfiguration original, @NotNull Supplier<Yaml> yamlSupplier) {
         super(original);
-        this.filePath = filePath;
+        this.filePath = Objects.requireNonNull(filePath);
+
+        Objects.requireNonNull(yamlSupplier);
         this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);
     }
 
