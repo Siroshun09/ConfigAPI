@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":17,"i1":17,"i2":6,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18,"i9":18,"i10":18,"i11":18,"i12":18,"i13":18,"i14":18,"i15":18,"i16":18,"i17":18,"i18":18,"i19":18,"i20":18,"i21":18,"i22":18,"i23":18,"i24":18,"i25":6,"i26":18,"i27":18,"i28":18,"i29":18,"i30":18,"i31":18,"i32":18,"i33":18,"i34":6,"i35":18,"i36":18,"i37":18,"i38":18,"i39":18,"i40":18,"i41":6,"i42":6,"i43":18};
+var methods = {"i0":17,"i1":17,"i2":18,"i3":6,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18,"i9":18,"i10":18,"i11":18,"i12":18,"i13":18,"i14":18,"i15":18,"i16":18,"i17":18,"i18":18,"i19":18,"i20":18,"i21":18,"i22":18,"i23":18,"i24":18,"i25":18,"i26":6,"i27":18,"i28":18,"i29":18,"i30":18,"i31":18,"i32":18,"i33":18,"i34":18,"i35":6,"i36":18,"i37":18,"i38":18,"i39":18,"i40":18,"i41":18,"i42":6,"i43":6,"i44":18};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -109,7 +109,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>public interface <a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.35">Configuration</a></pre>
+<pre>public interface <a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.36">Configuration</a></pre>
 <div class="block">An interface that gets the value by path.</div>
 </li>
 </ul>
@@ -157,260 +157,264 @@ var activeTableTab = "activeTableTab";
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#create-java.util.Map-">create</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;map)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>default &lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#get-com.github.siroshun09.configapi.common.value.ConfigValue-">get</a></span>(@NotNull <a href="../../../../../com/github/siroshun09/configapi/common/value/ConfigValue.html" title="interface in com.github.siroshun09.configapi.common.value">ConfigValue</a>&lt;T&gt;&nbsp;configValue)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#get-java.lang.String-">get</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested Object by path.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#get-java.lang.String-java.lang.Object-">get</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
    @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;def)</code>
 <div class="block">Gets the requested Object by path.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#get-java.lang.String-com.github.siroshun09.configapi.common.serialize.Serializer-">get</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
    @NotNull <a href="../../../../../com/github/siroshun09/configapi/common/serialize/Serializer.html" title="interface in com.github.siroshun09.configapi.common.serialize">Serializer</a>&lt;T&gt;&nbsp;deserializer)</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>default boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getBoolean-java.lang.String-">getBoolean</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested boolean by path.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>default boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getBoolean-java.lang.String-boolean-">getBoolean</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
           boolean&nbsp;def)</code>
 <div class="block">Gets the requested boolean by path.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getBooleanList-java.lang.String-">getBooleanList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested boolean list by path.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getBooleanList-java.lang.String-java.util.List-">getBooleanList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
               @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;def)</code>
 <div class="block">Gets the requested boolean list by path.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>default byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getByte-java.lang.String-">getByte</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested byte by path.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>default byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getByte-java.lang.String-byte-">getByte</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
        byte&nbsp;def)</code>
 <div class="block">Gets the requested byte by path.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getByteList-java.lang.String-">getByteList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested byte list by path.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getByteList-java.lang.String-java.util.List-">getByteList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
            @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a>&gt;&nbsp;def)</code>
 <div class="block">Gets the requested byte list by path.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>default double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getDouble-java.lang.String-">getDouble</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested double by path.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>default double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getDouble-java.lang.String-double-">getDouble</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
          double&nbsp;def)</code>
 <div class="block">Gets the requested double by path.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getDoubleList-java.lang.String-">getDoubleList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested double list by path.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getDoubleList-java.lang.String-java.util.List-">getDoubleList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
              @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;def)</code>
 <div class="block">Gets the requested double list by path.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>default float</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getFloat-java.lang.String-">getFloat</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested float by path.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>default float</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getFloat-java.lang.String-float-">getFloat</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
         float&nbsp;def)</code>
 <div class="block">Gets the requested float by path.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getFloatList-java.lang.String-">getFloatList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested float list by path.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getFloatList-java.lang.String-java.util.List-">getFloatList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
             @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a>&gt;&nbsp;def)</code>
 <div class="block">Gets the requested float list by path.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>default int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getInteger-java.lang.String-">getInteger</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested integer by path.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>default int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getInteger-java.lang.String-int-">getInteger</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
           int&nbsp;def)</code>
 <div class="block">Gets the requested integer by path.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getIntegerList-java.lang.String-">getIntegerList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested integer list by path.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getIntegerList-java.lang.String-java.util.List-">getIntegerList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
               @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;def)</code>
 <div class="block">Gets the requested integer list by path.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getKeys--">getKeys</a></span>()</code>
 <div class="block">Gets a set containing keys in this yaml file.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getList-java.lang.String-">getList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>&nbsp;</td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getList-java.lang.String-java.util.List-">getList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;&nbsp;def)</code>&nbsp;</td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getList-java.lang.String-com.github.siroshun09.configapi.common.serialize.Serializer-">getList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
        @NotNull <a href="../../../../../com/github/siroshun09/configapi/common/serialize/Serializer.html" title="interface in com.github.siroshun09.configapi.common.serialize">Serializer</a>&lt;T&gt;&nbsp;deserializer)</code>&nbsp;</td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>default @Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getListOrNull-java.lang.String-">getListOrNull</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>&nbsp;</td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>default long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getLong-java.lang.String-">getLong</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested long by path.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>default long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getLong-java.lang.String-long-">getLong</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
        long&nbsp;def)</code>
 <div class="block">Gets the requested long by path.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getLongList-java.lang.String-">getLongList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested long list by path.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getLongList-java.lang.String-java.util.List-">getLongList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
            @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;def)</code>
 <div class="block">Gets the requested long list by path.</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>@Nullable <a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html" title="interface in com.github.siroshun09.configapi.common">Configuration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getSection-java.lang.String-">getSection</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>&nbsp;</td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getShortList-java.lang.String-">getShortList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested short list by path.</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getShortList-java.lang.String-java.util.List-">getShortList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
             @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a>&gt;&nbsp;def)</code>
 <div class="block">Gets the requested short list by path.</div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i38" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getString-java.lang.String-">getString</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested string by path.</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getString-java.lang.String-java.lang.String-">getString</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
          @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;def)</code>
 <div class="block">Gets the requested string by path.</div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getStringList-java.lang.String-">getStringList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</code>
 <div class="block">Gets the requested string list by path.</div>
 </td>
 </tr>
-<tr id="i40" class="altColor">
+<tr id="i41" class="rowColor">
 <td class="colFirst"><code>default @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#getStringList-java.lang.String-java.util.List-">getStringList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
              @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;def)</code>
 <div class="block">Gets the requested string list by path.</div>
 </td>
 </tr>
-<tr id="i41" class="rowColor">
+<tr id="i42" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#set-java.lang.String-java.lang.Object-">set</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
    @Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</code>
 <div class="block">Set the value to the specified path.</div>
 </td>
 </tr>
-<tr id="i42" class="altColor">
+<tr id="i43" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#set-java.lang.String-T-com.github.siroshun09.configapi.common.serialize.Serializer-">set</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
    T&nbsp;value,
    @NotNull <a href="../../../../../com/github/siroshun09/configapi/common/serialize/Serializer.html" title="interface in com.github.siroshun09.configapi.common.serialize">Serializer</a>&lt;T&gt;&nbsp;serializer)</code>&nbsp;</td>
 </tr>
-<tr id="i43" class="rowColor">
+<tr id="i44" class="altColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html#setList-java.lang.String-java.util.List-com.github.siroshun09.configapi.common.serialize.Serializer-">setList</a></span>(@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;list,
@@ -437,7 +441,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockListLast">
 <li class="blockList">
 <h4>KEY_SEPARATOR</h4>
-<pre>static final&nbsp;char <a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.37">KEY_SEPARATOR</a></pre>
+<pre>static final&nbsp;char <a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.38">KEY_SEPARATOR</a></pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../constant-values.html#com.github.siroshun09.configapi.common.Configuration.KEY_SEPARATOR">Constant Field Values</a></dd>
@@ -461,7 +465,7 @@ var activeTableTab = "activeTableTab";
 <pre>@Contract(value=" -&gt; new",
           pure=true)
  @NotNull
-static&nbsp;@NotNull <a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html" title="interface in com.github.siroshun09.configapi.common">Configuration</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.40">create</a>()</pre>
+static&nbsp;@NotNull <a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html" title="interface in com.github.siroshun09.configapi.common">Configuration</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.41">create</a>()</pre>
 </li>
 </ul>
 <a name="create-java.util.Map-">
@@ -473,7 +477,7 @@ static&nbsp;@NotNull <a href="../../../../../com/github/siroshun09/configapi/com
 <pre>@Contract(value="_ -&gt; new",
           pure=true)
  @NotNull
-static&nbsp;@NotNull <a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html" title="interface in com.github.siroshun09.configapi.common">Configuration</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.45">create</a>(@NotNull
+static&nbsp;@NotNull <a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html" title="interface in com.github.siroshun09.configapi.common">Configuration</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.46">create</a>(@NotNull
                                                                                                 @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;map)</pre>
 </li>
 </ul>
@@ -484,7 +488,7 @@ static&nbsp;@NotNull <a href="../../../../../com/github/siroshun09/configapi/com
 <li class="blockList">
 <h4>get</h4>
 <pre>@Nullable
-@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.57">get</a>(@NotNull
+@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.58">get</a>(@NotNull
                                @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested Object by path.
  <p>
@@ -504,7 +508,7 @@ static&nbsp;@NotNull <a href="../../../../../com/github/siroshun09/configapi/com
 <li class="blockList">
 <h4>get</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.66">get</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.67">get</a>(@NotNull
                                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                      @NotNull
                                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;def)</pre>
@@ -525,10 +529,21 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/la
 <li class="blockList">
 <h4>get</h4>
 <pre>@Nullable
-default&nbsp;&lt;T&gt;&nbsp;T&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.72">get</a>(@NotNull
+default&nbsp;&lt;T&gt;&nbsp;T&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.73">get</a>(@NotNull
                             @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                             @NotNull
                             @NotNull <a href="../../../../../com/github/siroshun09/configapi/common/serialize/Serializer.html" title="interface in com.github.siroshun09.configapi.common.serialize">Serializer</a>&lt;T&gt;&nbsp;deserializer)</pre>
+</li>
+</ul>
+<a name="get-com.github.siroshun09.configapi.common.value.ConfigValue-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>get</h4>
+<pre>@NotNull
+default&nbsp;&lt;T&gt;&nbsp;T&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.87">get</a>(@NotNull
+                           @NotNull <a href="../../../../../com/github/siroshun09/configapi/common/value/ConfigValue.html" title="interface in com.github.siroshun09.configapi.common.value">ConfigValue</a>&lt;T&gt;&nbsp;configValue)</pre>
 </li>
 </ul>
 <a name="getListOrNull-java.lang.String-">
@@ -538,7 +553,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;<a href="../../../../../src-html/com/github/s
 <li class="blockList">
 <h4>getListOrNull</h4>
 <pre>@Nullable
-default&nbsp;@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.86">getListOrNull</a>(@NotNull
+default&nbsp;@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.91">getListOrNull</a>(@NotNull
                                                   @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 </li>
 </ul>
@@ -549,7 +564,7 @@ default&nbsp;@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/u
 <li class="blockList">
 <h4>getList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.91">getList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.96">getList</a>(@NotNull
                                           @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 </li>
 </ul>
@@ -560,7 +575,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.95">getList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.100">getList</a>(@NotNull
                                           @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                           @NotNull
                                           @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;?&gt;&nbsp;def)</pre>
@@ -573,7 +588,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getList</h4>
 <pre>@NotNull
-default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.101">getList</a>(@NotNull
+default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.106">getList</a>(@NotNull
                                               @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                               @NotNull
                                               @NotNull <a href="../../../../../com/github/siroshun09/configapi/common/serialize/Serializer.html" title="interface in com.github.siroshun09.configapi.common.serialize">Serializer</a>&lt;T&gt;&nbsp;deserializer)</pre>
@@ -585,7 +600,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>set</h4>
-<pre>void&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.124">set</a>(@NotNull
+<pre>void&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.129">set</a>(@NotNull
          @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
          @Nullable
          @Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</pre>
@@ -607,7 +622,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>set</h4>
-<pre>&lt;T&gt;&nbsp;void&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.126">set</a>(@NotNull
+<pre>&lt;T&gt;&nbsp;void&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.131">set</a>(@NotNull
              @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
              @NotNull
              T&nbsp;value,
@@ -621,7 +636,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>setList</h4>
-<pre>default&nbsp;&lt;T&gt;&nbsp;void&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.128">setList</a>(@NotNull
+<pre>default&nbsp;&lt;T&gt;&nbsp;void&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.133">setList</a>(@NotNull
                          @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                          @NotNull
                          @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;T&gt;&nbsp;list,
@@ -636,7 +651,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <li class="blockList">
 <h4>getKeys</h4>
 <pre>@NotNull
-@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.144">getKeys</a>()</pre>
+@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.149">getKeys</a>()</pre>
 <div class="block">Gets a set containing keys in this yaml file.
  <p>
  The returned set does not include deep key.</div>
@@ -653,7 +668,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <li class="blockList">
 <h4>getSection</h4>
 <pre>@Nullable
-@Nullable <a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html" title="interface in com.github.siroshun09.configapi.common">Configuration</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.146">getSection</a>(@NotNull
+@Nullable <a href="../../../../../com/github/siroshun09/configapi/common/Configuration.html" title="interface in com.github.siroshun09.configapi.common">Configuration</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.151">getSection</a>(@NotNull
                                              @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 </li>
 </ul>
@@ -663,7 +678,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getBoolean</h4>
-<pre>default&nbsp;boolean&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.156">getBoolean</a>(@NotNull
+<pre>default&nbsp;boolean&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.161">getBoolean</a>(@NotNull
                            @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested boolean by path.
  <p>
@@ -682,7 +697,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getBoolean</h4>
-<pre>default&nbsp;boolean&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.167">getBoolean</a>(@NotNull
+<pre>default&nbsp;boolean&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.172">getBoolean</a>(@NotNull
                            @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                            boolean&nbsp;def)</pre>
 <div class="block">Gets the requested boolean by path.</div>
@@ -701,7 +716,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getByte</h4>
-<pre>default&nbsp;byte&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.180">getByte</a>(@NotNull
+<pre>default&nbsp;byte&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.185">getByte</a>(@NotNull
                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested byte by path.
  <p>
@@ -720,7 +735,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getByte</h4>
-<pre>default&nbsp;byte&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.191">getByte</a>(@NotNull
+<pre>default&nbsp;byte&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.196">getByte</a>(@NotNull
                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                      byte&nbsp;def)</pre>
 <div class="block">Gets the requested byte by path.</div>
@@ -739,7 +754,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getDouble</h4>
-<pre>default&nbsp;double&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.204">getDouble</a>(@NotNull
+<pre>default&nbsp;double&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.209">getDouble</a>(@NotNull
                          @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested double by path.
  <p>
@@ -758,7 +773,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getDouble</h4>
-<pre>default&nbsp;double&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.215">getDouble</a>(@NotNull
+<pre>default&nbsp;double&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.220">getDouble</a>(@NotNull
                          @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                          double&nbsp;def)</pre>
 <div class="block">Gets the requested double by path.</div>
@@ -777,7 +792,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getFloat</h4>
-<pre>default&nbsp;float&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.228">getFloat</a>(@NotNull
+<pre>default&nbsp;float&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.233">getFloat</a>(@NotNull
                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested float by path.
  <p>
@@ -796,7 +811,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getFloat</h4>
-<pre>default&nbsp;float&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.239">getFloat</a>(@NotNull
+<pre>default&nbsp;float&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.244">getFloat</a>(@NotNull
                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                        float&nbsp;def)</pre>
 <div class="block">Gets the requested float by path.</div>
@@ -815,7 +830,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getInteger</h4>
-<pre>default&nbsp;int&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.252">getInteger</a>(@NotNull
+<pre>default&nbsp;int&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.257">getInteger</a>(@NotNull
                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested integer by path.
  <p>
@@ -834,7 +849,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getInteger</h4>
-<pre>default&nbsp;int&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.263">getInteger</a>(@NotNull
+<pre>default&nbsp;int&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.268">getInteger</a>(@NotNull
                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                        int&nbsp;def)</pre>
 <div class="block">Gets the requested integer by path.</div>
@@ -853,7 +868,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getLong</h4>
-<pre>default&nbsp;long&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.276">getLong</a>(@NotNull
+<pre>default&nbsp;long&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.281">getLong</a>(@NotNull
                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested long by path.
  <p>
@@ -872,7 +887,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <ul class="blockList">
 <li class="blockList">
 <h4>getLong</h4>
-<pre>default&nbsp;long&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.287">getLong</a>(@NotNull
+<pre>default&nbsp;long&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.292">getLong</a>(@NotNull
                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                      long&nbsp;def)</pre>
 <div class="block">Gets the requested long by path.</div>
@@ -892,7 +907,7 @@ default&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/d
 <li class="blockList">
 <h4>getString</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.301">getString</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.306">getString</a>(@NotNull
                                            @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested string by path.
  <p>
@@ -912,7 +927,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/la
 <li class="blockList">
 <h4>getString</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.312">getString</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.317">getString</a>(@NotNull
                                            @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                            @NotNull
                                            @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;def)</pre>
@@ -933,7 +948,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/la
 <li class="blockList">
 <h4>getBooleanList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.325">getBooleanList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.330">getBooleanList</a>(@NotNull
                                                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested boolean list by path.
  <p>
@@ -953,7 +968,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getBooleanList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.336">getBooleanList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.341">getBooleanList</a>(@NotNull
                                                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                                        @NotNull
                                                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;def)</pre>
@@ -974,7 +989,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getByteList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.357">getByteList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.362">getByteList</a>(@NotNull
                                                  @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested byte list by path.
  <p>
@@ -994,7 +1009,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getByteList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.368">getByteList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.373">getByteList</a>(@NotNull
                                                  @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                                  @NotNull
                                                  @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Byte.html?is-external=true" title="class or interface in java.lang">Byte</a>&gt;&nbsp;def)</pre>
@@ -1015,7 +1030,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getDoubleList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.391">getDoubleList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.396">getDoubleList</a>(@NotNull
                                                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested double list by path.
  <p>
@@ -1035,7 +1050,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getDoubleList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.402">getDoubleList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.407">getDoubleList</a>(@NotNull
                                                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                                      @NotNull
                                                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&gt;&nbsp;def)</pre>
@@ -1056,7 +1071,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getFloatList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.424">getFloatList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.429">getFloatList</a>(@NotNull
                                                    @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested float list by path.
  <p>
@@ -1076,7 +1091,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getFloatList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.435">getFloatList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.440">getFloatList</a>(@NotNull
                                                    @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                                    @NotNull
                                                    @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html?is-external=true" title="class or interface in java.lang">Float</a>&gt;&nbsp;def)</pre>
@@ -1097,7 +1112,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getIntegerList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.457">getIntegerList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.462">getIntegerList</a>(@NotNull
                                                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested integer list by path.
  <p>
@@ -1117,7 +1132,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getIntegerList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.468">getIntegerList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.473">getIntegerList</a>(@NotNull
                                                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                                        @NotNull
                                                        @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;def)</pre>
@@ -1138,7 +1153,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getLongList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.490">getLongList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.495">getLongList</a>(@NotNull
                                                  @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested long list by path.
  <p>
@@ -1158,7 +1173,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getLongList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.501">getLongList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.506">getLongList</a>(@NotNull
                                                  @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                                  @NotNull
                                                  @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;def)</pre>
@@ -1179,7 +1194,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getShortList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.523">getShortList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.528">getShortList</a>(@NotNull
                                                    @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested short list by path.
  <p>
@@ -1199,7 +1214,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getShortList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.534">getShortList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.539">getShortList</a>(@NotNull
                                                    @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                                    @NotNull
                                                    @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Short.html?is-external=true" title="class or interface in java.lang">Short</a>&gt;&nbsp;def)</pre>
@@ -1220,7 +1235,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getStringList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.556">getStringList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.561">getStringList</a>(@NotNull
                                                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path)</pre>
 <div class="block">Gets the requested string list by path.
  <p>
@@ -1240,7 +1255,7 @@ default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/ut
 <li class="blockList">
 <h4>getStringList</h4>
 <pre>@NotNull
-default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.567">getStringList</a>(@NotNull
+default&nbsp;@NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;<a href="../../../../../src-html/com/github/siroshun09/configapi/common/Configuration.html#line.572">getStringList</a>(@NotNull
                                                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                                                      @NotNull
                                                      @NotNull <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;def)</pre>
