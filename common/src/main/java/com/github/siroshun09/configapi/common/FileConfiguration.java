@@ -62,6 +62,5 @@ public interface FileConfiguration extends Configuration {
      *
      * @return the path to the file.
      */
-    @NotNull
-    Path getPath();
+    @NotNull Path getPath();
 }
