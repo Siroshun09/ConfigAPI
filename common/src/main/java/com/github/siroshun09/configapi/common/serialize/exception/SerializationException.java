@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-/**
- * The utility package.
- */
-package com.github.siroshun09.configapi.common.util;
+package com.github.siroshun09.configapi.common.serialize.exception;
+
+public class SerializationException extends RuntimeException {
+}

@@ -14,7 +14,19 @@
  *     limitations under the License.
  */
 
-/**
- * The utility package.
- */
-package com.github.siroshun09.configapi.common.util;
+package com.github.siroshun09.configapi.common;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+
+class ConfigurationImpl extends AbstractConfiguration {
+
+    ConfigurationImpl() {
+        super();
+    }
+
+    ConfigurationImpl(@NotNull Map<String, Object> map) {
+        super(map);
+    }
+}

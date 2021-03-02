@@ -1,5 +1,5 @@
 /*
- *     Copyright 2020 Siroshun09
+ *     Copyright 2021 Siroshun09
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -62,6 +62,5 @@ public interface FileConfiguration extends Configuration {
      *
      * @return the path to the file.
      */
-    @NotNull
-    Path getPath();
+    @NotNull Path getPath();
 }

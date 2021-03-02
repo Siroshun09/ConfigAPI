@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~     Copyright 2020 Siroshun09
+  ~     Copyright 2021 Siroshun09
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
   ~     you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi</artifactId>
-    <version>2.2.0</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ConfigAPI</name>
@@ -35,6 +35,12 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Siroshun09</name>
+        </developer>
+    </developers>
 
     <scm>
         <connection>scm:git:https://github.com/Siroshun09/ConfigAPI.git</connection>
@@ -52,13 +58,6 @@
         <url>https://github.com/Siroshun09/ConfigAPI/runs</url>
     </ciManagement>
 
-    <distributionManagement>
-        <repository>
-            <id>bintray-siroshun09-maven</id>
-            <url>https://api.bintray.com/maven/siroshun09/maven/ConfigAPI/;publish=1</url>
-        </repository>
-    </distributionManagement>
-
     <properties>
         <project.charset>UTF-8</project.charset>
         <java.version>1.8</java.version>
@@ -68,8 +67,7 @@
 
     <modules>
         <module>common</module>
-        <module>bukkit</module>
-        <module>bungee</module>
+        <module>file</module>
     </modules>
 
     <dependencies>
@@ -79,7 +77,57 @@
             <version>20.1.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>sign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>ossrh</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
 
     <build>
         <plugins>
@@ -98,16 +146,21 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <finalName>${project.name}-${project.version}</finalName>
-                    <archive>
+                    <archive combine.children="append">
                         <manifest>
-                            <addDefaultEntries>false</addDefaultEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                         <manifestEntries>
-                            <Automatic-Module-Name>com.github.siroshun09.configapi</Automatic-Module-Name>
+                            <Automatic-Module-Name>${project.groupId}</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
@@ -115,9 +168,9 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>post-integration-test</phase>
+                        <phase>prepare-package</phase>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -147,11 +200,8 @@
                     <show>protected</show>
                     <quiet>true</quiet>
                     <bottom>
-                        <![CDATA[<p class="legalCopy">Copyright &#169;2020 <a href="https://github.com/Siroshun09">Siroshun09</a>. All rights reserved.</p>]]></bottom>
-                    <links>
-                        <link>https://papermc.io/javadocs/paper/1.16/</link>
-                        <link>https://papermc.io/javadocs/waterfall/</link>
-                    </links>
+                        <![CDATA[<p class="legalCopy">Copyright &#169;2020-2021 <a href="https://github.com/Siroshun09">Siroshun09</a>. All rights reserved.</p>]]>
+                    </bottom>
                 </configuration>
             </plugin>
         </plugins>

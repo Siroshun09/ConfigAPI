@@ -1,5 +1,5 @@
 /*
- *     Copyright 2020 Siroshun09
+ *     Copyright 2021 Siroshun09
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -16,20 +16,35 @@
 
 package com.github.siroshun09.configapi.common;
 
-import com.github.siroshun09.configapi.common.configurable.Configurable;
+import com.github.siroshun09.configapi.common.serialize.Serializer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * An interface that gets the value by path.
  */
 public interface Configuration {
+
+    char KEY_SEPARATOR = '.';
+
+    @Contract(value = " -> new", pure = true)
+    static @NotNull Configuration create() {
+        return new ConfigurationImpl();
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    static @NotNull Configuration create(@NotNull Map<String, Object> map) {
+        return new ConfigurationImpl(map);
+    }
 
     /**
      * Gets the requested Object by path.
@@ -39,8 +54,7 @@ public interface Configuration {
      * @param path Path of the Object to get.
      * @return Requested Object.
      */
-    @Nullable
-    Object get(@NotNull String path);
+    @Nullable Object get(@NotNull String path);
 
     /**
      * Gets the requested Object by path.
@@ -49,39 +63,87 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested Object.
      */
-    @NotNull
-    default Object get(@NotNull String path, @NotNull Object def) {
-        Objects.requireNonNull(path, "path must not be null.");
-        Objects.requireNonNull(def, "def must not be null.");
-
+    default @NotNull Object get(@NotNull String path, @NotNull Object def) {
         Object value = get(path);
-        return value != null ? value : def;
+        return value != null ? value : Objects.requireNonNull(def);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> @Nullable T get(@NotNull String path, @NotNull Serializer<T> deserializer) {
+        Objects.requireNonNull(deserializer);
+
+        Object object = get(path);
+
+        if (object instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) object;
+            Configuration source = create(map);
+            return deserializer.deserialize(source);
+        } else {
+            return null;
+        }
+    }
+
+    default @Nullable List<?> getListOrNull(@NotNull String path) {
+        Object value = get(path);
+        return value instanceof List<?> ? (List<?>) value : null;
+    }
+
+    default @NotNull List<?> getList(@NotNull String path) {
+        return getList(path, new ArrayList<>());
+    }
+
+    default @NotNull List<?> getList(@NotNull String path, @NotNull List<?> def) {
+        List<?> list = getListOrNull(path);
+        return list != null ? list : Objects.requireNonNull(def);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> @NotNull List<T> getList(@NotNull String path, @NotNull Serializer<T> deserializer) {
+        List<?> list = getListOrNull(path);
+
+        if (list == null) {
+            return Collections.emptyList();
+        }
+
+        return list.stream()
+                .filter(e -> e instanceof Map)
+                .map(e -> (Map<String, Object>) e)
+                .map(Configuration::create)
+                .map(deserializer::deserialize)
+                .collect(Collectors.toList());
     }
 
     /**
-     * Gets the requested value by {@link Configurable#getKey()}
+     * Set the value to the specified path.
+     * <p>
+     * If given value is null, the path will be removed.
      *
-     * @param configurable The configurable to get the path.
-     * @param <T>          The value type.
-     * @return Requested value.
+     * @param path  Path of the object to set.
+     * @param value New value to set the path to.
      */
-    default @NotNull <T> T get(@NotNull Configurable<T> configurable) {
-        Objects.requireNonNull(configurable);
-        return configurable.getValue(this);
-    }
+    void set(@NotNull String path, @Nullable Object value);
 
+    <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer);
+
+    default <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T> serializer) {
+        Objects.requireNonNull(list);
+        Objects.requireNonNull(serializer);
+
+        List<Configuration> serializedList =
+                list.stream().map(serializer::serialize).collect(Collectors.toList());
+        set(path, serializedList);
+    }
 
     /**
-     * Gets the requested value by {@link Configurable#getKey()}
+     * Gets a set containing keys in this yaml file.
+     * <p>
+     * The returned set does not include deep key.
      *
-     * @param configurable The configurable to get the path.
-     * @param <T>          The value type.
-     * @return Requested value or {@code null}.
+     * @return Set of keys contained within this yaml file.
      */
-    default @Nullable <T> T getOrNull(@NotNull Configurable<T> configurable) {
-        Objects.requireNonNull(configurable);
-        return configurable.getValueOrNull(this);
-    }
+    @NotNull Collection<String> getKeys();
+
+    @Nullable Configuration getSection(@NotNull String path);
 
     /**
      * Gets the requested boolean by path.
@@ -102,7 +164,34 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested boolean.
      */
-    boolean getBoolean(@NotNull String path, boolean def);
+    default boolean getBoolean(@NotNull String path, boolean def) {
+        Object value = get(path);
+        return value instanceof Boolean ? (Boolean) value : def;
+    }
+
+    /**
+     * Gets the requested byte by path.
+     * <p>
+     * If the value could not be obtained, this method returns 0.
+     *
+     * @param path Path of the byte to get.
+     * @return Requested byte.
+     */
+    default byte getByte(@NotNull String path) {
+        return getByte(path, (byte) 0);
+    }
+
+    /**
+     * Gets the requested byte by path.
+     *
+     * @param path Path of the byte to get.
+     * @param def  The default value to return if the value could not be obtained.
+     * @return Requested byte.
+     */
+    default byte getByte(@NotNull String path, byte def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).byteValue() : def;
+    }
 
     /**
      * Gets the requested double by path.
@@ -123,7 +212,34 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested double.
      */
-    double getDouble(@NotNull String path, double def);
+    default double getDouble(@NotNull String path, double def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).doubleValue() : def;
+    }
+
+    /**
+     * Gets the requested float by path.
+     * <p>
+     * If the value could not be obtained, this method returns 0.
+     *
+     * @param path Path of the float to get.
+     * @return Requested float.
+     */
+    default float getFloat(@NotNull String path) {
+        return getFloat(path, 0);
+    }
+
+    /**
+     * Gets the requested float by path.
+     *
+     * @param path Path of the float to get.
+     * @param def  The default value to return if the value could not be obtained.
+     * @return Requested float.
+     */
+    default float getFloat(@NotNull String path, float def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).floatValue() : def;
+    }
 
     /**
      * Gets the requested integer by path.
@@ -144,7 +260,10 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested integer.
      */
-    int getInteger(@NotNull String path, int def);
+    default int getInteger(@NotNull String path, int def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).intValue() : def;
+    }
 
     /**
      * Gets the requested long by path.
@@ -165,7 +284,10 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested long.
      */
-    long getLong(@NotNull String path, long def);
+    default long getLong(@NotNull String path, long def) {
+        Object value = get(path);
+        return value instanceof Number ? ((Number) value).longValue() : def;
+    }
 
     /**
      * Gets the requested string by path.
@@ -175,8 +297,8 @@ public interface Configuration {
      * @param path Path of the string to get.
      * @return Requested string.
      */
-    @NotNull
-    default String getString(@NotNull String path) {
+
+    default @NotNull String getString(@NotNull String path) {
         return getString(path, "");
     }
 
@@ -187,123 +309,76 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested string.
      */
-    @NotNull
-    String getString(@NotNull String path, @NotNull String def);
-
-    /**
-     * Gets the requested string list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty string list.
-     *
-     * @param path Path of the string list to get.
-     * @return Requested string list.
-     */
-    @NotNull
-    default List<String> getStringList(@NotNull String path) {
-        return getStringList(path, new ArrayList<>());
+    default @NotNull String getString(@NotNull String path, @NotNull String def) {
+        Object value = get(path);
+        return value instanceof String ? (String) value : Objects.requireNonNull(def);
     }
 
     /**
-     * Gets the requested string list by path.
-     *
-     * @param path Path of the string list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested string list.
-     */
-    @NotNull
-    List<String> getStringList(@NotNull String path, @NotNull List<String> def);
-
-    /**
-     * Gets the requested short list by path.
+     * Gets the requested boolean list by path.
      * <p>
-     * If the value could not be obtained, this method returns an empty short list.
+     * If the value could not be obtained, this method returns an empty boolean list.
      *
-     * @param path Path of the short list to get.
-     * @return Requested short list.
+     * @param path Path of the boolean list to get.
+     * @return Requested boolean list.
      */
-    @NotNull
-    default List<Short> getShortList(@NotNull String path) {
-        return getShortList(path, new ArrayList<>());
+    default @NotNull List<Boolean> getBooleanList(@NotNull String path) {
+        return getBooleanList(path, new ArrayList<>());
     }
 
     /**
-     * Gets the requested short list by path.
+     * Gets the requested boolean list by path.
      *
-     * @param path Path of the short list to get.
+     * @param path Path of the boolean list to get.
      * @param def  The default list to return if the value could not be obtained.
-     * @return Requested short list.
+     * @return Requested boolean list.
      */
-    @NotNull
-    List<Short> getShortList(@NotNull String path, @NotNull List<Short> def);
+    default @NotNull List<Boolean> getBooleanList(@NotNull String path, @NotNull List<Boolean> def) {
+        List<?> list = getListOrNull(path);
 
-    /**
-     * Gets the requested integer list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty integer list.
-     *
-     * @param path Path of the integer list to get.
-     * @return Requested integer list.
-     */
-    @NotNull
-    default List<Integer> getIntegerList(@NotNull String path) {
-        return getIntegerList(path, new ArrayList<>());
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Boolean)
+                    .map(e -> (Boolean) e)
+                    .collect(Collectors.toList());
+        } else {
+            return Objects.requireNonNull(def);
+        }
     }
 
     /**
-     * Gets the requested integer list by path.
-     *
-     * @param path Path of the integer list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested integer list.
-     */
-    @NotNull
-    List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def);
-
-    /**
-     * Gets the requested long list by path.
+     * Gets the requested byte list by path.
      * <p>
-     * If the value could not be obtained, this method returns an empty long list.
+     * If the value could not be obtained, this method returns an empty byte list.
      *
-     * @param path Path of the long list to get.
-     * @return Requested long list.
+     * @param path Path of the byte list to get.
+     * @return Requested byte list.
      */
-    @NotNull
-    default List<Long> getLongList(@NotNull String path) {
-        return getLongList(path, new ArrayList<>());
+    default @NotNull List<Byte> getByteList(@NotNull String path) {
+        return getByteList(path, new ArrayList<>());
     }
 
     /**
-     * Gets the requested long list by path.
+     * Gets the requested byte list by path.
      *
-     * @param path Path of the long list to get.
+     * @param path Path of the byte list to get.
      * @param def  The default list to return if the value could not be obtained.
-     * @return Requested long list.
+     * @return Requested byte list.
      */
-    @NotNull
-    List<Long> getLongList(@NotNull String path, @NotNull List<Long> def);
+    default @NotNull List<Byte> getByteList(@NotNull String path, @NotNull List<Byte> def) {
+        List<?> list = getListOrNull(path);
 
-    /**
-     * Gets the requested float list by path.
-     * <p>
-     * If the value could not be obtained, this method returns an empty float list.
-     *
-     * @param path Path of the float list to get.
-     * @return Requested float list.
-     */
-    @NotNull
-    default List<Float> getFloatList(@NotNull String path) {
-        return getFloatList(path, new ArrayList<>());
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::byteValue)
+                    .collect(Collectors.toList());
+        } else {
+            return Objects.requireNonNull(def);
+        }
     }
 
-    /**
-     * Gets the requested float list by path.
-     *
-     * @param path Path of the float list to get.
-     * @param def  The default list to return if the value could not be obtained.
-     * @return Requested float list.
-     */
-    @NotNull
-    List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def);
 
     /**
      * Gets the requested double list by path.
@@ -313,8 +388,7 @@ public interface Configuration {
      * @param path Path of the double list to get.
      * @return Requested double list.
      */
-    @NotNull
-    default List<Double> getDoubleList(@NotNull String path) {
+    default @NotNull List<Double> getDoubleList(@NotNull String path) {
         return getDoubleList(path, new ArrayList<>());
     }
 
@@ -325,58 +399,181 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested double list.
      */
-    @NotNull
-    List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def);
+    default @NotNull List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
+        List<?> list = getListOrNull(path);
 
-    /**
-     * Gets a set containing keys in this yaml file.
-     * <p>
-     * The returned set does not include deep key.
-     *
-     * @return Set of keys contained within this yaml file.
-     */
-    @NotNull
-    Collection<String> getKeys();
-
-    /**
-     * Set the value to the specified path.
-     * <p>
-     * If given value is null, the path will be removed.
-     *
-     * @param path  Path of the object to set.
-     * @param value New value to set the path to.
-     */
-    void set(@NotNull String path, @Nullable Object value);
-
-    /**
-     * Sets the value to the specified path.
-     *
-     * @param configurable The configurable to get the path.
-     * @param value        The value to set.
-     * @param <T>          The value type
-     */
-    default <T> void setValue(@NotNull Configurable<T> configurable, @NotNull T value) {
-        Objects.requireNonNull(configurable);
-        Objects.requireNonNull(value);
-        set(configurable.getKey(), configurable.serialize(value));
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::doubleValue)
+                    .collect(Collectors.toList());
+        } else {
+            return Objects.requireNonNull(def);
+        }
     }
 
     /**
-     * Sets the default value to the specified path.
+     * Gets the requested float list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty float list.
      *
-     * @param configurable The configurable to get the path and the default value.
+     * @param path Path of the float list to get.
+     * @return Requested float list.
      */
-    default <T> void setDefault(@NotNull Configurable<T> configurable) {
-        Objects.requireNonNull(configurable);
-        setValue(configurable, configurable.getDefault());
+    default @NotNull List<Float> getFloatList(@NotNull String path) {
+        return getFloatList(path, new ArrayList<>());
     }
 
     /**
-     * Sets the default values to the specified path.
+     * Gets the requested float list by path.
      *
-     * @param configurableIterator The configurable to get the path and the default value.
+     * @param path Path of the float list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested float list.
      */
-    default void setDefault(@NotNull Iterator<Configurable<?>> configurableIterator) {
-        Objects.requireNonNull(configurableIterator).forEachRemaining(this::setDefault);
+    default @NotNull List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::floatValue)
+                    .collect(Collectors.toList());
+        } else {
+            return Objects.requireNonNull(def);
+        }
+    }
+
+    /**
+     * Gets the requested integer list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty integer list.
+     *
+     * @param path Path of the integer list to get.
+     * @return Requested integer list.
+     */
+    default @NotNull List<Integer> getIntegerList(@NotNull String path) {
+        return getIntegerList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested integer list by path.
+     *
+     * @param path Path of the integer list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested integer list.
+     */
+    default @NotNull List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::intValue)
+                    .collect(Collectors.toList());
+        } else {
+            return Objects.requireNonNull(def);
+        }
+    }
+
+    /**
+     * Gets the requested long list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty long list.
+     *
+     * @param path Path of the long list to get.
+     * @return Requested long list.
+     */
+    default @NotNull List<Long> getLongList(@NotNull String path) {
+        return getLongList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested long list by path.
+     *
+     * @param path Path of the long list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested long list.
+     */
+    default @NotNull List<Long> getLongList(@NotNull String path, @NotNull List<Long> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::longValue)
+                    .collect(Collectors.toList());
+        } else {
+            return Objects.requireNonNull(def);
+        }
+    }
+
+    /**
+     * Gets the requested short list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty short list.
+     *
+     * @param path Path of the short list to get.
+     * @return Requested short list.
+     */
+    default @NotNull List<Short> getShortList(@NotNull String path) {
+        return getShortList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested short list by path.
+     *
+     * @param path Path of the short list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested short list.
+     */
+    default @NotNull List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof Number)
+                    .map(e -> (Number) e)
+                    .map(Number::shortValue)
+                    .collect(Collectors.toList());
+        } else {
+            return Objects.requireNonNull(def);
+        }
+    }
+
+    /**
+     * Gets the requested string list by path.
+     * <p>
+     * If the value could not be obtained, this method returns an empty string list.
+     *
+     * @param path Path of the string list to get.
+     * @return Requested string list.
+     */
+    default @NotNull List<String> getStringList(@NotNull String path) {
+        return getStringList(path, new ArrayList<>());
+    }
+
+    /**
+     * Gets the requested string list by path.
+     *
+     * @param path Path of the string list to get.
+     * @param def  The default list to return if the value could not be obtained.
+     * @return Requested string list.
+     */
+    default @NotNull List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
+        List<?> list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .filter(e -> e instanceof String)
+                    .map(e -> (String) e)
+                    .collect(Collectors.toList());
+        } else {
+            return Objects.requireNonNull(def);
+        }
     }
 }

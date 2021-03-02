@@ -14,7 +14,14 @@
  *     limitations under the License.
  */
 
-/**
- * The utility package.
- */
-package com.github.siroshun09.configapi.common.util;
+package com.github.siroshun09.configapi.common.value;
+
+import com.github.siroshun09.configapi.common.Configuration;
+import org.jetbrains.annotations.NotNull;
+
+@FunctionalInterface
+public interface ConfigValue<T> {
+
+    @NotNull T get(@NotNull Configuration config);
+
+}
