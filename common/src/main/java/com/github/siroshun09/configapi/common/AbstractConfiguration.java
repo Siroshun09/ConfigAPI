@@ -50,6 +50,8 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @Nullable Object get(@NotNull String path) {
+        Objects.requireNonNull(path);
+
         if (!path.contains(KEY_SEPARATOR_STRING)) {
             return map.get(path);
         }
@@ -69,6 +71,8 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
+        Objects.requireNonNull(path);
+
         boolean remove = value == null;
 
         if (!path.contains(KEY_SEPARATOR_STRING)) {
@@ -95,6 +99,10 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer) {
+        Objects.requireNonNull(path);
+        Objects.requireNonNull(value);
+        Objects.requireNonNull(serializer);
+
         Configuration serialized = serializer.serialize(value);
 
         if (serialized instanceof AbstractConfiguration) {
@@ -104,6 +112,8 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @Nullable Configuration getSection(@NotNull String path) {
+        Objects.requireNonNull(path);
+
         if (!path.contains(KEY_SEPARATOR_STRING)) {
             return getDirectChild(path);
         }
