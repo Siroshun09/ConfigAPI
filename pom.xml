@@ -27,6 +27,7 @@
 
     <name>ConfigAPI</name>
     <url>https://github.com/Siroshun09/ConfigAPI</url>
+    <description>A configuration library for Java.</description>
 
     <licenses>
         <license>
