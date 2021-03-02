@@ -37,7 +37,7 @@ public abstract class AbstractConfiguration implements Configuration {
     }
 
     protected AbstractConfiguration(@NotNull Map<String, Object> map) {
-        this.map = map;
+        this.map = Objects.requireNonNull(map);
     }
 
     protected AbstractConfiguration(@NotNull AbstractConfiguration other) {
