@@ -84,16 +84,35 @@ public interface Configuration {
         }
     }
 
-    /**
-     * Gets a set containing keys in this yaml file.
-     * <p>
-     * The returned set does not include deep key.
-     *
-     * @return Set of keys contained within this yaml file.
-     */
-    @NotNull Collection<String> getKeys();
+    default @Nullable List<?> getListOrNull(@NotNull String path) {
+        Object value = get(path);
+        return value instanceof List<?> ? (List<?>) value : null;
+    }
 
-    @Nullable Configuration getSection(@NotNull String path);
+    default @NotNull List<?> getList(@NotNull String path) {
+        return getList(path, new ArrayList<>());
+    }
+
+    default @NotNull List<?> getList(@NotNull String path, @NotNull List<?> def) {
+        List<?> list = getListOrNull(path);
+        return list != null ? list : Objects.requireNonNull(def);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> @NotNull List<T> getList(@NotNull String path, @NotNull Serializer<T> deserializer) {
+        List<?> list = getListOrNull(path);
+
+        if (list == null) {
+            return Collections.emptyList();
+        }
+
+        return list.stream()
+                .filter(e -> e instanceof Map)
+                .map(e -> (Map<String, Object>) e)
+                .map(Configuration::create)
+                .map(deserializer::deserialize)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Set the value to the specified path.
@@ -115,6 +134,17 @@ public interface Configuration {
                 list.stream().map(serializer::serialize).collect(Collectors.toList());
         set(path, serializedList);
     }
+
+    /**
+     * Gets a set containing keys in this yaml file.
+     * <p>
+     * The returned set does not include deep key.
+     *
+     * @return Set of keys contained within this yaml file.
+     */
+    @NotNull Collection<String> getKeys();
+
+    @Nullable Configuration getSection(@NotNull String path);
 
     /**
      * Gets the requested boolean by path.
@@ -284,36 +314,6 @@ public interface Configuration {
     default String getString(@NotNull String path, @NotNull String def) {
         Object value = get(path);
         return value instanceof String ? (String) value : Objects.requireNonNull(def);
-    }
-
-    default @Nullable List<?> getListOrNull(@NotNull String path) {
-        Object value = get(path);
-        return value instanceof List<?> ? (List<?>) value : null;
-    }
-
-    default @NotNull List<?> getList(@NotNull String path) {
-        return getList(path, new ArrayList<>());
-    }
-
-    default @NotNull List<?> getList(@NotNull String path, @NotNull List<?> def) {
-        List<?> list = getListOrNull(path);
-        return list != null ? list : Objects.requireNonNull(def);
-    }
-
-    @SuppressWarnings("unchecked")
-    default <T> @NotNull List<T> getList(@NotNull String path, @NotNull Serializer<T> deserializer) {
-        List<?> list = getListOrNull(path);
-
-        if (list == null) {
-            return Collections.emptyList();
-        }
-
-        return list.stream()
-                .filter(e -> e instanceof Map)
-                .map(e -> (Map<String, Object>) e)
-                .map(Configuration::create)
-                .map(deserializer::deserialize)
-                .collect(Collectors.toList());
     }
 
     /**
