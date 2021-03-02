@@ -63,8 +63,7 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested Object.
      */
-    @NotNull
-    default Object get(@NotNull String path, @NotNull Object def) {
+    default @NotNull Object get(@NotNull String path, @NotNull Object def) {
         Object value = get(path);
         return value != null ? value : Objects.requireNonNull(def);
     }
@@ -298,8 +297,8 @@ public interface Configuration {
      * @param path Path of the string to get.
      * @return Requested string.
      */
-    @NotNull
-    default String getString(@NotNull String path) {
+
+    default @NotNull String getString(@NotNull String path) {
         return getString(path, "");
     }
 
@@ -310,8 +309,7 @@ public interface Configuration {
      * @param def  The default value to return if the value could not be obtained.
      * @return Requested string.
      */
-    @NotNull
-    default String getString(@NotNull String path, @NotNull String def) {
+    default @NotNull String getString(@NotNull String path, @NotNull String def) {
         Object value = get(path);
         return value instanceof String ? (String) value : Objects.requireNonNull(def);
     }
@@ -324,8 +322,7 @@ public interface Configuration {
      * @param path Path of the boolean list to get.
      * @return Requested boolean list.
      */
-    @NotNull
-    default List<Boolean> getBooleanList(@NotNull String path) {
+    default @NotNull List<Boolean> getBooleanList(@NotNull String path) {
         return getBooleanList(path, new ArrayList<>());
     }
 
@@ -336,8 +333,7 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested boolean list.
      */
-    @NotNull
-    default List<Boolean> getBooleanList(@NotNull String path, @NotNull List<Boolean> def) {
+    default @NotNull List<Boolean> getBooleanList(@NotNull String path, @NotNull List<Boolean> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
@@ -358,8 +354,7 @@ public interface Configuration {
      * @param path Path of the byte list to get.
      * @return Requested byte list.
      */
-    @NotNull
-    default List<Byte> getByteList(@NotNull String path) {
+    default @NotNull List<Byte> getByteList(@NotNull String path) {
         return getByteList(path, new ArrayList<>());
     }
 
@@ -370,8 +365,7 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested byte list.
      */
-    @NotNull
-    default List<Byte> getByteList(@NotNull String path, @NotNull List<Byte> def) {
+    default @NotNull List<Byte> getByteList(@NotNull String path, @NotNull List<Byte> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
@@ -394,8 +388,7 @@ public interface Configuration {
      * @param path Path of the double list to get.
      * @return Requested double list.
      */
-    @NotNull
-    default List<Double> getDoubleList(@NotNull String path) {
+    default @NotNull List<Double> getDoubleList(@NotNull String path) {
         return getDoubleList(path, new ArrayList<>());
     }
 
@@ -406,8 +399,7 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested double list.
      */
-    @NotNull
-    default List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
+    default @NotNull List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
@@ -429,8 +421,7 @@ public interface Configuration {
      * @param path Path of the float list to get.
      * @return Requested float list.
      */
-    @NotNull
-    default List<Float> getFloatList(@NotNull String path) {
+    default @NotNull List<Float> getFloatList(@NotNull String path) {
         return getFloatList(path, new ArrayList<>());
     }
 
@@ -441,8 +432,7 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested float list.
      */
-    @NotNull
-    default List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
+    default @NotNull List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
@@ -464,8 +454,7 @@ public interface Configuration {
      * @param path Path of the integer list to get.
      * @return Requested integer list.
      */
-    @NotNull
-    default List<Integer> getIntegerList(@NotNull String path) {
+    default @NotNull List<Integer> getIntegerList(@NotNull String path) {
         return getIntegerList(path, new ArrayList<>());
     }
 
@@ -476,8 +465,7 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested integer list.
      */
-    @NotNull
-    default List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def) {
+    default @NotNull List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
@@ -499,8 +487,7 @@ public interface Configuration {
      * @param path Path of the long list to get.
      * @return Requested long list.
      */
-    @NotNull
-    default List<Long> getLongList(@NotNull String path) {
+    default @NotNull List<Long> getLongList(@NotNull String path) {
         return getLongList(path, new ArrayList<>());
     }
 
@@ -511,8 +498,7 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested long list.
      */
-    @NotNull
-    default List<Long> getLongList(@NotNull String path, @NotNull List<Long> def) {
+    default @NotNull List<Long> getLongList(@NotNull String path, @NotNull List<Long> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
@@ -534,8 +520,7 @@ public interface Configuration {
      * @param path Path of the short list to get.
      * @return Requested short list.
      */
-    @NotNull
-    default List<Short> getShortList(@NotNull String path) {
+    default @NotNull List<Short> getShortList(@NotNull String path) {
         return getShortList(path, new ArrayList<>());
     }
 
@@ -546,8 +531,7 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested short list.
      */
-    @NotNull
-    default List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
+    default @NotNull List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
@@ -569,8 +553,7 @@ public interface Configuration {
      * @param path Path of the string list to get.
      * @return Requested string list.
      */
-    @NotNull
-    default List<String> getStringList(@NotNull String path) {
+    default @NotNull List<String> getStringList(@NotNull String path) {
         return getStringList(path, new ArrayList<>());
     }
 
@@ -581,8 +564,7 @@ public interface Configuration {
      * @param def  The default list to return if the value could not be obtained.
      * @return Requested string list.
      */
-    @NotNull
-    default List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
+    default @NotNull List<String> getStringList(@NotNull String path, @NotNull List<String> def) {
         List<?> list = getListOrNull(path);
 
         if (list != null) {
