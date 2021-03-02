@@ -79,7 +79,7 @@ public abstract class AbstractConfiguration implements Configuration {
             if (remove) {
                 map.remove(path);
             } else {
-                map.put(path, value);
+                putValue(path, value);
             }
         }
 
@@ -154,9 +154,9 @@ public abstract class AbstractConfiguration implements Configuration {
 
     private void putValue(@NotNull String key, @NotNull Object object) {
         if (object instanceof AbstractConfiguration) {
-            map.put(key, ((AbstractConfiguration) object).map);
+            map.put(checkKey(key), ((AbstractConfiguration) object).map);
         } else {
-            map.put(key, object);
+            map.put(checkKey(key), object);
         }
     }
 
@@ -190,7 +190,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
             if (current == null) {
                 Map<String, Object> childMap = new LinkedHashMap<>();
-                parent.map.put(keys[i], childMap);
+                parent.map.put(checkKey(keys[i]), childMap);
                 current = new ConfigurationImpl(childMap);
             }
 
@@ -198,5 +198,13 @@ public abstract class AbstractConfiguration implements Configuration {
         }
 
         return parent;
+    }
+
+    private @NotNull String checkKey(String key) {
+        if (key == null || key.isEmpty() || key.contains(KEY_SEPARATOR_STRING)) {
+            throw new IllegalArgumentException(key + " is invalid key.");
+        }
+
+        return key;
     }
 }
