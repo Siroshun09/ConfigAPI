@@ -50,10 +50,10 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @Nullable Object get(@NotNull String path) {
-        Objects.requireNonNull(path);
+        checkPath(path);
 
         if (!path.contains(KEY_SEPARATOR_STRING)) {
-            return map.get(path);
+            return getValue(path);
         }
 
         String[] keys = path.split(KEY_SEPARATOR_REGEX);
@@ -61,7 +61,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
         AbstractConfiguration parent = getParentOfPath(keys, lastIndex);
 
-        return parent != null ? parent.map.get(keys[lastIndex]) : null;
+        return parent != null ? parent.getValue(keys[lastIndex]) : null;
     }
 
     @Override
@@ -71,13 +71,13 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public void set(@NotNull String path, @Nullable Object value) {
-        Objects.requireNonNull(path);
+        checkPath(path);
 
         boolean remove = value == null;
 
         if (!path.contains(KEY_SEPARATOR_STRING)) {
             if (remove) {
-                map.remove(path);
+                removeValue(path);
             } else {
                 putValue(path, value);
             }
@@ -90,7 +90,7 @@ public abstract class AbstractConfiguration implements Configuration {
             AbstractConfiguration parent = getParentOfPath(keys, lastIndex);
 
             if (parent != null) {
-                parent.map.remove(keys[lastIndex]);
+                parent.removeValue(checkKey(keys[lastIndex]));
             }
         } else {
             getOrCreateParentOfPath(keys, lastIndex).putValue(keys[lastIndex], value);
@@ -99,7 +99,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T> serializer) {
-        Objects.requireNonNull(path);
+        checkPath(path);
         Objects.requireNonNull(value);
         Objects.requireNonNull(serializer);
 
@@ -112,7 +112,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @Nullable Configuration getSection(@NotNull String path) {
-        Objects.requireNonNull(path);
+        checkPath(path);
 
         if (!path.contains(KEY_SEPARATOR_STRING)) {
             return getDirectChild(path);
@@ -152,12 +152,20 @@ public abstract class AbstractConfiguration implements Configuration {
         return Objects.hash(getMap());
     }
 
+    private @Nullable Object getValue(@NotNull String key) {
+        return map.get(checkKey(key));
+    }
+
     private void putValue(@NotNull String key, @NotNull Object object) {
         if (object instanceof AbstractConfiguration) {
             map.put(checkKey(key), ((AbstractConfiguration) object).map);
         } else {
             map.put(checkKey(key), object);
         }
+    }
+
+    private void removeValue(@NotNull String key) {
+        map.remove(checkKey(key));
     }
 
     @SuppressWarnings("unchecked")
@@ -190,7 +198,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
             if (current == null) {
                 Map<String, Object> childMap = new LinkedHashMap<>();
-                parent.map.put(checkKey(keys[i]), childMap);
+                parent.putValue(checkKey(keys[i]), childMap);
                 current = new ConfigurationImpl(childMap);
             }
 
@@ -198,6 +206,13 @@ public abstract class AbstractConfiguration implements Configuration {
         }
 
         return parent;
+    }
+
+    private void checkPath(String path) {
+        if (path == null || path.isEmpty() ||
+                path.startsWith(KEY_SEPARATOR_STRING) || path.endsWith(KEY_SEPARATOR_STRING)) {
+            throw new IllegalArgumentException(path + " is invalid key.");
+        }
     }
 
     private @NotNull String checkKey(String key) {

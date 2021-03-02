@@ -34,5 +34,12 @@ class ConfigurationTest {
         Assertions.assertEquals("value1", config.get("key1"));
         Assertions.assertEquals("value2", config.get("aaa.bbb.ccc"));
         Assertions.assertEquals(5.0, config.get("ddd.eee.fff"));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.get(""));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.get("ddd."));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.get(".ddd"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.set("", null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.set("ddd.", null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.set("aaa..ccc", null));
     }
 }
