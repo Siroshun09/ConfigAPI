@@ -36,6 +36,12 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Siroshun09</name>
+        </developer>
+    </developers>
+
     <scm>
         <connection>scm:git:https://github.com/Siroshun09/ConfigAPI.git</connection>
         <developerConnection>scm:git@github.com:Siroshun09/ConfigAPI.git</developerConnection>
