@@ -1,5 +1,7 @@
 # ConfigAPI
 
+![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.configapi/configapi)
+![Maven Central](https://img.shields.io/nexus/s/com.github.siroshun09.configapi/configapi?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Siroshun09/ConfigAPI/Java%20CI)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/ConfigAPI)
 
