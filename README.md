@@ -19,7 +19,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>common</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -30,7 +30,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>yaml</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0</version>
     <scope>compile</scope>
 </dependency>
 ```
