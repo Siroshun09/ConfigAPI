@@ -23,7 +23,7 @@
     <parent>
         <artifactId>configapi</artifactId>
         <groupId>com.github.siroshun09.configapi</groupId>
-        <version>3.1.1-SNAPSHOT</version>
+        <version>3.1.1</version>
     </parent>
 
     <artifactId>file</artifactId>
