@@ -64,19 +64,25 @@ class YamlConfigurationImpl extends AbstractConfiguration implements YamlConfigu
     @SuppressWarnings("unchecked")
     @Override
     public void load() throws IOException {
+        getMap().clear();
+
         if (!Files.isRegularFile(filePath)) {
             return;
         }
 
         Yaml yaml = yamlThreadLocal.get();
-        Map<String, Object> map;
+        Map<Object, Object> map;
 
         try (Reader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
             map = yaml.loadAs(reader, LinkedHashMap.class);
         }
 
-        getMap().clear();
-        getMap().putAll(map);
+        for (Map.Entry<Object, Object> entry : map.entrySet()) {
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+
+            getMap().put(key instanceof String ? (String) key : key.toString(), value);
+        }
 
         isLoaded = true;
     }
