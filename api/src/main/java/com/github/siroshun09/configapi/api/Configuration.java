@@ -30,6 +30,16 @@ import java.util.Set;
 public interface Configuration {
 
     /**
+     * The separator to split paths.
+     */
+    char PATH_SEPARATOR = '.';
+
+    /**
+     * The string representation of {@link Configuration#PATH_SEPARATOR}.
+     */
+    String PATH_SEPARATOR_STRING = String.valueOf(PATH_SEPARATOR);
+
+    /**
      * Gets the object of the specified path.
      * <p>
      * If the object could not be obtained, this method returns {@code null}.
