@@ -25,7 +25,7 @@ jobs:
           mkdir staging
           cp -r common/target staging/common
           cp -r target staging/configapi
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2.2.4
         with:
           name: Package
           path: staging
