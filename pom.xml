@@ -69,6 +69,7 @@
     <modules>
         <module>common</module>
         <module>file</module>
+        <module>api</module>
     </modules>
 
     <dependencies>
