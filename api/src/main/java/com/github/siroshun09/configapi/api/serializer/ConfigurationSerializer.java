@@ -24,21 +24,11 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> the type of value
  */
-public interface ConfigurationSerializer<T> {
+public interface ConfigurationSerializer<T> extends Serializer<T, Configuration> {
 
-    /**
-     * Serializes the value.
-     *
-     * @param value the value to serialize
-     * @return the {@link Configuration}
-     */
+    @Override
     @NotNull Configuration serialize(@NotNull T value);
 
-    /**
-     * Deserializes the value.
-     *
-     * @param source the source {@link Configuration}
-     * @return the deserialized value
-     */
+    @Override
     @NotNull T deserialize(@NotNull Configuration source);
 }
