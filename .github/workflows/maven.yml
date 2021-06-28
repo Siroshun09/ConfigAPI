@@ -22,8 +22,7 @@ jobs:
       - name: Move built jars
         run: |
           mkdir staging
-          cp -r common/target staging/common
-          cp -r target staging/configapi
+          mv api/target staging/api
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: Artifacts
