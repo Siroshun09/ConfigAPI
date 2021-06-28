@@ -28,7 +28,7 @@ import java.util.jar.JarFile;
 /**
  * A utility class that provides methods to copy files contained in a jar.
  */
-public class ResourceUtils {
+public final class ResourceUtils {
 
     /**
      * Copies a file from classloader.
