@@ -95,7 +95,6 @@ class MappedConfigurationTest {
         };
 
         config.set("other-config", source);
-        System.out.println(config);
 
         Assertions.assertEquals("value", config.get("other-config.key"));
         Assertions.assertEquals("value", config.get("other-config.map.key"));
