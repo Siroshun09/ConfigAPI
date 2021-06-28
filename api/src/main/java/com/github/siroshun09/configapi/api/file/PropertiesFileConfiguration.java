@@ -129,11 +129,6 @@ public class PropertiesFileConfiguration extends AbstractFileConfiguration {
      * @throws IOException if an I/O error occurs
      */
     public void save(@Nullable String comments) throws IOException {
-        if (!Files.exists(getPath())) {
-            Files.createDirectories(getPath().getParent());
-            Files.createFile(getPath());
-        }
-
         try (var writer = Files.newBufferedWriter(getPath())) {
             properties.store(writer, comments);
         }
