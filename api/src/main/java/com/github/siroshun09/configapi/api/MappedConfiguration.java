@@ -44,7 +44,7 @@ public class MappedConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Create the new Configuration by copying the keys and values from another {@link Configuration}.
+     * Create the new {@link Configuration} by copying the keys and values from another {@link Configuration}.
      *
      * @param other the source {@link Configuration}
      * @return the new {@link Configuration}
