@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.jar.JarFile;
 
 public class ResourceUtils {
 
@@ -45,6 +46,89 @@ public class ResourceUtils {
 
         if (!Files.exists(target)) {
             copyFromClassLoader(loader, name, target);
+        }
+    }
+
+    /**
+     * Copies a file from jar.
+     *
+     * @param jar the jar file
+     * @param name the filename
+     * @param target the filepath to save
+     * @throws IOException if an I/O error occurs
+     * @throws NullPointerException if {@code null} is specified as an argument.
+     */
+    public static void copyFromJar(@NotNull JarFile jar,
+                                   @NotNull String name, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(jar);
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(target);
+
+        var file = jar.getEntry(name);
+
+        if (file == null) {
+            return;
+        }
+
+        try (var input = jar.getInputStream(file)) {
+            Files.copy(input, target);
+        }
+    }
+
+    /**
+     * Copies a file from jar if the {@code target} not exists.
+     *
+     * @param jar the jar file
+     * @param name the filename
+     * @param target the filepath to save
+     * @throws IOException if an I/O error occurs
+     * @throws NullPointerException if {@code null} is specified as an argument.
+     */
+    public static void copyFromJarIfNotExists(@NotNull JarFile jar,
+                                              @NotNull String name, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(target);
+
+        if (!Files.exists(target)) {
+            copyFromJar(jar, name, target);
+        }
+    }
+
+    /**
+     * Copies a file from jar.
+     *
+     * @param jarPath the jar filepath
+     * @param name the filename
+     * @param target the filepath to save
+     * @throws IOException if an I/O error occurs
+     * @throws NullPointerException if {@code null} is specified as an argument.
+     */
+    public static void copyFromJar(@NotNull Path jarPath,
+                                   @NotNull String name, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(jarPath);
+
+        if (!Files.exists(jarPath)) {
+            return;
+        }
+
+        var jar = new JarFile(jarPath.toFile(), false);
+        copyFromJar(jar, name, target);
+    }
+
+    /**
+     * Copies a file from jar if the {@code target} not exists.
+     *
+     * @param jarPath the jar filepath
+     * @param name the filename
+     * @param target the filepath to save
+     * @throws IOException if an I/O error occurs
+     * @throws NullPointerException if {@code null} is specified as an argument.
+     */
+    public static void copyFromJarIfNotExists(@NotNull Path jarPath,
+                                              @NotNull String name, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(target);
+
+        if (!Files.exists(target)) {
+            copyFromJar(jarPath, name, target);
         }
     }
 }
