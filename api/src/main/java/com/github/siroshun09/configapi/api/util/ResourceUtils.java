@@ -25,8 +25,20 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.jar.JarFile;
 
+/**
+ *  A utility class that provides methods to copy files contained in a jar.
+ */
 public class ResourceUtils {
 
+    /**
+     * Copies a file from classloader.
+     *
+     * @param loader the classloader
+     * @param name the filename
+     * @param target the filepath to save
+     * @throws IOException if an I/O error occurs
+     * @throws NullPointerException if {@code null} is specified as an argument.
+     */
     public static void copyFromClassLoader(@NotNull ClassLoader loader,
                                            @NotNull String name, @NotNull Path target) throws IOException {
         Objects.requireNonNull(loader);
@@ -40,6 +52,15 @@ public class ResourceUtils {
         }
     }
 
+    /**
+     * Copies a file from classloader if the {@code target} not exists.
+     *
+     * @param loader the classloader
+     * @param name the filename
+     * @param target the filepath to save
+     * @throws IOException if an I/O error occurs
+     * @throws NullPointerException if {@code null} is specified as an argument.
+     */
     public static void copyFromClassLoaderIfNotExists(@NotNull ClassLoader loader,
                                                       @NotNull String name, @NotNull Path target) throws IOException {
         Objects.requireNonNull(target);
