@@ -13,3 +13,6 @@ buildNumber.properties
 /.idea
 /jars
 *.iml
+
+# ignore files for test
+test.*
