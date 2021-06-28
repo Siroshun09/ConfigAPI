@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -136,5 +137,25 @@ public class PropertiesFileConfiguration extends AbstractFileConfiguration {
         try (var writer = Files.newBufferedWriter(getPath())) {
             properties.store(writer, comments);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PropertiesFileConfiguration that = (PropertiesFileConfiguration) o;
+        return properties.equals(that.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(properties);
+    }
+
+    @Override
+    public String toString() {
+        return "PropertiesFileConfiguration{" +
+                "properties=" + properties +
+                '}';
     }
 }
