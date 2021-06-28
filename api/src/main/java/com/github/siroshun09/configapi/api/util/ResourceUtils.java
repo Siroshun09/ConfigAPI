@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.jar.JarFile;
 
 /**
- *  A utility class that provides methods to copy files contained in a jar.
+ * A utility class that provides methods to copy files contained in a jar.
  */
 public class ResourceUtils {
 
@@ -34,9 +34,9 @@ public class ResourceUtils {
      * Copies a file from classloader.
      *
      * @param loader the classloader
-     * @param name the filename
+     * @param name   the filename
      * @param target the filepath to save
-     * @throws IOException if an I/O error occurs
+     * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if {@code null} is specified as an argument.
      */
     public static void copyFromClassLoader(@NotNull ClassLoader loader,
@@ -56,9 +56,9 @@ public class ResourceUtils {
      * Copies a file from classloader if the {@code target} not exists.
      *
      * @param loader the classloader
-     * @param name the filename
+     * @param name   the filename
      * @param target the filepath to save
-     * @throws IOException if an I/O error occurs
+     * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if {@code null} is specified as an argument.
      */
     public static void copyFromClassLoaderIfNotExists(@NotNull ClassLoader loader,
@@ -73,10 +73,10 @@ public class ResourceUtils {
     /**
      * Copies a file from jar.
      *
-     * @param jar the jar file
-     * @param name the filename
+     * @param jar    the jar file
+     * @param name   the filename
      * @param target the filepath to save
-     * @throws IOException if an I/O error occurs
+     * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if {@code null} is specified as an argument.
      */
     public static void copyFromJar(@NotNull JarFile jar,
@@ -99,10 +99,10 @@ public class ResourceUtils {
     /**
      * Copies a file from jar if the {@code target} not exists.
      *
-     * @param jar the jar file
-     * @param name the filename
+     * @param jar    the jar file
+     * @param name   the filename
      * @param target the filepath to save
-     * @throws IOException if an I/O error occurs
+     * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if {@code null} is specified as an argument.
      */
     public static void copyFromJarIfNotExists(@NotNull JarFile jar,
@@ -118,9 +118,9 @@ public class ResourceUtils {
      * Copies a file from jar.
      *
      * @param jarPath the jar filepath
-     * @param name the filename
-     * @param target the filepath to save
-     * @throws IOException if an I/O error occurs
+     * @param name    the filename
+     * @param target  the filepath to save
+     * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if {@code null} is specified as an argument.
      */
     public static void copyFromJar(@NotNull Path jarPath,
@@ -139,9 +139,9 @@ public class ResourceUtils {
      * Copies a file from jar if the {@code target} not exists.
      *
      * @param jarPath the jar filepath
-     * @param name the filename
-     * @param target the filepath to save
-     * @throws IOException if an I/O error occurs
+     * @param name    the filename
+     * @param target  the filepath to save
+     * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if {@code null} is specified as an argument.
      */
     public static void copyFromJarIfNotExists(@NotNull Path jarPath,
