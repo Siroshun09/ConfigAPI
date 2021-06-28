@@ -152,4 +152,8 @@ public final class ResourceUtils {
             copyFromJar(jarPath, name, target);
         }
     }
+
+    private ResourceUtils() {
+        throw new UnsupportedOperationException();
+    }
 }
