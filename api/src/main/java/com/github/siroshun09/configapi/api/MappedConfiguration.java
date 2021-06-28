@@ -44,7 +44,7 @@ public class MappedConfiguration extends AbstractConfiguration {
     }
 
     /**
-     * Create the new {@link Configuration} by copying the keys and values from another {@link Configuration}.
+     * Creates the new {@link Configuration} by copying the keys and values from another {@link Configuration}.
      *
      * @param other the source {@link Configuration}
      * @return the new {@link Configuration}
@@ -53,6 +53,22 @@ public class MappedConfiguration extends AbstractConfiguration {
     public static @NotNull Configuration create(@NotNull Configuration other) {
         var map = convertToMap(other);
         return new MappedConfiguration(map);
+    }
+
+    /**
+     * Creates the new {@link Configuration} from the map.
+     *
+     * @param map the map to create {@link Configuration}
+     * @return the new {@link Configuration}
+     */
+    public static @NotNull Configuration create(@NotNull Map<String, Object> map) {
+        var newMap = new LinkedHashMap<>();
+
+        for (var entry : map.entrySet()) {
+            newMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return new MappedConfiguration(newMap);
     }
 
     private static @NotNull Map<Object, Object> convertToMap(@NotNull Configuration config) {
