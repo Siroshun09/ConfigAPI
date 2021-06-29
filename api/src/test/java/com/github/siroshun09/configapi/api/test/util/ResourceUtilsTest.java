@@ -18,7 +18,6 @@ package com.github.siroshun09.configapi.api.test.util;
 
 import com.github.siroshun09.configapi.api.util.ResourceUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -30,26 +29,26 @@ public class ResourceUtilsTest {
     private static final Path JAR_PATH = Path.of("test.jar");
     private static final Path TEXT_PATH = Path.of("test.txt");
 
-    @Test @Disabled("Because it fails only on GitHub Actions and succeeds on Windows / Linux (Ubuntu).")
+    @Test
     void testCopyingFromClassLoader() throws IOException {
         if (Files.exists(JAR_PATH)) {
             Files.delete(JAR_PATH);
         }
 
-        ResourceUtils.copyFromClassLoader(getClass().getClassLoader(), "test.jar", JAR_PATH);
+        ResourceUtils.copyFromClassLoader(getClass().getClassLoader(), "example.jar", JAR_PATH);
 
         Assertions.assertTrue(Files.exists(JAR_PATH));
 
         Files.delete(JAR_PATH);
     }
 
-    @Test @Disabled("Because it fails only on GitHub Actions and succeeds on Windows / Linux (Ubuntu).")
+    @Test
     void testCopyingFromJar() throws IOException {
         if (Files.exists(TEXT_PATH)) {
             Files.delete(TEXT_PATH);
         }
 
-        ResourceUtils.copyFromClassLoaderIfNotExists(getClass().getClassLoader(), "test.jar", JAR_PATH);
+        ResourceUtils.copyFromClassLoaderIfNotExists(getClass().getClassLoader(), "example.jar", JAR_PATH);
 
         ResourceUtils.copyFromJar(JAR_PATH, "test.txt", TEXT_PATH);
         Assertions.assertTrue(Files.exists(TEXT_PATH));
