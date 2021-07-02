@@ -61,14 +61,8 @@ public class MappedConfiguration extends AbstractConfiguration {
      * @param map the map to create {@link Configuration}
      * @return the new {@link Configuration}
      */
-    public static @NotNull Configuration create(@NotNull Map<String, Object> map) {
-        var newMap = new LinkedHashMap<>();
-
-        for (var entry : map.entrySet()) {
-            newMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return new MappedConfiguration(newMap);
+    public static @NotNull Configuration create(@NotNull Map<Object, Object> map) {
+        return new MappedConfiguration(new LinkedHashMap<>(map));
     }
 
     private static @NotNull Map<Object, Object> convertToMap(@NotNull Configuration config) {
