@@ -1,6 +1,6 @@
-com.github.siroshun09.configapi.common
-com.github.siroshun09.configapi.common.serialize
-com.github.siroshun09.configapi.common.serialize.exception
-com.github.siroshun09.configapi.common.util
-com.github.siroshun09.configapi.common.value
+com.github.siroshun09.configapi.api
+com.github.siroshun09.configapi.api.file
+com.github.siroshun09.configapi.api.serializer
+com.github.siroshun09.configapi.api.util
+com.github.siroshun09.configapi.api.value
 com.github.siroshun09.configapi.yaml
