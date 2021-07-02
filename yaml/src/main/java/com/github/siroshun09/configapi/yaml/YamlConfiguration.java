@@ -55,6 +55,45 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         return new YamlConfiguration(path, Yaml::new);
     }
 
+    /**
+     * Creates the new {@link YamlConfiguration} from specified {@link Path} and other {@link Configuration}.
+     *
+     * @param path  the path to load or save
+     * @param other the other {@link Configuration}
+     * @return the new {@link YamlConfiguration}
+     */
+    @Contract("_, _ -> new")
+    public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Configuration other) {
+        return new YamlConfiguration(path, Yaml::new, other);
+    }
+
+    /**
+     * Creates the new {@link YamlConfiguration} from specified {@link Path}
+     * and specified supplier of {@link Yaml}.
+     *
+     * @param path         the path to load or save
+     * @param yamlSupplier the supplier of {@link Yaml}
+     * @return the new {@link YamlConfiguration}
+     */
+    @Contract("_, _ -> new")
+    public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier) {
+        return new YamlConfiguration(path, yamlSupplier);
+    }
+
+    /**
+     * Creates the new {@link YamlConfiguration} from specified {@link Path},
+     * other {@link Configuration}, and specified supplier of {@link Yaml}.
+     *
+     * @param path         the path to load or save
+     * @param yamlSupplier the supplier of {@link Yaml}
+     * @param other        the other {@link Configuration}
+     * @return the new {@link YamlConfiguration}
+     */
+    @Contract("_, _, _ -> new")
+    public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier, @NotNull Configuration other) {
+        return new YamlConfiguration(path, yamlSupplier, other);
+    }
+
     private final ThreadLocal<Yaml> yamlThreadLocal;
     private Configuration config;
 
