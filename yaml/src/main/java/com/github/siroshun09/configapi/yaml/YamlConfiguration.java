@@ -19,6 +19,7 @@ package com.github.siroshun09.configapi.yaml;
 import com.github.siroshun09.configapi.api.Configuration;
 import com.github.siroshun09.configapi.api.MappedConfiguration;
 import com.github.siroshun09.configapi.api.file.AbstractFileConfiguration;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -49,6 +50,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      * @param path the path to load or save
      * @return the new {@link YamlConfiguration}
      */
+    @Contract("_ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path) {
         return new YamlConfiguration(path, Yaml::new);
     }
