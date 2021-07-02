@@ -34,8 +34,21 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
+/**
+ * A class that implements {@link Configuration} for Yaml file.
+ * <p>
+ * This class can load from or save to Yaml file.
+ * <p>
+ * In the internal, this manages keys and values in {@link MappedConfiguration}.
+ */
 public class YamlConfiguration extends AbstractFileConfiguration {
 
+    /**
+     * Creates the new {@link YamlConfiguration} from specified {@link Path}.
+     *
+     * @param path the path to load or save
+     * @return the new {@link YamlConfiguration}
+     */
     public static @NotNull YamlConfiguration create(@NotNull Path path) {
         return new YamlConfiguration(path, Yaml::new);
     }

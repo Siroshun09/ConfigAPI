@@ -35,5 +35,11 @@ public interface StringSerializer<T> extends Serializer<T, String> {
         return deserializeString(string);
     }
 
+    /**
+     * Deserializes the {@link String}.
+     *
+     * @param source the string to deserialize
+     * @return the deserialized value or {@code null} if could not deserialize
+     */
     @Nullable T deserializeString(@NotNull String source);
 }
