@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.api;
 
+import com.github.siroshun09.configapi.api.serializer.Serializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -39,6 +40,23 @@ public abstract class AbstractConfiguration implements Configuration {
     }
 
     @Override
+    public <T> @Nullable T get(@NotNull String path, @NotNull Serializer<T, ?> serializer) {
+        var value = get(path);
+        return value != null ? serializer.deserialize(value) : null;
+    }
+
+    @Override
+    public <T> @NotNull T get(@NotNull String path, @NotNull Serializer<T, ?> serializer, @NotNull T def) {
+        var value = get(path, serializer);
+        return value != null ? value : def;
+    }
+
+    @Override
+    public <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T, ?> serializer) {
+        set(path, serializer.serialize(value));
+    }
+
+    @Override
     public @NotNull @Unmodifiable List<?> getList(@NotNull String path) {
         return getList(path, Collections.emptyList());
     }
@@ -47,6 +65,33 @@ public abstract class AbstractConfiguration implements Configuration {
     public @NotNull @Unmodifiable List<?> getList(@NotNull String path, @NotNull List<?> def) {
         var value = get(path);
         return value instanceof List<?> ? (List<?>) value : def;
+    }
+
+    @Override
+    public @NotNull @Unmodifiable <T> List<T> getList(@NotNull String path, @NotNull Serializer<T, ?> serializer) {
+        return getList(path).stream()
+                .map(serializer::deserialize)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public @NotNull @Unmodifiable <T> List<T> getList(@NotNull String path, @NotNull Serializer<T, ?> serializer, List<T> def) {
+        var list = getListOrNull(path);
+
+        if (list != null) {
+            return list.stream()
+                    .map(serializer::deserialize)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toUnmodifiableList());
+        } else {
+            return def;
+        }
+    }
+
+    @Override
+    public <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T, ?> serializer) {
+        set(path, list.stream().map(serializer::serialize).collect(Collectors.toUnmodifiableList()));
     }
 
     @Override

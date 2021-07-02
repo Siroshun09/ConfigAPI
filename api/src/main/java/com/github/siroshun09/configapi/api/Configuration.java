@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.api;
 
+import com.github.siroshun09.configapi.api.serializer.Serializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -51,12 +52,38 @@ public interface Configuration {
 
     /**
      * Gets the object of the specified path.
+     * <p>
+     * If the object could not be obtained or deserialized,
+     * this method returns {@code null}.
+     *
+     * @param path       the path to get the object
+     * @param serializer the serializer to deserialize object
+     * @param <T>        the type of value
+     * @return the deserialized object or {@code null}
+     */
+    <T> @Nullable T get(@NotNull String path, @NotNull Serializer<T, ?> serializer);
+
+    /**
+     * Gets the object of the specified path.
      *
      * @param path the path to get the object
      * @param def  the default object to return if the object could not be obtained
      * @return the object
      */
     @NotNull Object get(@NotNull String path, @NotNull Object def);
+
+    /**
+     * Gets the object of the specified path.
+     * <p>
+     * The object to be returned will be deserialized using {@link Serializer}.
+     *
+     * @param path       the path to get the object
+     * @param serializer the serializer to deserialize the object
+     * @param def        the default object to return if the object could not be obtained or deserialized
+     * @param <T>        the type of value
+     * @return the deserialized object or default object
+     */
+    <T> @NotNull T get(@NotNull String path, @NotNull Serializer<T, ?> serializer, @NotNull T def);
 
     /**
      * Sets the object to the specified path.
@@ -68,6 +95,18 @@ public interface Configuration {
      * @param value the object to set or {@code null}
      */
     void set(@NotNull String path, @Nullable Object value);
+
+    /**
+     * Sets the object to the specified path.
+     * <p>
+     * The object to set will be serialized using {@link Serializer}
+     *
+     * @param path       the path to set
+     * @param value      the value to set
+     * @param serializer the serializer to serialize value
+     * @param <T>        the type of value
+     */
+    <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T, ?> serializer);
 
     /**
      * Gets the set of root paths included in this {@link Configuration}.
@@ -113,6 +152,53 @@ public interface Configuration {
      * @return the list or default one
      */
     @NotNull @Unmodifiable List<?> getList(@NotNull String path, @NotNull List<?> def);
+
+    /**
+     * Gets the list of the specified path.
+     * <p>
+     * Each element in the list is converted by the {@link Serializer},
+     * and those that cannot be converted are removed from the returning list.
+     * <p>
+     * The list stored in this configuration is not changed.
+     *
+     * @param path       the path to get the list
+     * @param serializer the serializer to serialize elements
+     * @param <T>        the type of value
+     * @return the serialized list
+     */
+    @NotNull @Unmodifiable <T> List<T> getList(@NotNull String path, @NotNull Serializer<T, ?> serializer);
+
+    /**
+     * Gets the list of the specified path.
+     * <p>
+     * Each element in the list is converted by the {@link Serializer},
+     * and those that cannot be converted are removed from the list to be returned.
+     * <p>
+     * The list stored in this configuration will not be changed.
+     *
+     * @param path       the path to get the list
+     * @param serializer the serializer to serialize elements
+     * @param def        the default list to return if the list could not be obtained
+     * @param <T>        the type of value
+     * @return the serialized list or default one
+     */
+    @NotNull @Unmodifiable <T> List<T> getList(@NotNull String path,
+                                               @NotNull Serializer<T, ?> serializer, List<T> def);
+
+    /**
+     * Sets the list to specified path.
+     * <p>
+     * Each element in the list is converted by the {@link Serializer},
+     * and those that cannot be converted are removed from the list to be set.
+     * <p>
+     * The list given as an argument will not be changed.
+     *
+     * @param path       the path to set the list
+     * @param list       the list to set
+     * @param serializer the serializer to serialize elements
+     * @param <T>        the type of value
+     */
+    <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T, ?> serializer);
 
     /**
      * Gets the boolean of the specified path.
