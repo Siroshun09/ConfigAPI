@@ -17,7 +17,11 @@
 package com.github.siroshun09.configapi.api.serializer;
 
 import com.github.siroshun09.configapi.api.Configuration;
+import com.github.siroshun09.configapi.api.MappedConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * An interface that converts an object to a {@link Configuration}.
@@ -29,6 +33,24 @@ public interface ConfigurationSerializer<T> extends Serializer<T, Configuration>
     @Override
     @NotNull Configuration serialize(@NotNull T value);
 
+    @SuppressWarnings("unchecked")
     @Override
-    @NotNull T deserialize(@NotNull Configuration source);
+    default @Nullable T deserialize(@NotNull Object source) {
+        if (source instanceof Configuration) {
+            return deserializeConfiguration((Configuration) source);
+        } else if (source instanceof Map) {
+            var config = MappedConfiguration.create((Map<Object, Object>) source);
+            return deserializeConfiguration(config);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Deserializes {@link Configuration}
+     *
+     * @param config the config to deserialize
+     * @return the deserialized value or {@code null} if could not deserialize
+     */
+    @Nullable T deserializeConfiguration(@NotNull Configuration config);
 }

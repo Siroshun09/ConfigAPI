@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.api.serializer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An interface that converts an object to a {@link String}.
@@ -29,5 +30,10 @@ public interface StringSerializer<T> extends Serializer<T, String> {
     @NotNull String serialize(@NotNull T value);
 
     @Override
-    @NotNull T deserialize(@NotNull String source);
+    default @Nullable T deserialize(@NotNull Object source) {
+        var string = source instanceof String ? (String) source : source.toString();
+        return deserializeString(string);
+    }
+
+    @Nullable T deserializeString(@NotNull String source);
 }

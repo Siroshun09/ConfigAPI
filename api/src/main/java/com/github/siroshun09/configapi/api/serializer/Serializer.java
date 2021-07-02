@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.api.serializer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An interface that represents serializer.
@@ -38,7 +39,7 @@ public interface Serializer<T, S> {
      * Deserializes the value.
      *
      * @param source the value to deserialize
-     * @return the deserialized value
+     * @return the deserialized value or {@code null} if could not deserialize
      */
-    @NotNull T deserialize(@NotNull S source);
+    @Nullable T deserialize(@NotNull Object source);
 }
