@@ -9,18 +9,18 @@ A configuration library for Java.
 
 ## Requirements
 
-- Java 8+
+- Java 11+
 
 ## Usage (Maven)
 
 Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
 
-### Common
+### API
 
 ```xml
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
-    <artifactId>common</artifactId>
+    <artifactId>api</artifactId>
     <version>4.0.0-SNAPSHOT</version>
     <scope>compile</scope>
 </dependency>
@@ -33,6 +33,17 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>yaml</artifactId>
     <version>4.0.0-SNAPSHOT</version>
+    <scope>compile</scope>
+</dependency>
+```
+
+If necessary, add the snakeYaml dependency as follows:
+
+```xml
+<dependency>
+    <groupId>org.yaml</groupId>
+    <artifactId>snakeyaml</artifactId>
+    <version>1.29</version>
     <scope>compile</scope>
 </dependency>
 ```
