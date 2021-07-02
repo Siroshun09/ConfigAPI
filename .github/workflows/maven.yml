@@ -23,6 +23,7 @@ jobs:
         run: |
           mkdir staging
           mv api/target staging/api
+          mv yaml/target staging/yaml
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: Artifacts
