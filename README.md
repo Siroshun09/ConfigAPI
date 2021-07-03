@@ -1,7 +1,7 @@
 # ConfigAPI
 
-![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.configapi/configapi)
-![Maven Central](https://img.shields.io/nexus/s/com.github.siroshun09.configapi/configapi?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
+![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.configapi/parent)
+![Maven Central](https://img.shields.io/nexus/s/com.github.siroshun09.configapi/parent?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Siroshun09/ConfigAPI/Java%20CI)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/ConfigAPI)
 
@@ -20,7 +20,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
 ```xml
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
-    <artifactId>api</artifactId>
+    <artifactId>configapi</artifactId>
     <version>4.1.0-SNAPSHOT</version>
     <scope>compile</scope>
 </dependency>
@@ -31,7 +31,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
 ```xml
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
-    <artifactId>yaml</artifactId>
+    <artifactId>configapi-yaml</artifactId>
     <version>4.1.0-SNAPSHOT</version>
     <scope>compile</scope>
 </dependency>
