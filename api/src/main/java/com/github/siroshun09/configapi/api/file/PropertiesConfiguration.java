@@ -32,32 +32,32 @@ import java.util.stream.Collectors;
 /**
  * A implementation class that gets value from {@link Properties}.
  */
-public class PropertiesFileConfiguration extends AbstractFileConfiguration {
+public class PropertiesConfiguration extends AbstractFileConfiguration {
 
     /**
-     * Creates a new {@link PropertiesFileConfiguration}.
+     * Creates a new {@link PropertiesConfiguration}.
      *
      * @param path the filepath to load
-     * @return the new {@link PropertiesFileConfiguration}
+     * @return the new {@link PropertiesConfiguration}
      */
-    public static @NotNull PropertiesFileConfiguration create(@NotNull Path path) {
+    public static @NotNull PropertiesConfiguration create(@NotNull Path path) {
         return create(path, new Properties());
     }
 
     /**
-     * Creates a new {@link PropertiesFileConfiguration}.
+     * Creates a new {@link PropertiesConfiguration}.
      *
      * @param path       the filepath to load
      * @param properties the {@link Properties}
-     * @return the new {@link PropertiesFileConfiguration}
+     * @return the new {@link PropertiesConfiguration}
      */
-    public static @NotNull PropertiesFileConfiguration create(@NotNull Path path, @NotNull Properties properties) {
-        return new PropertiesFileConfiguration(path, properties);
+    public static @NotNull PropertiesConfiguration create(@NotNull Path path, @NotNull Properties properties) {
+        return new PropertiesConfiguration(path, properties);
     }
 
     private final Properties properties;
 
-    private PropertiesFileConfiguration(@NotNull Path path, @NotNull Properties properties) {
+    private PropertiesConfiguration(@NotNull Path path, @NotNull Properties properties) {
         super(path);
         this.properties = properties;
     }
@@ -138,7 +138,7 @@ public class PropertiesFileConfiguration extends AbstractFileConfiguration {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PropertiesFileConfiguration that = (PropertiesFileConfiguration) o;
+        PropertiesConfiguration that = (PropertiesConfiguration) o;
         return properties.equals(that.properties);
     }
 

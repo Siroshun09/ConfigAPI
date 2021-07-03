@@ -16,7 +16,7 @@
 
 package com.github.siroshun09.configapi.api.test.file;
 
-import com.github.siroshun09.configapi.api.file.PropertiesFileConfiguration;
+import com.github.siroshun09.configapi.api.file.PropertiesConfiguration;
 import com.github.siroshun09.configapi.api.util.ResourceUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,20 +25,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-class PropertiesFileConfigurationTest {
+class PropertiesConfigurationTest {
 
     private static final Path PROPERTIES_PATH = Path.of("test.properties");
 
     @Test
     void testSaving() throws IOException {
-        var config = PropertiesFileConfiguration.create(PROPERTIES_PATH);
+        var config = PropertiesConfiguration.create(PROPERTIES_PATH);
 
         config.set("aaa.bbb.ccc", "value");
         config.set("example.key", 1);
 
         config.save();
 
-        var sameConfig = PropertiesFileConfiguration.create(PROPERTIES_PATH);
+        var sameConfig = PropertiesConfiguration.create(PROPERTIES_PATH);
         sameConfig.load();
 
         Assertions.assertEquals(config, sameConfig);
@@ -56,7 +56,7 @@ class PropertiesFileConfigurationTest {
                 getClass().getClassLoader(), "example.properties", PROPERTIES_PATH
         );
 
-        var config = PropertiesFileConfiguration.create(PROPERTIES_PATH);
+        var config = PropertiesConfiguration.create(PROPERTIES_PATH);
 
         config.load();
 
