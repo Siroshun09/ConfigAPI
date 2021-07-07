@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.api;
 
 import com.github.siroshun09.configapi.api.serializer.Serializer;
+import com.github.siroshun09.configapi.api.value.ConfigValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -49,6 +50,11 @@ public abstract class AbstractConfiguration implements Configuration {
     public <T> @NotNull T get(@NotNull String path, @NotNull Serializer<T, ?> serializer, @NotNull T def) {
         var value = get(path, serializer);
         return value != null ? value : def;
+    }
+
+    @Override
+    public <T> @NotNull T get(@NotNull ConfigValue<T> configValue) {
+        return configValue.get(this);
     }
 
     @Override

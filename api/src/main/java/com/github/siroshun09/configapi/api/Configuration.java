@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.api;
 
 import com.github.siroshun09.configapi.api.serializer.Serializer;
+import com.github.siroshun09.configapi.api.value.ConfigValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -84,6 +85,15 @@ public interface Configuration {
      * @return the deserialized object or default object
      */
     <T> @NotNull T get(@NotNull String path, @NotNull Serializer<T, ?> serializer, @NotNull T def);
+
+    /**
+     * Gets the value using {@link ConfigValue}.
+     *
+     * @param configValue the {@link ConfigValue} to get
+     * @param <T> the type of value
+     * @return the object
+     */
+    <T> @NotNull T get(@NotNull ConfigValue<T> configValue);
 
     /**
      * Sets the object to the specified path.
