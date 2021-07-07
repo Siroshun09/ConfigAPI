@@ -105,7 +105,7 @@ class MappedConfigurationTest {
     void testInvalidPath() {
         var config = MappedConfiguration.create();
         //noinspection ConstantConditions
-        Assertions.assertThrows(IllegalArgumentException.class, () -> config.get(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.get((String) null));
         Assertions.assertThrows(IllegalArgumentException.class, () -> config.get(""));
         Assertions.assertThrows(IllegalArgumentException.class, () -> config.get("ddd."));
         Assertions.assertThrows(IllegalArgumentException.class, () -> config.get(".ddd"));
