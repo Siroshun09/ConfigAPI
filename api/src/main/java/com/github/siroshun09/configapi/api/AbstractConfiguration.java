@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -313,6 +314,26 @@ public abstract class AbstractConfiguration implements Configuration {
         } else {
             return def;
         }
+    }
+
+    @Override
+    public byte[] getBytes(@NotNull String path) {
+        var str = getString(path);
+
+        if (str.isEmpty()) {
+            return new byte[0];
+        }
+
+        try {
+            return Base64.getDecoder().decode(str);
+        } catch (IllegalArgumentException ignored) {
+            return new byte[0];
+        }
+    }
+
+    @Override
+    public void setBytes(@NotNull String path, byte[] bytes) {
+        set(path, Base64.getEncoder().encodeToString(bytes));
     }
 
     private <T extends Number> @NotNull T getNumber(@NotNull String path, T def,

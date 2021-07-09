@@ -521,4 +521,24 @@ public interface Configuration {
      * @return the string list
      */
     @NotNull @Unmodifiable List<String> getStringList(@NotNull String path, @NotNull List<String> def);
+
+    /**
+     * Gets the byte array.
+     * <p>
+     * This method decodes a base64 string into a byte array using {@link java.util.Base64#getDecoder()}.
+     *
+     * @param path the path to get the byte array
+     * @return the decoded byte array or the empty byte array if could not decode base64 string
+     */
+    byte[] getBytes(@NotNull String path);
+
+    /**
+     * Sets the byte array.
+     * <p>
+     * This method encodes a byte array into a base64 string using {@link java.util.Base64#getEncoder}.
+     *
+     * @param path  the path to set the byte array
+     * @param bytes the byte array to set
+     */
+    void setBytes(@NotNull String path, byte[] bytes);
 }
