@@ -99,7 +99,7 @@
 <span class="sourceLineNo">090</span><a id="line.90">     * Gets the value using {@link ConfigValue}.</a>
 <span class="sourceLineNo">091</span><a id="line.91">     *</a>
 <span class="sourceLineNo">092</span><a id="line.92">     * @param configValue the {@link ConfigValue} to get</a>
-<span class="sourceLineNo">093</span><a id="line.93">     * @param &lt;T&gt; the type of value</a>
+<span class="sourceLineNo">093</span><a id="line.93">     * @param &lt;T&gt;         the type of value</a>
 <span class="sourceLineNo">094</span><a id="line.94">     * @return the object</a>
 <span class="sourceLineNo">095</span><a id="line.95">     */</a>
 <span class="sourceLineNo">096</span><a id="line.96">    &lt;T&gt; @NotNull T get(@NotNull ConfigValue&lt;T&gt; configValue);</a>
@@ -530,7 +530,27 @@
 <span class="sourceLineNo">521</span><a id="line.521">     * @return the string list</a>
 <span class="sourceLineNo">522</span><a id="line.522">     */</a>
 <span class="sourceLineNo">523</span><a id="line.523">    @NotNull @Unmodifiable List&lt;String&gt; getStringList(@NotNull String path, @NotNull List&lt;String&gt; def);</a>
-<span class="sourceLineNo">524</span><a id="line.524">}</a>
+<span class="sourceLineNo">524</span><a id="line.524"></a>
+<span class="sourceLineNo">525</span><a id="line.525">    /**</a>
+<span class="sourceLineNo">526</span><a id="line.526">     * Gets the byte array.</a>
+<span class="sourceLineNo">527</span><a id="line.527">     * &lt;p&gt;</a>
+<span class="sourceLineNo">528</span><a id="line.528">     * This method decodes a base64 string into a byte array using {@link java.util.Base64#getDecoder()}.</a>
+<span class="sourceLineNo">529</span><a id="line.529">     *</a>
+<span class="sourceLineNo">530</span><a id="line.530">     * @param path the path to get the byte array</a>
+<span class="sourceLineNo">531</span><a id="line.531">     * @return the decoded byte array or the empty byte array if could not decode base64 string</a>
+<span class="sourceLineNo">532</span><a id="line.532">     */</a>
+<span class="sourceLineNo">533</span><a id="line.533">    byte[] getBytes(@NotNull String path);</a>
+<span class="sourceLineNo">534</span><a id="line.534"></a>
+<span class="sourceLineNo">535</span><a id="line.535">    /**</a>
+<span class="sourceLineNo">536</span><a id="line.536">     * Sets the byte array.</a>
+<span class="sourceLineNo">537</span><a id="line.537">     * &lt;p&gt;</a>
+<span class="sourceLineNo">538</span><a id="line.538">     * This method encodes a byte array into a base64 string using {@link java.util.Base64#getEncoder}.</a>
+<span class="sourceLineNo">539</span><a id="line.539">     *</a>
+<span class="sourceLineNo">540</span><a id="line.540">     * @param path  the path to set the byte array</a>
+<span class="sourceLineNo">541</span><a id="line.541">     * @param bytes the byte array to set</a>
+<span class="sourceLineNo">542</span><a id="line.542">     */</a>
+<span class="sourceLineNo">543</span><a id="line.543">    void setBytes(@NotNull String path, byte[] bytes);</a>
+<span class="sourceLineNo">544</span><a id="line.544">}</a>
 
 
 
