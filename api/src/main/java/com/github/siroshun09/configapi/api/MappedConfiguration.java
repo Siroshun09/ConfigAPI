@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 /**
  * A class that implements {@link Configuration}.
- *
+ * <p>
  * This class manages keys and values as a map.
  */
 public class MappedConfiguration extends AbstractConfiguration {

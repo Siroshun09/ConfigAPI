@@ -99,7 +99,7 @@ class MappedConfigurationTest {
         Assertions.assertEquals("value", config.get("other-config.key"));
         Assertions.assertEquals("value", config.get("other-config.map.key"));
         Assertions.assertEquals(LinkedHashMap.class, Objects.requireNonNull(config.get("other-config.map")).getClass());
- }
+    }
 
     @Test
     void testInvalidPath() {

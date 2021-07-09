@@ -90,7 +90,7 @@ public interface Configuration {
      * Gets the value using {@link ConfigValue}.
      *
      * @param configValue the {@link ConfigValue} to get
-     * @param <T> the type of value
+     * @param <T>         the type of value
      * @return the object
      */
     <T> @NotNull T get(@NotNull ConfigValue<T> configValue);
