@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -81,6 +82,11 @@ class MappedConfigurationTest {
             @Override
             public @NotNull @Unmodifiable Set<String> getPaths() {
                 return Set.of("key", "map");
+            }
+
+            @Override
+            public @NotNull @Unmodifiable List<String> getKeyList() {
+                return List.of("key", "map");
             }
 
             @Override

@@ -126,6 +126,15 @@ public interface Configuration {
     @NotNull @Unmodifiable Set<String> getPaths();
 
     /**
+     * Gets the list of root keys included in this {@link Configuration}.
+     *
+     * This method may not return to the correct order depending on the implementation.
+     *
+     * @return list of root keys
+     */
+    @NotNull @Unmodifiable List<String> getKeyList();
+
+    /**
      * Gets the set of root objects included in this {@link Configuration}.
      *
      * @return set of root keys

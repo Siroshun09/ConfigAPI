@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -128,6 +129,11 @@ public class YamlConfiguration extends AbstractFileConfiguration {
     }
 
     @Override
+    public @NotNull @Unmodifiable List<String> getKeyList() {
+        return config.getKeyList();
+    }
+
+    @Override
     public @NotNull @Unmodifiable Set<Object> getValues() {
         return config != null ? config.getValues() : Collections.emptySet();
     }
@@ -165,7 +171,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         var map = new LinkedHashMap<>();
 
         if (config != null) {
-            for (var key : config.getPaths()) {
+            for (var key : config.getKeyList()) {
                 map.put(key, config.get(key));
             }
         }

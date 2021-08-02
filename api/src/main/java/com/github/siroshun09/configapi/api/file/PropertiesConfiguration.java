@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
@@ -84,6 +85,14 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
                 .stream()
                 .map(object -> object instanceof String ? (String) object : object.toString())
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public @NotNull @Unmodifiable List<String> getKeyList() {
+        return properties.keySet()
+                .stream()
+                .map(object -> object instanceof String ? (String) object : object.toString())
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override

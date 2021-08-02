@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,7 +73,7 @@ public class MappedConfiguration extends AbstractConfiguration {
 
         var map = new LinkedHashMap<>();
 
-        for (var key : config.getPaths()) {
+        for (var key : config.getKeyList()) {
             var value = config.get(key);
 
             if (value instanceof Configuration) {
@@ -175,6 +176,13 @@ public class MappedConfiguration extends AbstractConfiguration {
         return map.keySet().stream()
                 .map(object -> object instanceof String ? (String) object : object.toString())
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public @NotNull @Unmodifiable List<String> getKeyList() {
+        return map.keySet().stream()
+                .map(object -> object instanceof String ? (String) object : object.toString())
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
