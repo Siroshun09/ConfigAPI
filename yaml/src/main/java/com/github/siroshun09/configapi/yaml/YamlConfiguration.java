@@ -140,7 +140,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
 
     @Override
     public @NotNull @Unmodifiable List<String> getKeyList() {
-        return config.getKeyList();
+        return config != null ? config.getKeyList() : Collections.emptyList();
     }
 
     @Override
