@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -45,6 +46,15 @@ import java.util.function.Supplier;
  */
 public class YamlConfiguration extends AbstractFileConfiguration {
 
+    private static final Supplier<Yaml> DEFAULT_YAML_SUPPLIER;
+
+    static {
+        var options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+        DEFAULT_YAML_SUPPLIER = () -> new Yaml(options);
+    }
+
     /**
      * Creates the new {@link YamlConfiguration} from specified {@link Path}.
      *
@@ -53,7 +63,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path) {
-        return new YamlConfiguration(path, Yaml::new);
+        return new YamlConfiguration(path, DEFAULT_YAML_SUPPLIER);
     }
 
     /**
@@ -65,7 +75,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Configuration other) {
-        return new YamlConfiguration(path, Yaml::new, other);
+        return new YamlConfiguration(path, DEFAULT_YAML_SUPPLIER, other);
     }
 
     /**
