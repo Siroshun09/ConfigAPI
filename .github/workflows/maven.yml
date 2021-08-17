@@ -29,5 +29,5 @@ jobs:
           mv yaml/target staging/yaml
       - uses: actions/upload-artifact@v2.2.4
         with:
-          name: Artifacts
+          name: Artifacts-Java-${{ matrix.java }}
           path: staging
