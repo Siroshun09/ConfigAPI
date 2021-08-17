@@ -119,15 +119,6 @@ public interface Configuration {
     <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T, ?> serializer);
 
     /**
-     * Gets the set of root paths included in this {@link Configuration}.
-     *
-     * @return set of root paths
-     * @deprecated use {@link Configuration#getKeyList()}
-     */
-    @Deprecated(since = "4.3.0", forRemoval = true)
-    @NotNull @Unmodifiable Set<String> getPaths();
-
-    /**
      * Gets the list of root keys included in this {@link Configuration}.
      *
      * This method may not return to the correct order depending on the implementation.

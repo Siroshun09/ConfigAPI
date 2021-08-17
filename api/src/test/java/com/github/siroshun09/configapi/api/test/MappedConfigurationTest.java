@@ -80,11 +80,6 @@ class MappedConfigurationTest {
             }
 
             @Override
-            public @NotNull @Unmodifiable Set<String> getPaths() {
-                return Set.of("key", "map");
-            }
-
-            @Override
             public @NotNull @Unmodifiable List<String> getKeyList() {
                 return List.of("key", "map");
             }
