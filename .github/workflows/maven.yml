@@ -25,6 +25,7 @@ jobs:
       - name: Move Artifacts
         run: |
           mkdir staging
+          mv target staging/parent
           mv api/target staging/api
           mv yaml/target staging/yaml
       - uses: actions/upload-artifact@v2.2.4
