@@ -38,7 +38,7 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public @NotNull Object get(@NotNull String path, @NotNull Object def) {
         var value = get(path);
-        return value != null ? value : Objects.requireNonNull(path);
+        return value != null ? value : Objects.requireNonNull(def);
     }
 
     @Override
