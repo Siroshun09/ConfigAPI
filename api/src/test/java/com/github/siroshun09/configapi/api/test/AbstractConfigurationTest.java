@@ -80,6 +80,26 @@ public class AbstractConfigurationTest {
         Assertions.assertEquals(Byte.MAX_VALUE, config.getByte("test-max"));
     }
 
+    @Test
+    void testGettingDouble() {
+        var config = newConfiguration();
+
+        config.set("test-1", 5);
+        config.set("test-2", -5);
+
+        Assertions.assertEquals(5, config.getDouble("test-1"));
+        Assertions.assertEquals(-5, config.getDouble("test-2"));
+
+        config.set("test-min", Double.MIN_VALUE);
+        config.set("test-max", Double.MAX_VALUE);
+
+        Assertions.assertEquals(Double.MIN_VALUE, config.getDouble("test-min"));
+        Assertions.assertEquals(Double.MAX_VALUE, config.getDouble("test-max"));
+
+        Assertions.assertEquals(0, config.getDouble("empty"));
+        Assertions.assertEquals(100, config.getDouble("empty", 100));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
@@ -94,5 +114,4 @@ public class AbstractConfigurationTest {
     private static @NotNull Configuration newConfiguration() {
         return MappedConfiguration.create();
     }
-
 }
