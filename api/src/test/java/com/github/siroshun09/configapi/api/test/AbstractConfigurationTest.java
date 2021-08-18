@@ -47,6 +47,18 @@ public class AbstractConfigurationTest {
         Assertions.assertSame(Collections.emptyList(), config.getList("test"));
     }
 
+    @Test
+    void testGettingBoolean() {
+        var config = newConfiguration();
+
+        config.set("test", true);
+        Assertions.assertTrue(config.getBoolean("test"));
+
+        config.set("test-string", "true");
+        Assertions.assertFalse(config.getBoolean("test-string"));
+        Assertions.assertTrue(config.getBoolean("test-string", true));
+    }
+
     @Contract(" -> new")
     private static @NotNull Configuration newConfiguration() {
         return MappedConfiguration.create();
