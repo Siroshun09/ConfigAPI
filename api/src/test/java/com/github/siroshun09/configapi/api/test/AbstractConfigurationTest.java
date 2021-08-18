@@ -356,6 +356,43 @@ public class AbstractConfigurationTest {
         Assertions.assertSame(def, config.getShortList("empty", def));
     }
 
+    @Test
+    void testGettingStringList() {
+        var list = List.of(new Object(), "test", "", 100, true);
+
+        var config = newConfiguration();
+        config.set("test-1", list);
+
+        var actual = config.getStringList("test-1");
+
+        Assertions.assertEquals(5, config.getStringList("test-1").size());
+
+        for (Object object : actual) {
+            Assertions.assertEquals(String.class, object.getClass());
+        }
+
+        var includeNull = new ArrayList<>();
+        includeNull.add("test");
+        includeNull.add(null);
+        includeNull.add(100);
+        includeNull.add(true);
+
+        config.set("test-2", includeNull);
+
+        var actual2 = config.getStringList("test-2");
+
+        Assertions.assertEquals(3, config.getStringList("test-2").size());
+
+        for (Object object : actual2) {
+            Assertions.assertEquals(String.class, object.getClass());
+        }
+
+        Assertions.assertSame(Collections.emptyList(), config.getShortList("empty"));
+
+        var def = List.of("test", "test");
+        Assertions.assertSame(def, config.getStringList("empty", def));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
