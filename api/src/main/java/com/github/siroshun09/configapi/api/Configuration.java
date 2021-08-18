@@ -348,7 +348,7 @@ public interface Configuration {
     /**
      * Gets the string of the specified path.
      * <p>
-     * If the string could not be obtained, this method returns 0.
+     * If the string could not be obtained, this method returns empty string.
      *
      * @param path the path to get the string
      * @return the string
