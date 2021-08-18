@@ -314,6 +314,26 @@ public class AbstractConfigurationTest {
         Assertions.assertSame(def, config.getIntegerList("empty", def));
     }
 
+    @Test
+    void testGettingLongList() {
+        var list = List.of(new Object(), 5, -5, Long.MAX_VALUE, 5.5, true, "test");
+
+        var config = newConfiguration();
+        config.set("test", list);
+
+        var actual = config.getLongList("test");
+
+        Assertions.assertEquals(4, config.getLongList("test").size());
+
+        for (Object object : actual) {
+            Assertions.assertEquals(Long.class, object.getClass());
+        }
+
+        Assertions.assertSame(Collections.emptyList(), config.getLongList("empty"));
+
+        var def = List.of(5L, -5L);
+        Assertions.assertSame(def, config.getLongList("empty", def));
+    }
 
     @SuppressWarnings("ConstantConditions")
     @Test
