@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -391,6 +392,30 @@ public class AbstractConfigurationTest {
 
         var def = List.of("test", "test");
         Assertions.assertSame(def, config.getStringList("empty", def));
+    }
+
+    @Test
+    void testBytes() {
+        byte[] bytes = {-3, -1, 1, 3};
+
+        var config = newConfiguration();
+        config.setBytes("test", bytes);
+
+        var actual = config.getBytes("test");
+
+        Assertions.assertEquals(4, actual.length);
+
+        for (int i = 0; i < actual.length; i++) {
+            Assertions.assertEquals(bytes[i], actual[i]);
+        }
+
+        var encoded = Base64.getEncoder().encodeToString(bytes);
+        Assertions.assertEquals(encoded, config.getString("test"));
+
+        Assertions.assertEquals(0, config.getBytes("empty").length);
+
+        config.set("invalid", "*test*");
+        Assertions.assertEquals(0, config.getBytes("invalid").length);
     }
 
     @SuppressWarnings("ConstantConditions")
