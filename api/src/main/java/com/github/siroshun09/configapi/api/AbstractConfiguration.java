@@ -71,7 +71,7 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public @NotNull @Unmodifiable List<?> getList(@NotNull String path, @NotNull List<?> def) {
         var value = get(path);
-        return value instanceof List<?> ? (List<?>) value : def;
+        return value instanceof List<?> ? (List<?>) value : Objects.requireNonNull(def);
     }
 
     @Override
