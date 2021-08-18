@@ -78,6 +78,9 @@ public class AbstractConfigurationTest {
 
         Assertions.assertEquals(Byte.MIN_VALUE, config.getByte("test-min"));
         Assertions.assertEquals(Byte.MAX_VALUE, config.getByte("test-max"));
+
+        Assertions.assertEquals(0, config.getByte("empty"));
+        Assertions.assertEquals(100, config.getByte("empty", (byte) 100));
     }
 
     @Test
