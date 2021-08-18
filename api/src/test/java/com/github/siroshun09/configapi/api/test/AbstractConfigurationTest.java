@@ -23,6 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class AbstractConfigurationTest {
 
     @Test
@@ -31,6 +34,17 @@ public class AbstractConfigurationTest {
 
         var def = new Object();
         Assertions.assertSame(def, config.get("test", def));
+    }
+
+    @Test
+    void testGettingList() {
+        var config = newConfiguration();
+
+        var list = new ArrayList<>();
+        config.set("test-list", list);
+
+        Assertions.assertSame(list, config.getList("test-list"));
+        Assertions.assertSame(Collections.emptyList(), config.getList("test"));
     }
 
     @Contract(" -> new")
