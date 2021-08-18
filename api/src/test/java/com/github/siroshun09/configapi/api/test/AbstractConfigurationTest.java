@@ -16,6 +16,26 @@
 
 package com.github.siroshun09.configapi.api.test;
 
+import com.github.siroshun09.configapi.api.Configuration;
+import com.github.siroshun09.configapi.api.MappedConfiguration;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 public class AbstractConfigurationTest {
+
+    @Test
+    void testGettingDefaultValue() {
+        var config = newConfiguration();
+
+        var def = new Object();
+        Assertions.assertSame(def, config.get("test", def));
+    }
+
+    @Contract(" -> new")
+    private static @NotNull Configuration newConfiguration() {
+        return MappedConfiguration.create();
+    }
 
 }
