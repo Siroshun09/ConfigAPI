@@ -134,11 +134,6 @@ public class YamlConfiguration extends AbstractFileConfiguration {
     }
 
     @Override
-    public @NotNull @Unmodifiable Set<String> getPaths() {
-        return config != null ? config.getPaths() : Collections.emptySet();
-    }
-
-    @Override
     public @NotNull @Unmodifiable List<String> getKeyList() {
         return config != null ? config.getKeyList() : Collections.emptyList();
     }

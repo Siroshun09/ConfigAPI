@@ -119,17 +119,8 @@ public interface Configuration {
     <T> void set(@NotNull String path, @NotNull T value, @NotNull Serializer<T, ?> serializer);
 
     /**
-     * Gets the set of root paths included in this {@link Configuration}.
-     *
-     * @return set of root paths
-     * @deprecated use {@link Configuration#getKeyList()}
-     */
-    @Deprecated(since = "4.3.0", forRemoval = true)
-    @NotNull @Unmodifiable Set<String> getPaths();
-
-    /**
      * Gets the list of root keys included in this {@link Configuration}.
-     *
+     * <p>
      * This method may not return to the correct order depending on the implementation.
      *
      * @return list of root keys
@@ -357,7 +348,7 @@ public interface Configuration {
     /**
      * Gets the string of the specified path.
      * <p>
-     * If the string could not be obtained, this method returns 0.
+     * If the string could not be obtained, this method returns empty string.
      *
      * @param path the path to get the string
      * @return the string
@@ -378,6 +369,9 @@ public interface Configuration {
      * <p>
      * If the boolean list could not be obtained,
      * this method returns {@link Collections#emptyList()}.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a boolean, it will be excluded.
      *
      * @param path the path to get the boolean list
      * @return the boolean list
@@ -386,6 +380,9 @@ public interface Configuration {
 
     /**
      * Gets the boolean list of the specified path.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a boolean, it will be excluded.
      *
      * @param path the path to get the boolean list
      * @param def  the default boolean list to return if the boolean list could not be obtained
@@ -398,6 +395,12 @@ public interface Configuration {
      * <p>
      * If the byte list could not be obtained,
      * this method returns {@link Collections#emptyList()}.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the byte range,
+     * it will be converted to a byte using {@link Number#byteValue()}.
      *
      * @param path the path to get the byte list
      * @return the byte list
@@ -406,6 +409,12 @@ public interface Configuration {
 
     /**
      * Gets the byte list of the specified path.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the byte range,
+     * it will be converted to a byte using {@link Number#byteValue()}.
      *
      * @param path the path to get the byte list
      * @param def  the default byte list to return if the byte list could not be obtained
@@ -418,6 +427,12 @@ public interface Configuration {
      * <p>
      * If the double list could not be obtained,
      * this method returns {@link Collections#emptyList()}.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the double range,
+     * it will be converted to a byte using {@link Number#doubleValue()}.
      *
      * @param path the path to get the double list
      * @return the double list
@@ -426,6 +441,12 @@ public interface Configuration {
 
     /**
      * Gets the double list of the specified path.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the double range,
+     * it will be converted to a byte using {@link Number#doubleValue()}.
      *
      * @param path the path to get the double list
      * @param def  the default double list to return if the double list could not be obtained
@@ -438,6 +459,12 @@ public interface Configuration {
      * <p>
      * If the float list could not be obtained,
      * this method returns {@link Collections#emptyList()}.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the float range,
+     * it will be converted to a byte using {@link Number#floatValue()}.
      *
      * @param path the path to get the float list
      * @return the float list
@@ -446,6 +473,12 @@ public interface Configuration {
 
     /**
      * Gets the float list of the specified path.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the float range,
+     * it will be converted to a byte using {@link Number#floatValue()}.
      *
      * @param path the path to get the float list
      * @param def  the default float list to return if the float list could not be obtained
@@ -458,6 +491,12 @@ public interface Configuration {
      * <p>
      * If the integer list could not be obtained,
      * this method returns {@link Collections#emptyList()}.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the int range,
+     * it will be converted to a byte using {@link Number#intValue()}.
      *
      * @param path the path to get the integer list
      * @return the integer list
@@ -466,6 +505,12 @@ public interface Configuration {
 
     /**
      * Gets the integer list of the specified path.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the int range,
+     * it will be converted to a byte using {@link Number#intValue()}.
      *
      * @param path the path to get the integer list
      * @param def  the default integer list to return if the integer list could not be obtained
@@ -478,6 +523,12 @@ public interface Configuration {
      * <p>
      * If the long list could not be obtained,
      * this method returns {@link Collections#emptyList()}.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the long range,
+     * it will be converted to a byte using {@link Number#longValue()}.
      *
      * @param path the path to get the long list
      * @return the long list
@@ -486,6 +537,12 @@ public interface Configuration {
 
     /**
      * Gets the long list of the specified path.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the long range,
+     * it will be converted to a byte using {@link Number#longValue()}.
      *
      * @param path the path to get the long list
      * @param def  the default long list to return if the long list could not be obtained
@@ -498,6 +555,12 @@ public interface Configuration {
      * <p>
      * If the short list could not be obtained,
      * this method returns {@link Collections#emptyList()}.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the short range,
+     * it will be converted to a byte using {@link Number#shortValue()}.
      *
      * @param path the path to get the short list
      * @return the short list
@@ -506,6 +569,12 @@ public interface Configuration {
 
     /**
      * Gets the short list of the specified path.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)}
+     * contains an object that cannot be converted to a number, it will be excluded.
+     * <p>
+     * If the list contains a number that is outside the short range,
+     * it will be converted to a byte using {@link Number#shortValue()}.
      *
      * @param path the path to get the short list
      * @param def  the default short list to return if the short list could not be obtained
@@ -518,6 +587,10 @@ public interface Configuration {
      * <p>
      * If the string list could not be obtained,
      * this method returns {@link Collections#emptyList()}.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)} contains non-string object,
+     * it will be converted to a string based on {@link Object#toString()}
+     * or the <code>toString</code> implementation of that object.
      *
      * @param path the path to get the string list
      * @return the string list
@@ -526,6 +599,10 @@ public interface Configuration {
 
     /**
      * Gets the string list of the specified path.
+     * <p>
+     * If the list that obtained from {@link Configuration#getList(String)} contains non-string object,
+     * it will be converted to a string based on {@link Object#toString()}
+     * or the <code>toString</code> implementation of that object.
      *
      * @param path the path to get the string list
      * @param def  the default string list to return if the string list could not be obtained

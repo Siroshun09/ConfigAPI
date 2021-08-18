@@ -50,7 +50,7 @@ public interface ConfigurationSerializer<T> extends Serializer<T, Configuration>
      * Deserializes {@link Configuration}
      *
      * @param config the config to deserialize
-     * @return the deserialized value or {@code null} if could not deserialize
+     * @return the deserialized value or {@code null} if configuration could not be deserialized
      */
     @Nullable T deserializeConfiguration(@NotNull Configuration config);
 }

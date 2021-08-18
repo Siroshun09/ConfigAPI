@@ -172,13 +172,6 @@ public class MappedConfiguration extends AbstractConfiguration {
     }
 
     @Override
-    public @NotNull @Unmodifiable Set<String> getPaths() {
-        return map.keySet().stream()
-                .map(object -> object instanceof String ? (String) object : object.toString())
-                .collect(Collectors.toUnmodifiableSet());
-    }
-
-    @Override
     public @NotNull @Unmodifiable List<String> getKeyList() {
         return map.keySet().stream()
                 .map(object -> object instanceof String ? (String) object : object.toString())

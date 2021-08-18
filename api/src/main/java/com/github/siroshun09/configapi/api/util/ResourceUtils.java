@@ -45,11 +45,7 @@ public final class ResourceUtils {
         Objects.requireNonNull(name);
         Objects.requireNonNull(target);
 
-        try (InputStream input = loader.getResourceAsStream(name)) {
-            if (input != null) {
-                Files.copy(input, target);
-            }
-        }
+        copy(() -> loader.getResourceAsStream(name), target);
     }
 
     /**
@@ -87,12 +83,8 @@ public final class ResourceUtils {
 
         var file = jar.getEntry(name);
 
-        if (file == null) {
-            return;
-        }
-
-        try (var input = jar.getInputStream(file)) {
-            Files.copy(input, target);
+        if (file != null) {
+            copy(() -> jar.getInputStream(file), target);
         }
     }
 
@@ -151,6 +143,27 @@ public final class ResourceUtils {
         if (!Files.exists(target)) {
             copyFromJar(jarPath, name, target);
         }
+    }
+
+    private static void copy(@NotNull IOSupplier<InputStream> inputSupplier, @NotNull Path target) throws IOException {
+        var parent = target.getParent();
+
+        if (parent != null) {
+            FileUtils.createDirectoriesIfNotExists(parent);
+        }
+
+        try (var input = inputSupplier.get()) {
+            if (input != null) {
+                Files.copy(input, target);
+            }
+        }
+    }
+
+    @FunctionalInterface
+    private interface IOSupplier<T> {
+
+        T get() throws IOException;
+
     }
 
     private ResourceUtils() {

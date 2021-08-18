@@ -30,29 +30,26 @@ public class ResourceUtilsTest {
     private static final Path TEXT_PATH = Path.of("test.txt");
 
     @Test
-    void testCopyingFromClassLoader() throws IOException {
+    void testResourceCopy() throws IOException {
         if (Files.exists(JAR_PATH)) {
             Files.delete(JAR_PATH);
+        }
+
+        if (Files.exists(TEXT_PATH)) {
+            Files.delete(TEXT_PATH);
         }
 
         ResourceUtils.copyFromClassLoader(getClass().getClassLoader(), "example.jar", JAR_PATH);
 
         Assertions.assertTrue(Files.exists(JAR_PATH));
 
-        Files.delete(JAR_PATH);
-    }
-
-    @Test
-    void testCopyingFromJar() throws IOException {
-        if (Files.exists(TEXT_PATH)) {
-            Files.delete(TEXT_PATH);
-        }
-
-        ResourceUtils.copyFromClassLoaderIfNotExists(getClass().getClassLoader(), "example.jar", JAR_PATH);
-
         ResourceUtils.copyFromJar(JAR_PATH, "test.txt", TEXT_PATH);
         Assertions.assertTrue(Files.exists(TEXT_PATH));
 
-        Files.delete(TEXT_PATH);
+        try {
+            Files.delete(JAR_PATH);
+            Files.delete(TEXT_PATH);
+        } catch (Exception ignored) {
+        }
     }
 }

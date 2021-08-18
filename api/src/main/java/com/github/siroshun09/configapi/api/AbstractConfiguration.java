@@ -38,7 +38,7 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public @NotNull Object get(@NotNull String path, @NotNull Object def) {
         var value = get(path);
-        return value != null ? value : Objects.requireNonNull(path);
+        return value != null ? value : Objects.requireNonNull(def);
     }
 
     @Override
@@ -71,7 +71,7 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public @NotNull @Unmodifiable List<?> getList(@NotNull String path, @NotNull List<?> def) {
         var value = get(path);
-        return value instanceof List<?> ? (List<?>) value : def;
+        return value instanceof List<?> ? (List<?>) value : Objects.requireNonNull(def);
     }
 
     @Override
@@ -180,7 +180,12 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public @NotNull String getString(@NotNull String path, @NotNull String def) {
         var value = get(path);
-        return value instanceof String ? (String) value : def;
+
+        if (value != null) {
+            return value instanceof String ? (String) value : value.toString();
+        } else {
+            return Objects.requireNonNull(def);
+        }
     }
 
     @Override
@@ -309,6 +314,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
         if (list != null) {
             return list.stream()
+                    .filter(Objects::nonNull)
                     .map(object -> object instanceof String ? (String) object : object.toString())
                     .collect(Collectors.toUnmodifiableList());
         } else {
