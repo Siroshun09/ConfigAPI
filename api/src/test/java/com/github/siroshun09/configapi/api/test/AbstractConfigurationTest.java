@@ -218,7 +218,7 @@ public class AbstractConfigurationTest {
 
         var actual = config.getBooleanList("test");
 
-        Assertions.assertEquals(4, config.getBooleanList("test").size());
+        Assertions.assertEquals(4, actual.size());
 
         for (Object object : actual) {
             Assertions.assertEquals(Boolean.class, object.getClass());
@@ -239,7 +239,7 @@ public class AbstractConfigurationTest {
 
         var actual = config.getByteList("test");
 
-        Assertions.assertEquals(3, config.getByteList("test").size());
+        Assertions.assertEquals(3, actual.size());
 
         for (Object object : actual) {
             Assertions.assertEquals(Byte.class, object.getClass());
@@ -260,7 +260,7 @@ public class AbstractConfigurationTest {
 
         var actual = config.getDoubleList("test");
 
-        Assertions.assertEquals(3, config.getDoubleList("test").size());
+        Assertions.assertEquals(3, actual.size());
 
         for (Object object : actual) {
             Assertions.assertEquals(Double.class, object.getClass());
@@ -281,7 +281,7 @@ public class AbstractConfigurationTest {
 
         var actual = config.getFloatList("test");
 
-        Assertions.assertEquals(4, config.getFloatList("test").size());
+        Assertions.assertEquals(4, actual.size());
 
         for (Object object : actual) {
             Assertions.assertEquals(Float.class, object.getClass());
@@ -302,7 +302,7 @@ public class AbstractConfigurationTest {
 
         var actual = config.getIntegerList("test");
 
-        Assertions.assertEquals(4, config.getIntegerList("test").size());
+        Assertions.assertEquals(4, actual.size());
 
         for (Object object : actual) {
             Assertions.assertEquals(Integer.class, object.getClass());
@@ -323,7 +323,7 @@ public class AbstractConfigurationTest {
 
         var actual = config.getLongList("test");
 
-        Assertions.assertEquals(4, config.getLongList("test").size());
+        Assertions.assertEquals(4, actual.size());
 
         for (Object object : actual) {
             Assertions.assertEquals(Long.class, object.getClass());
@@ -344,7 +344,7 @@ public class AbstractConfigurationTest {
 
         var actual = config.getShortList("test");
 
-        Assertions.assertEquals(4, config.getShortList("test").size());
+        Assertions.assertEquals(4, actual.size());
 
         for (Object object : actual) {
             Assertions.assertEquals(Short.class, object.getClass());
@@ -363,11 +363,11 @@ public class AbstractConfigurationTest {
         var config = newConfiguration();
         config.set("test-1", list);
 
-        var actual = config.getStringList("test-1");
+        var actual1 = config.getStringList("test-1");
 
-        Assertions.assertEquals(5, config.getStringList("test-1").size());
+        Assertions.assertEquals(5, actual1.size());
 
-        for (Object object : actual) {
+        for (Object object : actual1) {
             Assertions.assertEquals(String.class, object.getClass());
         }
 
@@ -381,7 +381,7 @@ public class AbstractConfigurationTest {
 
         var actual2 = config.getStringList("test-2");
 
-        Assertions.assertEquals(3, config.getStringList("test-2").size());
+        Assertions.assertEquals(3, actual2.size());
 
         for (Object object : actual2) {
             Assertions.assertEquals(String.class, object.getClass());
