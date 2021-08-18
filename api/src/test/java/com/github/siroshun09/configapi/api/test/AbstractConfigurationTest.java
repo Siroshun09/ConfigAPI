@@ -335,6 +335,27 @@ public class AbstractConfigurationTest {
         Assertions.assertSame(def, config.getLongList("empty", def));
     }
 
+    @Test
+    void testGettingShortList() {
+        var list = List.of(new Object(), 5, -5, Long.MAX_VALUE, 5.5, true, "test");
+
+        var config = newConfiguration();
+        config.set("test", list);
+
+        var actual = config.getShortList("test");
+
+        Assertions.assertEquals(4, config.getShortList("test").size());
+
+        for (Object object : actual) {
+            Assertions.assertEquals(Short.class, object.getClass());
+        }
+
+        Assertions.assertSame(Collections.emptyList(), config.getShortList("empty"));
+
+        var def = List.of((short) 5, (short) -5);
+        Assertions.assertSame(def, config.getShortList("empty", def));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
