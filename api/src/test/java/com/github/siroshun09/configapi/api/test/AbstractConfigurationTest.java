@@ -195,6 +195,20 @@ public class AbstractConfigurationTest {
         Assertions.assertEquals(100, config.getShort("empty", (short) 100));
     }
 
+    @Test
+    void testGettingString() {
+        var config = newConfiguration();
+
+        config.set("test-1", "test");
+        Assertions.assertEquals("test", config.getString("test-1"));
+
+        config.set("test-2", 100);
+        Assertions.assertEquals("100", config.getString("test-2"));
+
+        Assertions.assertEquals("", config.getString("empty"));
+        Assertions.assertEquals("100", config.getString("empty", "100"));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
