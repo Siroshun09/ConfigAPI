@@ -282,7 +282,7 @@ public class AbstractConfigurationTest {
 
         var actual = config.getFloatList("test");
 
-        Assertions.assertEquals(4, actual.size());
+        Assertions.assertEquals(3, actual.size());
 
         for (Object object : actual) {
             Assertions.assertEquals(Float.class, object.getClass());
