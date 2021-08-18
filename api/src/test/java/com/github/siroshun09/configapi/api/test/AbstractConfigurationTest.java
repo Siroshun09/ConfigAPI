@@ -31,7 +31,7 @@ import java.util.List;
 public class AbstractConfigurationTest {
 
     @Test
-    void testGettingDefaultValue() {
+    void testDefaultValue() {
         var config = newConfiguration();
 
         var def = new Object();
@@ -39,7 +39,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingList() {
+    void testList() {
         var config = newConfiguration();
 
         var list = new ArrayList<>();
@@ -50,7 +50,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingBoolean() {
+    void testBoolean() {
         var config = newConfiguration();
 
         config.set("test", true);
@@ -62,7 +62,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingByte() {
+    void testByte() {
         var config = newConfiguration();
 
         config.set("test-1", 5);
@@ -85,7 +85,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingDouble() {
+    void testDouble() {
         var config = newConfiguration();
 
         config.set("test-1", 5);
@@ -105,7 +105,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingFloat() {
+    void testFloat() {
         var config = newConfiguration();
 
         config.set("test-1", 5);
@@ -128,7 +128,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingInteger() {
+    void testInteger() {
         var config = newConfiguration();
 
         config.set("test-1", 5);
@@ -151,7 +151,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingLong() {
+    void testLong() {
         var config = newConfiguration();
 
         config.set("test-1", 5);
@@ -174,7 +174,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingShort() {
+    void testShort() {
         var config = newConfiguration();
 
         config.set("test-1", 5);
@@ -197,7 +197,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingString() {
+    void testString() {
         var config = newConfiguration();
 
         config.set("test-1", "test");
@@ -211,7 +211,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingBooleanTest() {
+    void testBooleanTest() {
         var list = List.of(new Object(), true, false, Boolean.TRUE, Boolean.FALSE, 100, "test");
 
         var config = newConfiguration();
@@ -232,7 +232,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingByteList() {
+    void testByteList() {
         var list = List.of(new Object(), 5, -5, 300, true, "test");
 
         var config = newConfiguration();
@@ -253,7 +253,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingDoubleList() {
+    void testDoubleList() {
         var list = List.of(new Object(), 5.5, -5.5, 300, true, "test");
 
         var config = newConfiguration();
@@ -274,7 +274,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingFloatList() {
+    void testFloatList() {
         var list = List.of(new Object(), 5.5, -5.5, 300, true, "test");
 
         var config = newConfiguration();
@@ -295,7 +295,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingIntegerList() {
+    void testIntegerList() {
         var list = List.of(new Object(), 5, -5, Long.MAX_VALUE, 5.5, true, "test");
 
         var config = newConfiguration();
@@ -316,7 +316,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingLongList() {
+    void testLongList() {
         var list = List.of(new Object(), 5, -5, Long.MAX_VALUE, 5.5, true, "test");
 
         var config = newConfiguration();
@@ -337,7 +337,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingShortList() {
+    void testShortList() {
         var list = List.of(new Object(), 5, -5, Long.MAX_VALUE, 5.5, true, "test");
 
         var config = newConfiguration();
@@ -358,7 +358,7 @@ public class AbstractConfigurationTest {
     }
 
     @Test
-    void testGettingStringList() {
+    void testStringList() {
         var list = List.of(new Object(), "test", "", 100, true);
 
         var config = newConfiguration();
@@ -423,9 +423,9 @@ public class AbstractConfigurationTest {
     void testIllegalArguments() {
         var config = newConfiguration();
 
-        Assertions.assertTrue(testThrowingForIllegalArgument(() -> config.get("test", (Object) null)));
-        Assertions.assertTrue(testThrowingForIllegalArgument(() -> config.getList(null)));
-        Assertions.assertTrue(testThrowingForIllegalArgument(() -> config.getList("test", (List<?>) null)));
+        Assertions.assertTrue(testArgument(() -> config.get("test", (Object) null)));
+        Assertions.assertTrue(testArgument(() -> config.getList(null)));
+        Assertions.assertTrue(testArgument(() -> config.getList("test", (List<?>) null)));
     }
 
     @Contract(" -> new")
@@ -433,7 +433,7 @@ public class AbstractConfigurationTest {
         return MappedConfiguration.create();
     }
 
-    private static boolean testThrowingForIllegalArgument(@NotNull Runnable runnable) {
+    private static boolean testArgument(@NotNull Runnable runnable) {
         try {
             runnable.run();
             return false;
