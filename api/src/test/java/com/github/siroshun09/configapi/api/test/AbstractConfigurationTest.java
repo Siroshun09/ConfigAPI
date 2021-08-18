@@ -59,6 +59,26 @@ public class AbstractConfigurationTest {
         Assertions.assertTrue(config.getBoolean("test-string", true));
     }
 
+    @Test
+    void testGettingByte() {
+        var config = newConfiguration();
+
+        config.set("test-1", 5);
+        config.set("test-2", -5);
+
+        Assertions.assertEquals(5, config.getByte("test-1"));
+        Assertions.assertEquals(-5, config.getByte("test-2"));
+
+        config.set("test-3", 300);
+        Assertions.assertNotEquals(300, config.getByte("test-3"));
+
+        config.set("test-min", Byte.MIN_VALUE);
+        config.set("test-max", Byte.MAX_VALUE);
+
+        Assertions.assertEquals(Byte.MIN_VALUE, config.getByte("test-min"));
+        Assertions.assertEquals(Byte.MAX_VALUE, config.getByte("test-max"));
+    }
+
     @Contract(" -> new")
     private static @NotNull Configuration newConfiguration() {
         return MappedConfiguration.create();
