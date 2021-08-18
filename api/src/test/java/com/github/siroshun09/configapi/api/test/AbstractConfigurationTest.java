@@ -103,6 +103,29 @@ public class AbstractConfigurationTest {
         Assertions.assertEquals(100, config.getDouble("empty", 100));
     }
 
+    @Test
+    void testGettingFloat() {
+        var config = newConfiguration();
+
+        config.set("test-1", 5);
+        config.set("test-2", -5);
+
+        Assertions.assertEquals(5, config.getFloat("test-1"));
+        Assertions.assertEquals(-5, config.getFloat("test-2"));
+
+        config.set("test-3", Double.MAX_VALUE);
+        Assertions.assertNotEquals(Double.MAX_VALUE, config.getFloat("test-3"));
+
+        config.set("test-min", Float.MIN_VALUE);
+        config.set("test-max", Float.MAX_VALUE);
+
+        Assertions.assertEquals(Float.MIN_VALUE, config.getFloat("test-min"));
+        Assertions.assertEquals(Float.MAX_VALUE, config.getFloat("test-max"));
+
+        Assertions.assertEquals(0, config.getFloat("empty"));
+        Assertions.assertEquals(100, config.getFloat("empty", 100));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
