@@ -108,13 +108,22 @@ public class AbstractConfigurationTest {
     void testIllegalArguments() {
         var config = newConfiguration();
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> config.get("test", (Object) null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> config.getList(null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> config.getList("test", (List<?>) null));
+        Assertions.assertTrue(testThrowingForIllegalArgument(() -> config.get("test", (Object) null)));
+        Assertions.assertTrue(testThrowingForIllegalArgument(() -> config.getList(null)));
+        Assertions.assertTrue(testThrowingForIllegalArgument(() -> config.getList("test", (List<?>) null)));
     }
 
     @Contract(" -> new")
     private static @NotNull Configuration newConfiguration() {
         return MappedConfiguration.create();
+    }
+
+    private static boolean testThrowingForIllegalArgument(@NotNull Runnable runnable) {
+        try {
+            runnable.run();
+            return false;
+        } catch (Throwable throwable) {
+            return throwable instanceof NullPointerException || throwable instanceof IllegalArgumentException;
+        }
     }
 }
