@@ -314,6 +314,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
         if (list != null) {
             return list.stream()
+                    .filter(Objects::nonNull)
                     .map(object -> object instanceof String ? (String) object : object.toString())
                     .collect(Collectors.toUnmodifiableList());
         } else {
