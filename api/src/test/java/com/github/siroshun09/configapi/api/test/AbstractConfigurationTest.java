@@ -172,6 +172,29 @@ public class AbstractConfigurationTest {
         Assertions.assertEquals(100, config.getLong("empty", 100));
     }
 
+    @Test
+    void testGettingShort() {
+        var config = newConfiguration();
+
+        config.set("test-1", 5);
+        config.set("test-2", -5);
+
+        Assertions.assertEquals(5, config.getShort("test-1"));
+        Assertions.assertEquals(-5, config.getShort("test-2"));
+
+        config.set("test-3", Double.MAX_VALUE);
+        Assertions.assertNotEquals(Double.MAX_VALUE, config.getShort("test-3"));
+
+        config.set("test-min", Short.MIN_VALUE);
+        config.set("test-max", Short.MAX_VALUE);
+
+        Assertions.assertEquals(Short.MIN_VALUE, config.getShort("test-min"));
+        Assertions.assertEquals(Short.MAX_VALUE, config.getShort("test-max"));
+
+        Assertions.assertEquals(0, config.getShort("empty"));
+        Assertions.assertEquals(100, config.getShort("empty", (short) 100));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
