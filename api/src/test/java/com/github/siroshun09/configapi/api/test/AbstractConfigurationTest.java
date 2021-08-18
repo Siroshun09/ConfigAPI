@@ -230,6 +230,27 @@ public class AbstractConfigurationTest {
         Assertions.assertSame(def, config.getBooleanList("empty", def));
     }
 
+    @Test
+    void testGettingByteList() {
+        var list = List.of(new Object(), 5, -5, 300, true, "test");
+
+        var config = newConfiguration();
+        config.set("test", list);
+
+        var actual = config.getByteList("test");
+
+        Assertions.assertEquals(3, config.getByteList("test").size());
+
+        for (Object object : actual) {
+            Assertions.assertEquals(Byte.class, object.getClass());
+        }
+
+        Assertions.assertSame(Collections.emptyList(), config.getByteList("empty"));
+
+        var def = List.of((byte) 5, (byte) -5);
+        Assertions.assertSame(def, config.getByteList("empty", def));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
