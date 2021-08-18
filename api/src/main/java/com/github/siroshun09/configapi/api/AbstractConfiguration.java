@@ -180,7 +180,12 @@ public abstract class AbstractConfiguration implements Configuration {
     @Override
     public @NotNull String getString(@NotNull String path, @NotNull String def) {
         var value = get(path);
-        return value instanceof String ? (String) value : def;
+
+        if (value != null) {
+            return value instanceof String ? (String) value : value.toString();
+        } else {
+            return Objects.requireNonNull(def);
+        }
     }
 
     @Override
