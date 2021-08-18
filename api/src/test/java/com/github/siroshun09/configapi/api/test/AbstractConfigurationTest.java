@@ -209,6 +209,27 @@ public class AbstractConfigurationTest {
         Assertions.assertEquals("100", config.getString("empty", "100"));
     }
 
+    @Test
+    void testGettingBooleanTest() {
+        var list = List.of(new Object(), true, false, Boolean.TRUE, Boolean.FALSE, 100, "test");
+
+        var config = newConfiguration();
+        config.set("test", list);
+
+        var actual = config.getBooleanList("test");
+
+        Assertions.assertEquals(4, config.getBooleanList("test").size());
+
+        for (Object object : actual) {
+            Assertions.assertEquals(Boolean.class, object.getClass());
+        }
+
+        Assertions.assertSame(Collections.emptyList(), config.getBooleanList("empty"));
+
+        var def = List.of(true, false, true, false);
+        Assertions.assertSame(def, config.getBooleanList("empty", def));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
