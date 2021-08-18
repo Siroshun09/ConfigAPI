@@ -251,6 +251,27 @@ public class AbstractConfigurationTest {
         Assertions.assertSame(def, config.getByteList("empty", def));
     }
 
+    @Test
+    void testGettingDoubleList() {
+        var list = List.of(new Object(), 5.5, -5.5, 300, true, "test");
+
+        var config = newConfiguration();
+        config.set("test", list);
+
+        var actual = config.getDoubleList("test");
+
+        Assertions.assertEquals(3, config.getDoubleList("test").size());
+
+        for (Object object : actual) {
+            Assertions.assertEquals(Double.class, object.getClass());
+        }
+
+        Assertions.assertSame(Collections.emptyList(), config.getDoubleList("empty"));
+
+        var def = List.of(5.5, -5.5);
+        Assertions.assertSame(def, config.getDoubleList("empty", def));
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     void testIllegalArguments() {
