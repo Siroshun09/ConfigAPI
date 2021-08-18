@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class AbstractConfigurationTest {
 
@@ -77,6 +78,16 @@ public class AbstractConfigurationTest {
 
         Assertions.assertEquals(Byte.MIN_VALUE, config.getByte("test-min"));
         Assertions.assertEquals(Byte.MAX_VALUE, config.getByte("test-max"));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testIllegalArguments() {
+        var config = newConfiguration();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.get("test", (Object) null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.getList(null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> config.getList("test", (List<?>) null));
     }
 
     @Contract(" -> new")
