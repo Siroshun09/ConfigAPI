@@ -148,6 +148,15 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         return config != null ? config.getSection(path) : null;
     }
 
+    @Override
+    public @NotNull Configuration getOrCreateSection(@NotNull String path) {
+        if (config == null) {
+            config = MappedConfiguration.create();
+        }
+
+        return config.getOrCreateSection(path);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void load() throws IOException {

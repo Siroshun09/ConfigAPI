@@ -146,6 +146,17 @@ public interface Configuration {
     @Nullable Configuration getSection(@NotNull String path);
 
     /**
+     * Gets the {@link Configuration} section of the specified path.
+     * <p>
+     * If the {@link Configuration} section could not be obtained,
+     * this method creates a new {@link Configuration} section and returns it.
+     *
+     * @param path the path to get the {@link Configuration} section
+     * @return the {@link Configuration} section or {@code null}
+     */
+    @NotNull Configuration getOrCreateSection(@NotNull String path);
+
+    /**
      * Gets the list of the specified path.
      * <p>
      * If the list could not be obtained,

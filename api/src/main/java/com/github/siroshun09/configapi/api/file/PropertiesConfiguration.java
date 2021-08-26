@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.api.file;
 
 import com.github.siroshun09.configapi.api.Configuration;
+import com.github.siroshun09.configapi.api.MappedConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -101,6 +102,18 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
     @Deprecated
     public @Nullable Configuration getSection(@NotNull String path) {
         return null;
+    }
+
+    /**
+     * @param path the path to get the {@link Configuration} section
+     * @return {@link MappedConfiguration#create()}
+     * @deprecated {@link PropertiesConfiguration} does not support the section,
+     * so this method always returns {@link MappedConfiguration#create()}.
+     */
+    @Override
+    @Deprecated
+    public @NotNull Configuration getOrCreateSection(@NotNull String path) {
+        return MappedConfiguration.create();
     }
 
     @Override
