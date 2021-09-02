@@ -103,6 +103,11 @@ class MappedConfigurationTest {
             public void clear() {
                 throw new UnsupportedOperationException();
             }
+
+            @Override
+            public @NotNull Configuration copy() {
+                throw new UnsupportedOperationException();
+            }
         };
 
         config.set("other-config", source);

@@ -54,7 +54,17 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
      * @return the new {@link PropertiesConfiguration}
      */
     public static @NotNull PropertiesConfiguration create(@NotNull Path path, @NotNull Properties properties) {
-        return new PropertiesConfiguration(path, properties);
+        return new PropertiesConfiguration(path, copyProperties(properties));
+    }
+
+    private static @NotNull Properties copyProperties(@NotNull Properties source) {
+        var newProperties = new Properties();
+
+        for (var key : source.keySet()) {
+            newProperties.put(key, source.get(key));
+        }
+
+        return newProperties;
     }
 
     private final Properties properties;
@@ -120,6 +130,15 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
     public void clear() {
         properties.clear();
         setLoaded(false);
+    }
+
+    @Override
+    public @NotNull PropertiesConfiguration copy() {
+        var copied = create(getPath(), properties);
+
+        copied.setLoaded(isLoaded());
+
+        return copied;
     }
 
     @Override

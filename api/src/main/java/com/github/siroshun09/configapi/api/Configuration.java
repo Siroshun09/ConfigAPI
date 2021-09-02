@@ -645,4 +645,11 @@ public interface Configuration {
      * Clears this configuration.
      */
     void clear();
+
+    /**
+     * Copies this configuration.
+     *
+     * @return the copied configuration
+     */
+    @NotNull Configuration copy();
 }

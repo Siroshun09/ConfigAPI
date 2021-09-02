@@ -63,7 +63,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path) {
-        return new YamlConfiguration(path, DEFAULT_YAML_SUPPLIER);
+        return new YamlConfiguration(path, ThreadLocal.withInitial(DEFAULT_YAML_SUPPLIER));
     }
 
     /**
@@ -75,7 +75,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Configuration other) {
-        return new YamlConfiguration(path, DEFAULT_YAML_SUPPLIER, other);
+        return new YamlConfiguration(path, ThreadLocal.withInitial(DEFAULT_YAML_SUPPLIER), other);
     }
 
     /**
@@ -88,7 +88,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier) {
-        return new YamlConfiguration(path, yamlSupplier);
+        return new YamlConfiguration(path, ThreadLocal.withInitial(yamlSupplier));
     }
 
     /**
@@ -102,20 +102,20 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_, _, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier, @NotNull Configuration other) {
-        return new YamlConfiguration(path, yamlSupplier, other);
+        return new YamlConfiguration(path, ThreadLocal.withInitial(yamlSupplier), other);
     }
 
     private final ThreadLocal<Yaml> yamlThreadLocal;
     private Configuration config;
 
-    private YamlConfiguration(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier) {
+    private YamlConfiguration(@NotNull Path path, @NotNull ThreadLocal<Yaml> yamlThreadLocal) {
         super(path);
-        this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);
+        this.yamlThreadLocal = yamlThreadLocal;
     }
 
-    private YamlConfiguration(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier, @NotNull Configuration other) {
+    private YamlConfiguration(@NotNull Path path, @NotNull ThreadLocal<Yaml> yamlThreadLocal, @NotNull Configuration other) {
         super(path);
-        this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);
+        this.yamlThreadLocal = yamlThreadLocal;
         this.config = MappedConfiguration.create(other);
     }
 
@@ -165,6 +165,18 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         }
 
         setLoaded(false);
+    }
+
+    @Override
+    public @NotNull YamlConfiguration copy() {
+        var copied =
+                config != null ?
+                        new YamlConfiguration(getPath(), yamlThreadLocal, config) :
+                        new YamlConfiguration(getPath(), yamlThreadLocal);
+
+        copied.setLoaded(isLoaded());
+
+        return copied;
     }
 
     @SuppressWarnings("unchecked")

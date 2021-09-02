@@ -211,6 +211,11 @@ public class MappedConfiguration extends AbstractConfiguration {
     }
 
     @Override
+    public @NotNull Configuration copy() {
+        return create(this);
+    }
+
+    @Override
     public int hashCode() {
         return map.hashCode();
     }
