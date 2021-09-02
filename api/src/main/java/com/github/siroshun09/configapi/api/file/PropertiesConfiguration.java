@@ -117,8 +117,14 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
     }
 
     @Override
-    public void load() throws IOException {
+    public void clear() {
         properties.clear();
+        setLoaded(false);
+    }
+
+    @Override
+    public void load() throws IOException {
+        clear();
 
         if (!Files.isRegularFile(getPath())) {
             return;

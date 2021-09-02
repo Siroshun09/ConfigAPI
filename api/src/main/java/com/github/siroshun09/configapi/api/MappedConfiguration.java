@@ -206,6 +206,11 @@ public class MappedConfiguration extends AbstractConfiguration {
     }
 
     @Override
+    public void clear() {
+        map.clear();
+    }
+
+    @Override
     public int hashCode() {
         return map.hashCode();
     }

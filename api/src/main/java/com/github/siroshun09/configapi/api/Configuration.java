@@ -640,4 +640,9 @@ public interface Configuration {
      * @param bytes the byte array to set
      */
     void setBytes(@NotNull String path, byte[] bytes);
+
+    /**
+     * Clears this configuration.
+     */
+    void clear();
 }

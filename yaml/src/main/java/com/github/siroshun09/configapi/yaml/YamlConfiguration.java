@@ -157,10 +157,20 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         return config.getOrCreateSection(path);
     }
 
+    @Override
+    public void clear() {
+        if (config != null) {
+            config.clear();
+            config = null;
+        }
+
+        setLoaded(false);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void load() throws IOException {
-        config = null;
+        clear();
 
         if (!Files.isRegularFile(getPath())) {
             return;

@@ -98,6 +98,11 @@ class MappedConfigurationTest {
             public @NotNull Configuration getOrCreateSection(@NotNull String path) {
                 throw new UnsupportedOperationException();
             }
+
+            @Override
+            public void clear() {
+                throw new UnsupportedOperationException();
+            }
         };
 
         config.set("other-config", source);
