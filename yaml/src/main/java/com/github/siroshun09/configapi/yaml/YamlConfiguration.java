@@ -29,6 +29,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -212,7 +213,13 @@ public class YamlConfiguration extends AbstractFileConfiguration {
             }
         }
 
-        try (var writer = Files.newBufferedWriter(getPath())) {
+        var parent = getPath().getParent();
+
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        try (var writer = Files.newBufferedWriter(getPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
             yaml.dump(map, writer);
         }
     }

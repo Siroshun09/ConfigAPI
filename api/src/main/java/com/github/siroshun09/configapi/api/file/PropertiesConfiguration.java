@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -168,7 +169,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
      * @throws IOException if an I/O error occurs
      */
     public void save(@Nullable String comments) throws IOException {
-        try (var writer = Files.newBufferedWriter(getPath())) {
+        var parent = getPath().getParent();
+
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        try (var writer = Files.newBufferedWriter(getPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
             properties.store(writer, comments);
         }
     }
