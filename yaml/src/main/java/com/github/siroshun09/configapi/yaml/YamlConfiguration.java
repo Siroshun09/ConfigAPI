@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,7 +54,10 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         var options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-        DEFAULT_YAML_SUPPLIER = () -> new Yaml(options);
+        var representer = new Representer();
+        representer.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+        DEFAULT_YAML_SUPPLIER = () -> new Yaml(representer, options);
     }
 
     /**
