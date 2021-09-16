@@ -28,9 +28,9 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -196,9 +196,8 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         Yaml yaml = yamlThreadLocal.get();
         Map<Object, Object> map;
 
-        try (var reader = Files.newBufferedReader(getPath())) {
-            map = yaml.loadAs(reader, LinkedHashMap.class);
-        }
+        var contents = Files.readString(getPath(), StandardCharsets.UTF_8);
+        map = yaml.loadAs(contents, LinkedHashMap.class);
 
         config = MappedConfiguration.create(map);
 
@@ -223,9 +222,8 @@ public class YamlConfiguration extends AbstractFileConfiguration {
             Files.createDirectories(parent);
         }
 
-        try (var writer = Files.newBufferedWriter(getPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
-            yaml.dump(map, writer);
-        }
+        var dump = yaml.dump(map);
+        Files.writeString(getPath(), dump, StandardCharsets.UTF_8);
     }
 
     @Override
