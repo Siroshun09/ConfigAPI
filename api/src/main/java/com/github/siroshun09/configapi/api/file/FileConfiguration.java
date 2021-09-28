@@ -25,7 +25,7 @@ import java.nio.file.Path;
 /**
  * An interface that represents the {@link Configuration} that can load from a file.
  */
-public interface FileConfiguration extends Configuration {
+public interface FileConfiguration extends Configuration, AutoCloseable {
 
     /**
      * Loads from the file.
@@ -62,4 +62,16 @@ public interface FileConfiguration extends Configuration {
      * @return the path to the file.
      */
     @NotNull Path getPath();
+
+    /**
+     * Closes this {@link FileConfiguration}.
+     * <p>
+     * By default, this method calls {@link #clear()}.
+     *
+     * @see AutoCloseable
+     */
+    @Override
+    default void close() {
+        clear();
+    }
 }

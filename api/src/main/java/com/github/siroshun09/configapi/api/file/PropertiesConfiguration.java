@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.api.file;
 
 import com.github.siroshun09.configapi.api.Configuration;
+import com.github.siroshun09.configapi.api.MappedConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -53,7 +55,17 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
      * @return the new {@link PropertiesConfiguration}
      */
     public static @NotNull PropertiesConfiguration create(@NotNull Path path, @NotNull Properties properties) {
-        return new PropertiesConfiguration(path, properties);
+        return new PropertiesConfiguration(path, copyProperties(properties));
+    }
+
+    private static @NotNull Properties copyProperties(@NotNull Properties source) {
+        var newProperties = new Properties();
+
+        for (var key : source.keySet()) {
+            newProperties.put(key, source.get(key));
+        }
+
+        return newProperties;
     }
 
     private final Properties properties;
@@ -103,9 +115,36 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
         return null;
     }
 
+    /**
+     * @param path the path to get the {@link Configuration} section
+     * @return {@link MappedConfiguration#create()}
+     * @deprecated {@link PropertiesConfiguration} does not support the section,
+     * so this method always returns {@link MappedConfiguration#create()}.
+     */
+    @Override
+    @Deprecated
+    public @NotNull Configuration getOrCreateSection(@NotNull String path) {
+        return MappedConfiguration.create();
+    }
+
+    @Override
+    public void clear() {
+        properties.clear();
+        setLoaded(false);
+    }
+
+    @Override
+    public @NotNull PropertiesConfiguration copy() {
+        var copied = create(getPath(), properties);
+
+        copied.setLoaded(isLoaded());
+
+        return copied;
+    }
+
     @Override
     public void load() throws IOException {
-        properties.clear();
+        clear();
 
         if (!Files.isRegularFile(getPath())) {
             return;
@@ -130,7 +169,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
      * @throws IOException if an I/O error occurs
      */
     public void save(@Nullable String comments) throws IOException {
-        try (var writer = Files.newBufferedWriter(getPath())) {
+        var parent = getPath().getParent();
+
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        try (var writer = Files.newBufferedWriter(getPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
             properties.store(writer, comments);
         }
     }

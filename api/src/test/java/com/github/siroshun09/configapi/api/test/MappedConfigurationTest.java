@@ -93,6 +93,21 @@ class MappedConfigurationTest {
             public @Nullable Configuration getSection(@NotNull String path) {
                 return null;
             }
+
+            @Override
+            public @NotNull Configuration getOrCreateSection(@NotNull String path) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void clear() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public @NotNull Configuration copy() {
+                throw new UnsupportedOperationException();
+            }
         };
 
         config.set("other-config", source);

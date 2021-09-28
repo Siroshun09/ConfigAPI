@@ -25,8 +25,10 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -52,7 +54,10 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         var options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-        DEFAULT_YAML_SUPPLIER = () -> new Yaml(options);
+        var representer = new Representer();
+        representer.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+        DEFAULT_YAML_SUPPLIER = () -> new Yaml(representer, options);
     }
 
     /**
@@ -63,7 +68,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path) {
-        return new YamlConfiguration(path, DEFAULT_YAML_SUPPLIER);
+        return new YamlConfiguration(path, ThreadLocal.withInitial(DEFAULT_YAML_SUPPLIER));
     }
 
     /**
@@ -75,7 +80,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Configuration other) {
-        return new YamlConfiguration(path, DEFAULT_YAML_SUPPLIER, other);
+        return new YamlConfiguration(path, ThreadLocal.withInitial(DEFAULT_YAML_SUPPLIER), other);
     }
 
     /**
@@ -88,7 +93,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier) {
-        return new YamlConfiguration(path, yamlSupplier);
+        return new YamlConfiguration(path, ThreadLocal.withInitial(yamlSupplier));
     }
 
     /**
@@ -102,20 +107,20 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @Contract("_, _, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier, @NotNull Configuration other) {
-        return new YamlConfiguration(path, yamlSupplier, other);
+        return new YamlConfiguration(path, ThreadLocal.withInitial(yamlSupplier), other);
     }
 
     private final ThreadLocal<Yaml> yamlThreadLocal;
     private Configuration config;
 
-    private YamlConfiguration(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier) {
+    private YamlConfiguration(@NotNull Path path, @NotNull ThreadLocal<Yaml> yamlThreadLocal) {
         super(path);
-        this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);
+        this.yamlThreadLocal = yamlThreadLocal;
     }
 
-    private YamlConfiguration(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier, @NotNull Configuration other) {
+    private YamlConfiguration(@NotNull Path path, @NotNull ThreadLocal<Yaml> yamlThreadLocal, @NotNull Configuration other) {
         super(path);
-        this.yamlThreadLocal = ThreadLocal.withInitial(yamlSupplier);
+        this.yamlThreadLocal = yamlThreadLocal;
         this.config = MappedConfiguration.create(other);
     }
 
@@ -148,10 +153,41 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         return config != null ? config.getSection(path) : null;
     }
 
+    @Override
+    public @NotNull Configuration getOrCreateSection(@NotNull String path) {
+        if (config == null) {
+            config = MappedConfiguration.create();
+        }
+
+        return config.getOrCreateSection(path);
+    }
+
+    @Override
+    public void clear() {
+        if (config != null) {
+            config.clear();
+            config = null;
+        }
+
+        setLoaded(false);
+    }
+
+    @Override
+    public @NotNull YamlConfiguration copy() {
+        var copied =
+                config != null ?
+                        new YamlConfiguration(getPath(), yamlThreadLocal, config) :
+                        new YamlConfiguration(getPath(), yamlThreadLocal);
+
+        copied.setLoaded(isLoaded());
+
+        return copied;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void load() throws IOException {
-        config = null;
+        clear();
 
         if (!Files.isRegularFile(getPath())) {
             return;
@@ -160,9 +196,8 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         Yaml yaml = yamlThreadLocal.get();
         Map<Object, Object> map;
 
-        try (var reader = Files.newBufferedReader(getPath())) {
-            map = yaml.loadAs(reader, LinkedHashMap.class);
-        }
+        var contents = Files.readString(getPath(), StandardCharsets.UTF_8);
+        map = yaml.loadAs(contents, LinkedHashMap.class);
 
         config = MappedConfiguration.create(map);
 
@@ -181,9 +216,14 @@ public class YamlConfiguration extends AbstractFileConfiguration {
             }
         }
 
-        try (var writer = Files.newBufferedWriter(getPath())) {
-            yaml.dump(map, writer);
+        var parent = getPath().getParent();
+
+        if (parent != null) {
+            Files.createDirectories(parent);
         }
+
+        var dump = yaml.dump(map);
+        Files.writeString(getPath(), dump, StandardCharsets.UTF_8);
     }
 
     @Override

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,6 +189,30 @@ public class MappedConfiguration extends AbstractConfiguration {
     public @Nullable Configuration getSection(@NotNull String path) {
         var value = get(path);
         return value instanceof Map ? new MappedConfiguration((Map<Object, Object>) value) : null;
+    }
+
+    @Override
+    public @NotNull Configuration getOrCreateSection(@NotNull String path) {
+        var section = getSection(path);
+
+        if (section != null) {
+            return section;
+        }
+
+        var newSection = new MappedConfiguration(new HashMap<>());
+        set(path, newSection.map);
+
+        return newSection;
+    }
+
+    @Override
+    public void clear() {
+        map.clear();
+    }
+
+    @Override
+    public @NotNull Configuration copy() {
+        return create(this);
     }
 
     @Override
