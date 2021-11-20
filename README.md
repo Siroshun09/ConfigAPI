@@ -9,7 +9,7 @@ A configuration library for Java.
 
 ## Requirements
 
-- Java 11+
+- Java 17+
 
 ## Usage (Maven)
 
