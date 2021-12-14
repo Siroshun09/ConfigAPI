@@ -31,7 +31,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -211,8 +213,9 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         Yaml yaml = yamlThreadLocal.get();
         Map<Object, Object> map;
 
-        var contents = Files.readString(getPath(), StandardCharsets.UTF_8);
-        map = yaml.loadAs(contents, LinkedHashMap.class);
+        try (var reader = Files.newBufferedReader(getPath(), StandardCharsets.UTF_8)) {
+            map = yaml.loadAs(reader, LinkedHashMap.class);
+        }
 
         config = MappedConfiguration.create(map);
 
@@ -237,8 +240,11 @@ public class YamlConfiguration extends AbstractFileConfiguration {
             Files.createDirectories(parent);
         }
 
-        var dump = yaml.dump(map);
-        Files.writeString(getPath(), dump, StandardCharsets.UTF_8);
+        OpenOption[] options = {StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING};
+
+        try (var writer = Files.newBufferedWriter(getPath(), StandardCharsets.UTF_8, options)) {
+            yaml.dump(map, writer);
+        }
     }
 
     @Override
