@@ -28,6 +28,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -108,6 +109,20 @@ public class YamlConfiguration extends AbstractFileConfiguration {
     @Contract("_, _, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier, @NotNull Configuration other) {
         return new YamlConfiguration(path, ThreadLocal.withInitial(yamlSupplier), other);
+    }
+
+    /**
+     * Loads from {@link InputStream} using {@link Yaml#loadAs(InputStream, Class)}.
+     *
+     * @param input the {@link InputStream} to load
+     * @return the loaded {@link Configuration}
+     */
+    @SuppressWarnings("unchecked")
+    public static @NotNull Configuration loadFromInputStream(@NotNull InputStream input) {
+        var yaml = new Yaml();
+        var map = yaml.loadAs(input, LinkedHashMap.class);
+
+        return MappedConfiguration.create(map);
     }
 
     private final ThreadLocal<Yaml> yamlThreadLocal;
