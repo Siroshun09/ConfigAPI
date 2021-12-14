@@ -267,4 +267,18 @@ public class YamlConfiguration extends AbstractFileConfiguration {
                 ", config=" + config +
                 '}';
     }
+
+    /**
+     * Gets the loaded {@link Configuration}.
+     *
+     * @return the loaded {@link Configuration}
+     * @throws IllegalStateException if this configuration is not loaded
+     */
+    public @NotNull Configuration getLoadedConfiguration() {
+        if (config != null) {
+            return config;
+        } else {
+            throw new IllegalStateException("this configuration is not loaded");
+        }
+    }
 }
