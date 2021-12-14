@@ -96,7 +96,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration {
         return properties.keySet()
                 .stream()
                 .map(object -> object instanceof String ? (String) object : object.toString())
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     @Override
