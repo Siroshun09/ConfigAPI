@@ -4,16 +4,19 @@ on: [ push, pull_request ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '11', '16', '17' ]
     steps:
       - uses: actions/checkout@v2.4.0
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v2.4.0
         with:
           distribution: 'adopt'
-          java-version: 17
+          java-version: ${{ matrix.java }}
           cache: 'maven'
       - name: Build Project
-        run: mvn -B package --file pom.xml
+        run: mvn -B package --file pom.xml -Djava.version=${{ matrix.java }}
       - name: Move Artifacts
         run: |
           mkdir staging
@@ -22,5 +25,5 @@ jobs:
           mv yaml/target staging/yaml
       - uses: actions/upload-artifact@v2.3.0
         with:
-          name: Package
+          name: Artifacts-Java-${{ matrix.java }}
           path: staging
