@@ -9,7 +9,7 @@ A configuration library for Java.
 
 ## Requirements
 
-- Java 17+
+- Java 11+
 
 ## Usage (Maven)
 
@@ -21,7 +21,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi</artifactId>
-    <version>4.6.0-SNAPSHOT</version>
+    <version>4.6.0</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -32,7 +32,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi-yaml</artifactId>
-    <version>4.6.0-SNAPSHOT</version>
+    <version>4.6.0</version>
     <scope>compile</scope>
 </dependency>
 ```
