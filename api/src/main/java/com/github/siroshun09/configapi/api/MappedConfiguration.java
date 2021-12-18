@@ -177,7 +177,7 @@ public class MappedConfiguration extends AbstractConfiguration {
         return map.keySet()
                 .stream()
                 .map(object -> object instanceof String ? (String) object : object.toString())
-                .toList();
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override

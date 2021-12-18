@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * An abstract implementation of {@link Configuration}.
@@ -77,7 +78,7 @@ public abstract class AbstractConfiguration implements Configuration {
         return getList(path).stream()
                 .map(serializer::deserialize)
                 .filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -88,7 +89,7 @@ public abstract class AbstractConfiguration implements Configuration {
             return list.stream()
                     .map(serializer::deserialize)
                     .filter(Objects::nonNull)
-                    .toList();
+                    .collect(Collectors.toUnmodifiableList());
         } else {
             return def;
         }
@@ -96,7 +97,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T, ?> serializer) {
-        set(path, list.stream().map(serializer::serialize).toList());
+        set(path, list.stream().map(serializer::serialize).collect(Collectors.toUnmodifiableList()));
     }
 
     @Override
@@ -199,7 +200,7 @@ public abstract class AbstractConfiguration implements Configuration {
             return list.stream()
                     .filter(object -> object instanceof Boolean)
                     .map(object -> (Boolean) object)
-                    .toList();
+                    .collect(Collectors.toUnmodifiableList());
         } else {
             return def;
         }
@@ -278,7 +279,7 @@ public abstract class AbstractConfiguration implements Configuration {
             return list.stream()
                     .filter(Objects::nonNull)
                     .map(object -> object instanceof String ? (String) object : object.toString())
-                    .toList();
+                    .collect(Collectors.toUnmodifiableList());
         } else {
             return def;
         }
@@ -325,7 +326,7 @@ public abstract class AbstractConfiguration implements Configuration {
                     .filter(object -> object instanceof Number)
                     .map(object -> (Number) object)
                     .map(numberTFunction)
-                    .toList();
+                    .collect(Collectors.toUnmodifiableList());
         } else {
             return def;
         }
