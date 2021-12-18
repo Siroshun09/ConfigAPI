@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * An abstract implementation of {@link Configuration}.
@@ -214,13 +213,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @NotNull @Unmodifiable List<Byte> getByteList(@NotNull String path, @NotNull List<Byte> def) {
-        var stream = getNumberStreamOrNull(path);
-
-        if (stream != null) {
-            return stream.map(Number::byteValue).collect(Collectors.toUnmodifiableList());
-        } else {
-            return def;
-        }
+        return getNumberListOrDefault(path, Number::byteValue, def);
     }
 
     @Override
@@ -230,13 +223,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @NotNull @Unmodifiable List<Double> getDoubleList(@NotNull String path, @NotNull List<Double> def) {
-        var stream = getNumberStreamOrNull(path);
-
-        if (stream != null) {
-            return stream.map(Number::doubleValue).collect(Collectors.toUnmodifiableList());
-        } else {
-            return def;
-        }
+        return getNumberListOrDefault(path, Number::doubleValue, def);
     }
 
     @Override
@@ -246,13 +233,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @NotNull @Unmodifiable List<Float> getFloatList(@NotNull String path, @NotNull List<Float> def) {
-        var stream = getNumberStreamOrNull(path);
-
-        if (stream != null) {
-            return stream.map(Number::floatValue).collect(Collectors.toUnmodifiableList());
-        } else {
-            return def;
-        }
+        return getNumberListOrDefault(path, Number::floatValue, def);
     }
 
     @Override
@@ -262,13 +243,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @NotNull @Unmodifiable List<Integer> getIntegerList(@NotNull String path, @NotNull List<Integer> def) {
-        var stream = getNumberStreamOrNull(path);
-
-        if (stream != null) {
-            return stream.map(Number::intValue).collect(Collectors.toUnmodifiableList());
-        } else {
-            return def;
-        }
+        return getNumberListOrDefault(path, Number::intValue, def);
     }
 
     @Override
@@ -278,13 +253,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @NotNull @Unmodifiable List<Long> getLongList(@NotNull String path, @NotNull List<Long> def) {
-        var stream = getNumberStreamOrNull(path);
-
-        if (stream != null) {
-            return stream.map(Number::longValue).collect(Collectors.toUnmodifiableList());
-        } else {
-            return def;
-        }
+        return getNumberListOrDefault(path, Number::longValue, def);
     }
 
     @Override
@@ -294,13 +263,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Override
     public @NotNull @Unmodifiable List<Short> getShortList(@NotNull String path, @NotNull List<Short> def) {
-        var stream = getNumberStreamOrNull(path);
-
-        if (stream != null) {
-            return stream.map(Number::shortValue).collect(Collectors.toUnmodifiableList());
-        } else {
-            return def;
-        }
+        return getNumberListOrDefault(path, Number::shortValue, def);
     }
 
     @Override
@@ -353,15 +316,19 @@ public abstract class AbstractConfiguration implements Configuration {
         return value instanceof List<?> ? (List<?>) value : null;
     }
 
-    private @Nullable Stream<Number> getNumberStreamOrNull(@NotNull String path) {
+    private <T extends Number> @NotNull List<T> getNumberListOrDefault(@NotNull String path,
+                                                                       @NotNull Function<Number, T> numberTFunction,
+                                                                       @NotNull List<T> def) {
         var list = getListOrNull(path);
 
         if (list != null) {
             return list.stream()
                     .filter(object -> object instanceof Number)
-                    .map(object -> (Number) object);
+                    .map(object -> (Number) object)
+                    .map(numberTFunction)
+                    .collect(Collectors.toUnmodifiableList());
         } else {
-            return null;
+            return def;
         }
     }
 }

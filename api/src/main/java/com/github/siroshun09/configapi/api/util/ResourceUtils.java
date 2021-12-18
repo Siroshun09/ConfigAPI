@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 /**
  * A utility class that provides methods to copy files contained in a jar.
@@ -41,11 +42,7 @@ public final class ResourceUtils {
      */
     public static void copyFromClassLoader(@NotNull ClassLoader loader,
                                            @NotNull String name, @NotNull Path target) throws IOException {
-        Objects.requireNonNull(loader);
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(target);
-
-        copy(() -> loader.getResourceAsStream(name), target);
+        copy(() -> getInputStreamFromClassLoader(loader, name), target);
     }
 
     /**
@@ -77,15 +74,7 @@ public final class ResourceUtils {
      */
     public static void copyFromJar(@NotNull JarFile jar,
                                    @NotNull String name, @NotNull Path target) throws IOException {
-        Objects.requireNonNull(jar);
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(target);
-
-        var file = jar.getEntry(name);
-
-        if (file != null) {
-            copy(() -> jar.getInputStream(file), target);
-        }
+        copy(() -> getInputStreamFromJar(jar, name), target);
     }
 
     /**
@@ -145,7 +134,72 @@ public final class ResourceUtils {
         }
     }
 
+    /**
+     * Gets an {@link InputStream} from the {@link ClassLoader}.
+     *
+     * @param classLoader the {@link ClassLoader} to get an {@link InputStream}
+     * @param name        the resource name
+     * @return {@link ClassLoader#getResourceAsStream(String)}
+     * @throws IllegalStateException if the resource was not found
+     * @throws NullPointerException  if {@code null} is specified as an argument.
+     */
+    public static @NotNull InputStream getInputStreamFromClassLoader(@NotNull ClassLoader classLoader,
+                                                                     @NotNull String name) {
+        Objects.requireNonNull(classLoader);
+        Objects.requireNonNull(name);
+
+        var input = classLoader.getResourceAsStream(name);
+
+        if (input != null) {
+            return input;
+        } else {
+            throw new IllegalStateException(name + " was not found in the classloader");
+        }
+    }
+
+    /**
+     * Gets an {@link InputStream} from the {@link JarFile}.
+     *
+     * @param jar  the {@link JarFile} to get an {@link InputStream}
+     * @param name the resource name
+     * @return the {@link InputStream} from {@link JarFile#getInputStream(ZipEntry)}
+     * @throws IOException           if an I/O error occurs
+     * @throws IllegalStateException if the resource was not found
+     * @throws NullPointerException  if {@code null} is specified as an argument.
+     */
+    public static @NotNull InputStream getInputStreamFromJar(@NotNull JarFile jar,
+                                                             @NotNull String name) throws IOException {
+        Objects.requireNonNull(jar);
+        Objects.requireNonNull(name);
+
+        var file = jar.getEntry(name);
+
+        if (file != null) {
+            return jar.getInputStream(file);
+        } else {
+            throw new IllegalStateException(name + " was not found in the jar");
+        }
+    }
+
+    /**
+     * Gets an {@link InputStream} from the jar file.
+     *
+     * @param jarPath the path to the jar
+     * @param name    the resource name
+     * @return the {@link InputStream} from {@link JarFile#getInputStream(ZipEntry)}
+     * @throws IOException           if an I/O error occurs
+     * @throws IllegalStateException if the resource was not found
+     * @throws NullPointerException  if {@code null} is specified as an argument.
+     */
+    public static @NotNull InputStream getInputStreamFromJar(@NotNull Path jarPath,
+                                                             @NotNull String name) throws IOException {
+        Objects.requireNonNull(jarPath);
+        return getInputStreamFromJar(new JarFile(jarPath.toFile(), false), name);
+    }
+
     private static void copy(@NotNull IOSupplier<InputStream> inputSupplier, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(target);
+
         var parent = target.getParent();
 
         if (parent != null) {

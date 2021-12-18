@@ -28,9 +28,12 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -108,6 +111,20 @@ public class YamlConfiguration extends AbstractFileConfiguration {
     @Contract("_, _, _ -> new")
     public static @NotNull YamlConfiguration create(@NotNull Path path, @NotNull Supplier<Yaml> yamlSupplier, @NotNull Configuration other) {
         return new YamlConfiguration(path, ThreadLocal.withInitial(yamlSupplier), other);
+    }
+
+    /**
+     * Loads from {@link InputStream} using {@link Yaml#loadAs(InputStream, Class)}.
+     *
+     * @param input the {@link InputStream} to load
+     * @return the loaded {@link Configuration}
+     */
+    @SuppressWarnings("unchecked")
+    public static @NotNull Configuration loadFromInputStream(@NotNull InputStream input) {
+        var yaml = new Yaml();
+        var map = yaml.loadAs(input, LinkedHashMap.class);
+
+        return MappedConfiguration.create(map);
     }
 
     private final ThreadLocal<Yaml> yamlThreadLocal;
@@ -196,8 +213,9 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         Yaml yaml = yamlThreadLocal.get();
         Map<Object, Object> map;
 
-        var contents = Files.readString(getPath(), StandardCharsets.UTF_8);
-        map = yaml.loadAs(contents, LinkedHashMap.class);
+        try (var reader = Files.newBufferedReader(getPath(), StandardCharsets.UTF_8)) {
+            map = yaml.loadAs(reader, LinkedHashMap.class);
+        }
 
         config = MappedConfiguration.create(map);
 
@@ -222,8 +240,11 @@ public class YamlConfiguration extends AbstractFileConfiguration {
             Files.createDirectories(parent);
         }
 
-        var dump = yaml.dump(map);
-        Files.writeString(getPath(), dump, StandardCharsets.UTF_8);
+        OpenOption[] options = {StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING};
+
+        try (var writer = Files.newBufferedWriter(getPath(), StandardCharsets.UTF_8, options)) {
+            yaml.dump(map, writer);
+        }
     }
 
     @Override
@@ -245,5 +266,19 @@ public class YamlConfiguration extends AbstractFileConfiguration {
                 "yamlThreadLocal=" + yamlThreadLocal +
                 ", config=" + config +
                 '}';
+    }
+
+    /**
+     * Gets the loaded {@link Configuration}.
+     *
+     * @return the loaded {@link Configuration}
+     * @throws IllegalStateException if this configuration is not loaded
+     */
+    public @NotNull Configuration getLoadedConfiguration() {
+        if (config != null) {
+            return config;
+        } else {
+            throw new IllegalStateException("this configuration is not loaded");
+        }
     }
 }

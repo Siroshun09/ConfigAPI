@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.yaml.test;
 
+import com.github.siroshun09.configapi.api.Configuration;
 import com.github.siroshun09.configapi.api.util.ResourceUtils;
 import com.github.siroshun09.configapi.yaml.YamlConfiguration;
 import org.junit.jupiter.api.Assertions;
@@ -101,5 +102,25 @@ class YamlConfigurationTest {
         assertEquals(1, item2.getQuantity());
 
         Files.delete(YAML_PATH);
+    }
+
+    @Test
+    void testCreating() throws IOException {
+        Files.deleteIfExists(YAML_PATH);
+
+        var classLoader = getClass().getClassLoader();
+
+        ResourceUtils.copyFromClassLoader(classLoader, "example.yml", YAML_PATH);
+
+        var fromFile = YamlConfiguration.create(YAML_PATH);
+        fromFile.load();
+
+        Configuration fromInputStream;
+
+        try (var input = ResourceUtils.getInputStreamFromClassLoader(classLoader, "example.yml")) {
+            fromInputStream = YamlConfiguration.loadFromInputStream(input);
+        }
+
+        assertEquals(fromFile.getLoadedConfiguration(), fromInputStream);
     }
 }
