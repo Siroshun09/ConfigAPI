@@ -15,7 +15,7 @@ jobs:
           java-version: 17
           cache: 'maven'
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B package --file pom.xml -Djava.version=17
       - name: Deploy pages
         uses: peaceiris/actions-gh-pages@v3.8.0
         with:
