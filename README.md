@@ -2,7 +2,7 @@
 
 ![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.configapi/parent)
 ![Maven Central](https://img.shields.io/nexus/s/com.github.siroshun09.configapi/parent?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Siroshun09/ConfigAPI/Java%20CI)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Siroshun09/ConfigAPI/maven.yml?branch=master)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/ConfigAPI)
 
 A configuration library for Java.
@@ -43,7 +43,7 @@ If necessary, add the snakeYaml dependency as follows:
 <dependency>
     <groupId>org.yaml</groupId>
     <artifactId>snakeyaml</artifactId>
-    <version>1.29</version>
+    <version>1.33</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -52,4 +52,4 @@ If necessary, add the snakeYaml dependency as follows:
 
 This project is under the Apache License version 2.0. Please see [LICENSE](LICENSE) for more info.
 
-Copyright © 2020-2021, Siroshun09
+Copyright © 2020-2023, Siroshun09
