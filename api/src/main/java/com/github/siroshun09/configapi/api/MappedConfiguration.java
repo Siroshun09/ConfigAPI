@@ -69,7 +69,7 @@ public class MappedConfiguration extends AbstractConfiguration {
 
     private static @NotNull Map<Object, Object> convertToMap(@NotNull Configuration config) {
         if (config instanceof MappedConfiguration) {
-            return ((MappedConfiguration) config).map;
+            return new LinkedHashMap<>(((MappedConfiguration) config).map);
         }
 
         var map = new LinkedHashMap<>();
