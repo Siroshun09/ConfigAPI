@@ -1,0 +1,24 @@
+[versions]
+# libraries
+annotations = "24.0.0"
+snakeyaml = "2.0-SNAPSHOT"
+
+# testing tool
+junit = "5.9.2"
+
+# gradle plugins
+aggregate-javadoc = "6.6.2"
+
+[libraries]
+
+# libraries
+annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
+
+# testing tool
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+
+[plugins]
+
+aggregate-javadoc = { id = "io.freefair.aggregate-javadoc", version.ref = "aggregate-javadoc" }

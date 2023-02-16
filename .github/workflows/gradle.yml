@@ -1,0 +1,19 @@
+name: Java CI
+on: [ push, pull_request ]
+
+jobs:
+  build-java-11:
+    uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
+    with:
+      java-version: '11'
+      upload-artifacts: false
+      caching-refs: |
+        refs/heads/master
+        refs/heads/develop
+        refs/heads/gradle
+  build-java-17:
+    uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
+    with:
+      java-version: '17'
+      upload-artifacts: false
+      caching-refs: ''
