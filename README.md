@@ -13,7 +13,7 @@ A configuration library for Java.
 
 ## Usage (Maven)
 
-Javadoc is [here](https://siroshun09.github.io/ConfigAPI/)
+Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 
 ### API
 
