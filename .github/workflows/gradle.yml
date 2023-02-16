@@ -8,9 +8,7 @@ jobs:
       java-version: '11'
       upload-artifacts: false
       caching-refs: |
-        refs/heads/master
-        refs/heads/develop
-        refs/heads/gradle
+        refs/heads/v5.x.x
   build-java-17:
     uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
     with:
