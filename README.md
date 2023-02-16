@@ -2,7 +2,7 @@
 
 ![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.configapi/parent)
 ![Maven Central](https://img.shields.io/nexus/s/com.github.siroshun09.configapi/parent?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Siroshun09/ConfigAPI/maven.yml?branch=master)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Siroshun09/ConfigAPI/maven.yml?branch=v4.x.x)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/ConfigAPI)
 
 A configuration library for Java.
