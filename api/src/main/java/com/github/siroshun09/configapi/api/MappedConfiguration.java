@@ -1,5 +1,5 @@
 /*
- *     Copyright 2021 Siroshun09
+ *     Copyright 2023 Siroshun09
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class MappedConfiguration extends AbstractConfiguration {
 
     private static @NotNull Map<Object, Object> convertToMap(@NotNull Configuration config) {
         if (config instanceof MappedConfiguration) {
-            return ((MappedConfiguration) config).map;
+            return new LinkedHashMap<>(((MappedConfiguration) config).map);
         }
 
         var map = new LinkedHashMap<>();
