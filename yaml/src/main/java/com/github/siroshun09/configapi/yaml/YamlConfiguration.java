@@ -24,7 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
@@ -51,16 +53,23 @@ import java.util.function.Supplier;
  */
 public class YamlConfiguration extends AbstractFileConfiguration {
 
-    private static final Supplier<Yaml> DEFAULT_YAML_SUPPLIER;
+    private static final Supplier<Yaml> DEFAULT_YAML_SUPPLIER = YamlConfiguration::createYaml;
 
-    static {
-        var options = new DumperOptions();
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+    private static @NotNull Yaml createYaml() {
+        var dumperOptions = new DumperOptions();
+        dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-        var representer = new Representer();
+        var representer = new Representer(dumperOptions);
         representer.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-        DEFAULT_YAML_SUPPLIER = () -> new Yaml(representer, options);
+        var loaderOptions = new LoaderOptions();
+
+        // ConfigAPI is intended to load configuration files from trusted sources such as the local files.
+        // It is NOT intended to load from untrusted sources.
+        //noinspection VulnerableCodeUsages
+        var constructor = new Constructor(LinkedHashMap.class, loaderOptions);
+
+        return new Yaml(constructor, representer, dumperOptions, loaderOptions);
     }
 
     /**
@@ -121,9 +130,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
      */
     @SuppressWarnings("unchecked")
     public static @NotNull Configuration loadFromInputStream(@NotNull InputStream input) {
-        var yaml = new Yaml();
-        var map = yaml.loadAs(input, LinkedHashMap.class);
-
+        var map = createYaml().loadAs(input, LinkedHashMap.class);
         return MappedConfiguration.create(map);
     }
 
