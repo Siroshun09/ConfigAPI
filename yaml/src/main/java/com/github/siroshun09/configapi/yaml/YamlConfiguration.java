@@ -19,6 +19,8 @@ package com.github.siroshun09.configapi.yaml;
 import com.github.siroshun09.configapi.api.Configuration;
 import com.github.siroshun09.configapi.api.MappedConfiguration;
 import com.github.siroshun09.configapi.api.file.AbstractFileConfiguration;
+import com.github.siroshun09.configapi.api.serializer.ConfigurationSerializer;
+import com.github.siroshun09.configapi.api.serializer.Serializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -186,6 +188,16 @@ public class YamlConfiguration extends AbstractFileConfiguration {
         return config.getOrCreateSection(path);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> void setList(@NotNull String path, @NotNull List<T> list, @NotNull Serializer<T, ?> serializer) {
+        if (serializer instanceof ConfigurationSerializer) {
+            serializer = new ToMap<>((ConfigurationSerializer<T>) serializer);
+        }
+
+        super.setList(path, list, serializer);
+    }
+
     @Override
     public void clear() {
         if (config != null) {
@@ -286,6 +298,30 @@ public class YamlConfiguration extends AbstractFileConfiguration {
             return config;
         } else {
             throw new IllegalStateException("this configuration is not loaded");
+        }
+    }
+
+    private static class ToMap<T> implements Serializer<T, Map<Object, Object>> {
+
+        private final ConfigurationSerializer<T> serializer;
+
+        private ToMap(@NotNull ConfigurationSerializer<T> serializer) {
+            this.serializer = serializer;
+        }
+
+        @Override
+        public @NotNull Map<Object, Object> serialize(@NotNull T input) {
+            return MappedConfiguration.convertToMap(serializer.serialize(input));
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public @Nullable T deserialize(@NotNull Object source) {
+            if (source instanceof Map) {
+                return serializer.deserializeConfiguration(MappedConfiguration.create((Map<Object, Object>) source));
+            } else {
+                return null;
+            }
         }
     }
 }
