@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.api;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,7 +68,8 @@ public class MappedConfiguration extends AbstractConfiguration {
         return new MappedConfiguration(new LinkedHashMap<>(map));
     }
 
-    private static @NotNull Map<Object, Object> convertToMap(@NotNull Configuration config) {
+    @ApiStatus.Internal
+    public static @NotNull Map<Object, Object> convertToMap(@NotNull Configuration config) {
         if (config instanceof MappedConfiguration) {
             return new LinkedHashMap<>(((MappedConfiguration) config).map);
         }
