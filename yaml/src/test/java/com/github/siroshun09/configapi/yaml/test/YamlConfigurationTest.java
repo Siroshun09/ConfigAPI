@@ -41,6 +41,13 @@ class YamlConfigurationTest {
         config.set("example.key", 1);
         config.set("example.list", List.of("A", "B", "C"));
 
+        var list = List.of(
+                new Item("A4786", "Water Bucket (Filled)", 1.47, 0, 4),
+                new Item("E1628", "High Heeled \"Ruby\" Slippers", 133.7, 8, 1)
+        );
+
+        config.setList("item-list", list, new ItemSerializer());
+
         config.save();
 
         var sameConfig = YamlConfiguration.create(YAML_PATH);
@@ -49,6 +56,7 @@ class YamlConfigurationTest {
         Assertions.assertEquals("value", sameConfig.get("aaa.bbb.ccc"));
         Assertions.assertEquals(1, sameConfig.get("example.key"));
         Assertions.assertEquals(List.of("A", "B", "C"), sameConfig.get("example.list"));
+        Assertions.assertEquals(list, sameConfig.getList("item-list", new ItemSerializer()));
 
         Files.delete(YAML_PATH);
     }

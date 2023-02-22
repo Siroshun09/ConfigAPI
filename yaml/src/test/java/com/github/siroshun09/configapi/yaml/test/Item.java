@@ -18,6 +18,8 @@ package com.github.siroshun09.configapi.yaml.test;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class Item {
 
     private final String partNo;
@@ -52,5 +54,22 @@ public class Item {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Double.compare(item.price, price) == 0 &&
+                size == item.size &&
+                quantity == item.quantity &&
+                partNo.equals(item.partNo) &&
+                description.equals(item.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(partNo, description, price, size, quantity);
     }
 }
