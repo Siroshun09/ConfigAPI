@@ -1,7 +1,7 @@
 [versions]
 # libraries
 annotations = "24.0.0"
-snakeyaml = "2.0-SNAPSHOT"
+snakeyaml = "2.0"
 
 # testing tool
 junit = "5.9.2"
