@@ -68,6 +68,14 @@ public class MappedConfiguration extends AbstractConfiguration {
         return new MappedConfiguration(new LinkedHashMap<>(map));
     }
 
+    /**
+     * Converts the {@link Configuration} to the {@link Map}.
+     * <p>
+     * <b>This method is intended for internal use.</b>
+     *
+     * @param config the {@link Configuration} to convert
+     * @return the result {@link Map} of converting
+     */
     @ApiStatus.Internal
     public static @NotNull Map<Object, Object> convertToMap(@NotNull Configuration config) {
         if (config instanceof MappedConfiguration) {
