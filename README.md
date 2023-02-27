@@ -21,7 +21,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi</artifactId>
-    <version>4.6.2-SNAPSHOT</version>
+    <version>4.6.2</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -32,7 +32,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi-yaml</artifactId>
-    <version>4.6.2-SNAPSHOT</version>
+    <version>4.6.2</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -43,7 +43,7 @@ If necessary, add the snakeYaml dependency as follows:
 <dependency>
     <groupId>org.yaml</groupId>
     <artifactId>snakeyaml</artifactId>
-    <version>1.33</version>
+    <version>2.0</version>
     <scope>compile</scope>
 </dependency>
 ```
