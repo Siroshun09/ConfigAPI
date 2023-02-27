@@ -6,7 +6,9 @@ jobs:
     uses: Siroshun09/gh-actions-workflows/.github/workflows/maven.yml@v1
     with:
       java-version: '11'
+      upload-artifacts: false
   build-java-17:
     uses: Siroshun09/gh-actions-workflows/.github/workflows/maven.yml@v1
     with:
       java-version: '17'
+      upload-artifacts: false
