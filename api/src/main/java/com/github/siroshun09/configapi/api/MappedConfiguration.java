@@ -273,11 +273,6 @@ public class MappedConfiguration extends AbstractConfiguration {
         return key;
     }
 
-    private @Nullable Map<?, ?> getChild(@NotNull String key) {
-        var value = map.get(key);
-        return value instanceof Map ? (Map<?, ?>) value : null;
-    }
-
     private @NotNull String[] splitPath(@NotNull String path) {
         var builder = new StringBuilder();
         var result = new String[Math.toIntExact(path.chars().filter(c -> c == PATH_SEPARATOR).count() + 1)];
