@@ -112,8 +112,9 @@ public final class ResourceUtils {
             return;
         }
 
-        var jar = new JarFile(jarPath.toFile(), false);
-        copyFromJar(jar, name, target);
+        try (var jar = new JarFile(jarPath.toFile(), false)) {
+            copyFromJar(jar, name, target);
+        }
     }
 
     /**
@@ -194,7 +195,9 @@ public final class ResourceUtils {
     public static @NotNull InputStream getInputStreamFromJar(@NotNull Path jarPath,
                                                              @NotNull String name) throws IOException {
         Objects.requireNonNull(jarPath);
-        return getInputStreamFromJar(new JarFile(jarPath.toFile(), false), name);
+        try (var jar = new JarFile(jarPath.toFile(), false)) {
+            return getInputStreamFromJar(jar, name);
+        }
     }
 
     private static void copy(@NotNull IOSupplier<InputStream> inputSupplier, @NotNull Path target) throws IOException {

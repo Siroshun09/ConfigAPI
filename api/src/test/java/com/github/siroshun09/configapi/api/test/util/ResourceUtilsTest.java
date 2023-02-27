@@ -46,10 +46,7 @@ public class ResourceUtilsTest {
         ResourceUtils.copyFromJar(JAR_PATH, "test.txt", TEXT_PATH);
         Assertions.assertTrue(Files.exists(TEXT_PATH));
 
-        try {
-            Files.delete(JAR_PATH);
-            Files.delete(TEXT_PATH);
-        } catch (Exception ignored) {
-        }
+        Files.delete(JAR_PATH);
+        Files.delete(TEXT_PATH);
     }
 }
