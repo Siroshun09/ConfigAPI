@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A implementation class that gets value from {@link Properties}.
+ * An implementation class that gets value from {@link Properties}.
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration {
 

@@ -39,7 +39,7 @@ public interface Serializer<T, S> {
      * Deserializes the value.
      *
      * @param source the value to deserialize
-     * @return the deserialized value or {@code null} if could not deserialize
+     * @return the deserialized value or {@code null} if the value could not be deserialized
      */
     @Nullable T deserialize(@NotNull Object source);
 }
