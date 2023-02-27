@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,7 +209,7 @@ public class MappedConfiguration extends AbstractConfiguration {
             return section;
         }
 
-        var newSection = new MappedConfiguration(new HashMap<>());
+        var newSection = new MappedConfiguration(new LinkedHashMap<>());
         set(path, newSection.map);
 
         return newSection;
