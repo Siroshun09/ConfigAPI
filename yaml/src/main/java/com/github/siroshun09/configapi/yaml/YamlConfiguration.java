@@ -66,9 +66,6 @@ public class YamlConfiguration extends AbstractFileConfiguration {
 
         var loaderOptions = new LoaderOptions();
 
-        // ConfigAPI is intended to load configuration files from trusted sources such as the local files.
-        // It is NOT intended to load from untrusted sources.
-        //noinspection VulnerableCodeUsages
         var constructor = new Constructor(LinkedHashMap.class, loaderOptions);
 
         return new Yaml(constructor, representer, dumperOptions, loaderOptions);
