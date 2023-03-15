@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.api.util;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -191,7 +192,10 @@ public final class ResourceUtils {
      * @throws IOException           if an I/O error occurs
      * @throws IllegalStateException if the resource was not found
      * @throws NullPointerException  if {@code null} is specified as an argument.
+     * @deprecated The {@link JarFile} that created in this method cannot be closed.
      */
+    @ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
+    @Deprecated(since = "4.6.3", forRemoval = true)
     public static @NotNull InputStream getInputStreamFromJar(@NotNull Path jarPath,
                                                              @NotNull String name) throws IOException {
         Objects.requireNonNull(jarPath);
