@@ -195,9 +195,7 @@ public final class ResourceUtils {
     public static @NotNull InputStream getInputStreamFromJar(@NotNull Path jarPath,
                                                              @NotNull String name) throws IOException {
         Objects.requireNonNull(jarPath);
-        try (var jar = new JarFile(jarPath.toFile(), false)) {
-            return getInputStreamFromJar(jar, name);
-        }
+        return getInputStreamFromJar(new JarFile(jarPath.toFile(), false), name);
     }
 
     private static void copy(@NotNull IOSupplier<InputStream> inputSupplier, @NotNull Path target) throws IOException {
