@@ -21,7 +21,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi</artifactId>
-    <version>4.6.2</version>
+    <version>4.6.3</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -32,7 +32,7 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 <dependency>
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>configapi-yaml</artifactId>
-    <version>4.6.2</version>
+    <version>4.6.3</version>
     <scope>compile</scope>
 </dependency>
 ```
