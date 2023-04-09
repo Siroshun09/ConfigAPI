@@ -233,7 +233,7 @@ public class YamlConfiguration extends AbstractFileConfiguration {
             map = yaml.loadAs(reader, LinkedHashMap.class);
         }
 
-        config = MappedConfiguration.create(map);
+        config = map != null ? MappedConfiguration.create(map) : MappedConfiguration.create();
 
         setLoaded(true);
     }
