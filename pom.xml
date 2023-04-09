@@ -22,7 +22,7 @@
 
     <groupId>com.github.siroshun09.configapi</groupId>
     <artifactId>parent</artifactId>
-    <version>4.6.3</version>
+    <version>4.6.4</version>
     <packaging>pom</packaging>
 
     <name>ConfigAPI</name>
