@@ -4,7 +4,7 @@ annotations = "24.0.1"
 snakeyaml = "2.0"
 
 # testing tool
-junit = "5.9.2"
+junit = "5.9.3"
 
 # gradle plugins
 aggregate-javadoc = "6.6.3"
