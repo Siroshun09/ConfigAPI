@@ -195,7 +195,7 @@ public final class ResourceUtils {
      * @deprecated The {@link JarFile} that created in this method cannot be closed.
      */
     @ApiStatus.ScheduledForRemoval(inVersion = "5.0.0")
-    @Deprecated(since = "4.6.4", forRemoval = true)
+    @Deprecated(since = "4.6.3", forRemoval = true)
     public static @NotNull InputStream getInputStreamFromJar(@NotNull Path jarPath,
                                                              @NotNull String name) throws IOException {
         Objects.requireNonNull(jarPath);
