@@ -7,7 +7,7 @@ snakeyaml = "2.0"
 junit = "5.9.3"
 
 # gradle plugins
-aggregate-javadoc = "6.6.3"
+aggregate-javadoc = "8.0.1"
 
 [libraries]
 
@@ -21,4 +21,4 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 
 [plugins]
 
-aggregate-javadoc = { id = "io.freefair.aggregate-javadoc", version.ref = "aggregate-javadoc" }
+aggregate-javadoc = { id = "io.freefair.aggregate-javadoc-legacy", version.ref = "aggregate-javadoc" }
