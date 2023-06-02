@@ -2,16 +2,10 @@ name: Java CI (Gradle)
 on: [ push, pull_request ]
 
 jobs:
-  build-java-11:
-    uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
-    with:
-      java-version: '11'
-      upload-artifacts: false
-      caching-refs: |
-        refs/heads/v5.x.x
   build-java-17:
     uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
     with:
       java-version: '17'
       upload-artifacts: false
-      caching-refs: ''
+      caching-refs: |
+        refs/heads/v5.x.x

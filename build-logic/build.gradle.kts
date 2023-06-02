@@ -12,7 +12,7 @@ dependencies {
     compileOnly(files(libs::class.java.protectionDomain.codeSource.location))
 }
 
-val javaVersion = JavaVersion.VERSION_11
+val javaVersion = JavaVersion.VERSION_17
 val charset = Charsets.UTF_8
 
 java {
