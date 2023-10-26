@@ -1,0 +1,84 @@
+/*
+ *     Copyright 2023 Siroshun09
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+
+package com.github.siroshun09.configapi.test.shared.util;
+
+import com.github.siroshun09.configapi.core.node.ListNode;
+import com.github.siroshun09.configapi.core.node.MapNode;
+import com.github.siroshun09.configapi.core.node.Node;
+import com.github.siroshun09.configapi.core.node.ValueNode;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AssertionFailureBuilder;
+
+public final class NodeAssertion {
+
+    public static void assertEquals(@NotNull Node<?> a, @NotNull Node<?> b) {
+        if (a instanceof ListNode listNodeA && b instanceof ListNode listNodeB) {
+            assertEquals(listNodeA, listNodeB);
+        } else if (a instanceof MapNode mapNodeA && b instanceof MapNode mapNodeB) {
+            assertEquals(mapNodeA, mapNodeB);
+        } else if (a instanceof ValueNode<?> valueA && b instanceof ValueNode<?> valueB) {
+            if (!a.value().equals(b.value())) {
+                fail(a, b);
+            }
+        } else {
+            if (!a.equals(b)) {
+                fail(a, b);
+            }
+        }
+    }
+
+    public static void assertEquals(@NotNull ListNode a, @NotNull ListNode b) {
+        var listA = a.value();
+        var listB = b.value();
+
+        if (listA.size() != listB.size()) {
+            fail(a, b);
+        }
+
+        for (int i = 0, mapASize = listA.size(); i < mapASize; i++) {
+            assertEquals(listA.get(i), listB.get(i));
+        }
+    }
+
+    public static void assertEquals(@NotNull MapNode a, @NotNull MapNode b) {
+        var mapA = a.value();
+        var mapB = b.value();
+
+        if (mapA.size() != mapB.size()) {
+            fail(a, b);
+        }
+
+        for (var key : mapA.keySet()) {
+            if (!mapB.containsKey(key)) {
+                fail(a, b);
+            }
+
+            var nodeA = mapA.get(key);
+            var nodeB = mapB.get(key);
+
+            assertEquals(nodeA, nodeB);
+        }
+    }
+
+    private static void fail(@NotNull Node<?> a, @NotNull Node<?> b) {
+        AssertionFailureBuilder.assertionFailure().expected(a).actual(b).buildAndThrow();
+    }
+
+    private NodeAssertion() {
+        throw new UnsupportedOperationException();
+    }
+}
