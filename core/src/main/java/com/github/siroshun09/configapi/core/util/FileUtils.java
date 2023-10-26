@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.api.util;
+package com.github.siroshun09.configapi.core.util;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,12 @@ public final class FileUtils {
         Objects.requireNonNull(path, "path");
 
         if (!Files.exists(path)) {
-            createDirectoriesIfNotExists(path.getParent());
+            var parent = path.getParent();
+
+            if (parent != null) {
+                createDirectoriesIfNotExists(parent);
+            }
+
             Files.createFile(path);
         }
 

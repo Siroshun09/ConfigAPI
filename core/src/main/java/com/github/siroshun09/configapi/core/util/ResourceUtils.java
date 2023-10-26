@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.api.util;
+package com.github.siroshun09.configapi.core.util;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +42,10 @@ public final class ResourceUtils {
      */
     public static void copyFromClassLoader(@NotNull ClassLoader loader,
                                            @NotNull String name, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(loader);
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(target);
+
         copy(() -> getInputStreamFromClassLoader(loader, name), target);
     }
 
@@ -53,13 +57,16 @@ public final class ResourceUtils {
      * @param target the filepath to save
      * @throws IOException          if an I/O error occurs
      * @throws NullPointerException if {@code null} is specified as an argument.
+     * @see #copyFromClassLoader(ClassLoader, String, Path)
      */
     public static void copyFromClassLoaderIfNotExists(@NotNull ClassLoader loader,
                                                       @NotNull String name, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(loader);
+        Objects.requireNonNull(name);
         Objects.requireNonNull(target);
 
         if (!Files.exists(target)) {
-            copyFromClassLoader(loader, name, target);
+            copy(() -> getInputStreamFromClassLoader(loader, name), target);
         }
     }
 
@@ -74,6 +81,10 @@ public final class ResourceUtils {
      */
     public static void copyFromJar(@NotNull JarFile jar,
                                    @NotNull String name, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(jar);
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(target);
+
         copy(() -> getInputStreamFromJar(jar, name), target);
     }
 
@@ -88,10 +99,12 @@ public final class ResourceUtils {
      */
     public static void copyFromJarIfNotExists(@NotNull JarFile jar,
                                               @NotNull String name, @NotNull Path target) throws IOException {
+        Objects.requireNonNull(jar);
+        Objects.requireNonNull(name);
         Objects.requireNonNull(target);
 
         if (!Files.exists(target)) {
-            copyFromJar(jar, name, target);
+            copy(() -> getInputStreamFromJar(jar, name), target);
         }
     }
 
@@ -112,8 +125,9 @@ public final class ResourceUtils {
             return;
         }
 
-        var jar = new JarFile(jarPath.toFile(), false);
-        copyFromJar(jar, name, target);
+        try (var jar = new JarFile(jarPath.toFile(), false)) {
+            copyFromJar(jar, name, target);
+        }
     }
 
     /**
@@ -181,25 +195,7 @@ public final class ResourceUtils {
         }
     }
 
-    /**
-     * Gets an {@link InputStream} from the jar file.
-     *
-     * @param jarPath the path to the jar
-     * @param name    the resource name
-     * @return the {@link InputStream} from {@link JarFile#getInputStream(ZipEntry)}
-     * @throws IOException           if an I/O error occurs
-     * @throws IllegalStateException if the resource was not found
-     * @throws NullPointerException  if {@code null} is specified as an argument.
-     */
-    public static @NotNull InputStream getInputStreamFromJar(@NotNull Path jarPath,
-                                                             @NotNull String name) throws IOException {
-        Objects.requireNonNull(jarPath);
-        return getInputStreamFromJar(new JarFile(jarPath.toFile(), false), name);
-    }
-
     private static void copy(@NotNull IOSupplier<InputStream> inputSupplier, @NotNull Path target) throws IOException {
-        Objects.requireNonNull(target);
-
         var parent = target.getParent();
 
         if (parent != null) {

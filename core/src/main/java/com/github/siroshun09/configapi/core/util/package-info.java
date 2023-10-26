@@ -14,24 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.api.value;
-
-import com.github.siroshun09.configapi.api.Configuration;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * An interface that represents the values that can be obtained from the {@link Configuration}.
- *
- * @param <T> the type of value to be obtained
+ * The utility package.
  */
-@FunctionalInterface
-public interface ConfigValue<T> {
-
-    /**
-     * Gets the value from {@link Configuration}
-     *
-     * @param config the source {@link Configuration}
-     * @return the value
-     */
-    @NotNull T get(@NotNull Configuration config);
-}
+package com.github.siroshun09.configapi.core.util;
