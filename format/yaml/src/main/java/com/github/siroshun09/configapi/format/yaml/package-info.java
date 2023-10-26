@@ -14,13 +14,7 @@
  *     limitations under the License.
  */
 
-plugins {
-    id ("configapi.common-conventions")
-}
-
-dependencies {
-    implementation(projects.configapiCore)
-    api(libs.snakeyaml)
-
-    testImplementation(projects.configapiTestSharedClasses)
-}
+/**
+ * A package that includes {@link com.github.siroshun09.configapi.format.yaml.YamlFormat}.
+ */
+package com.github.siroshun09.configapi.format.yaml;
