@@ -16,6 +16,9 @@ val prefix = rootProject.name
 include("$prefix-core")
 project(":$prefix-core").projectDir = file("core")
 
+include("$prefix-test-shared-classes")
+project(":$prefix-test-shared-classes").projectDir = file("test-shared-classes")
+
 // file formats
 sequenceOf(
     "yaml"

@@ -14,7 +14,11 @@
  *     limitations under the License.
  */
 
-/**
- * The core package of ConfigAPI.
- */
-package com.github.siroshun09.configapi.api;
+plugins {
+    id ("configapi.common-conventions")
+}
+
+dependencies {
+    implementation(projects.configapiCore)
+    implementation(libs.junit.jupiter)
+}
