@@ -65,7 +65,10 @@ publishing {
             from(components["java"])
 
             pom {
+                name.set(project.name)
                 url.set("https://github.com/Siroshun09/ConfigAPI")
+                description.set("A configuration library for Java.")
+
                 licenses {
                     license {
                         name.set("APACHE LICENSE, VERSION 2.0")
