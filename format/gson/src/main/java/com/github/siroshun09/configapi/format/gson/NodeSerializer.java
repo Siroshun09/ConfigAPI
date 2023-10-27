@@ -30,7 +30,6 @@ import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.core.node.NumberValue;
 import com.github.siroshun09.configapi.core.node.ShortValue;
 import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -55,7 +54,7 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
 
             in.endObject();
         } else {
-            throw new SerializationException("Unexpected token: " + token);
+            throw new IOException("Unexpected token: " + token);
         }
 
         return mapNode;
@@ -153,7 +152,7 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
 
             out.endObject();
         } else {
-            throw new IOException(new SerializationException("Cannot serialize " + value.getClass().getName()));
+            throw new IOException("Cannot serialize " + value.getClass().getName());
         }
     }
 }
