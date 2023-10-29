@@ -14,9 +14,8 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.core.test.serialization.key;
+package com.github.siroshun09.configapi.core.serialization.key;
 
-import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
