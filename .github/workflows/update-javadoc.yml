@@ -9,6 +9,7 @@ jobs:
     with:
       java-version: '17'
       gradle-arguments: aggregateJavadoc
+      javadoc-directory: ./build/docs/aggregateJavadoc
       artifact-name: Javadoc
       cache-disabled: true
   deploy-javadoc:
