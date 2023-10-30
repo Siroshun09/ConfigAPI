@@ -13,7 +13,7 @@ A configuration library for Java.
 
 ## Usage (Maven)
 
-Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
+Javadoc is [here](https://siroshun09.github.io/ConfigAPI/4.6.4)
 
 ### API
 
@@ -43,7 +43,7 @@ If necessary, add the snakeYaml dependency as follows:
 <dependency>
     <groupId>org.yaml</groupId>
     <artifactId>snakeyaml</artifactId>
-    <version>2.0</version>
+    <version>2.2</version>
     <scope>compile</scope>
 </dependency>
 ```
