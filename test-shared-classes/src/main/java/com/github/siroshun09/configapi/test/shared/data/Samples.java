@@ -30,8 +30,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * A set of sample data for testing.
+ */
 public final class Samples {
 
+    /**
+     * Creates a sample {@link MapNode}.
+     *
+     * @return a sample {@link MapNode}
+     */
     public static @NotNull MapNode mapNode() {
         var mapNode = MapNode.create();
 
@@ -46,15 +54,45 @@ public final class Samples {
         return mapNode;
     }
 
+    /**
+     * An enum that is used for {@link #mapNode()} and {@link Record}.
+     */
     public enum Enum {
-        A, B, C
+        /**
+         * Sample enum value: A
+         */
+        A,
+        /**
+         * Sample enum value: B
+         */
+        B,
+        /**
+         * Sample enum value: C
+         */
+        C
     }
 
+    /**
+     * Creates a sample {@link Record}.
+     *
+     * @return a sample {@link Record}
+     */
     public static @NotNull Record record() {
         return new Record("value", 100, 3.14, true, List.of("A", "B", "C"),
                 Map.of("key", "value"), new NestedRecord(Map.of("key", "value")));
     }
 
+    /**
+     * A sample {@link java.lang.Record} class.
+     *
+     * @param string      the {@link String} field
+     * @param integer     the int field
+     * @param doubleValue the double field
+     * @param bool        the boolean field
+     * @param list        the {@link List} field
+     * @param map         the {@link Map} field
+     * @param nested      the {@link NestedRecord} field
+     */
     public record Record(@DefaultString("value") String string,
                          @DefaultInt(100) int integer,
                          @Key("double") @DefaultDouble(3.14) double doubleValue,
@@ -64,12 +102,29 @@ public final class Samples {
                          NestedRecord nested) {
     }
 
+    /**
+     * A {@link java.lang.Record} that is used in sample {@link Record}.
+     *
+     * @param map the {@link Map} field
+     */
     public record NestedRecord(@MapType(key = String.class, value = String.class) Map<String, String> map) {
     }
 
+    /**
+     * A first {@link UUID} that is used in {@link UUIDRecord}.
+     */
     public static final UUID UUID_1 = UUID.randomUUID();
+
+    /**
+     * A second {@link UUID} that is used in {@link UUIDRecord}.
+     */
     public static final UUID UUID_2 = UUID.randomUUID();
 
+    /**
+     * Creates a sample {@link UUIDRecord}.
+     *
+     * @return a sample {@link UUIDRecord}
+     */
     public static @NotNull UUIDRecord uuidRecord() {
         return new UUIDRecord(
                 UUID_1,
@@ -78,6 +133,11 @@ public final class Samples {
         );
     }
 
+    /**
+     * Creates a {@link MapNode} that represents {@link #uuidRecord()} using {@link com.github.siroshun09.configapi.core.serialization.key.KeyGenerator#CAMEL_TO_KEBAB}.
+     *
+     * @return a {@link MapNode} that represents {@link #uuidRecord()}
+     */
     public static @NotNull MapNode uuidRecordMapNode() {
         var mapNode = MapNode.create();
         mapNode.set("uuid", Samples.UUID_1.toString());
@@ -86,6 +146,13 @@ public final class Samples {
         return mapNode;
     }
 
+    /**
+     * A {@link java.lang.Record} that holds {@link UUID}.
+     *
+     * @param uuid       the {@link UUID} field
+     * @param uuidList   the {@link List} field
+     * @param uuidIntMap the {@link Map} field
+     */
     public record UUIDRecord(UUID uuid,
                              @CollectionType(UUID.class) List<UUID> uuidList,
                              @MapType(key = UUID.class, value = Integer.class) Map<UUID, Integer> uuidIntMap

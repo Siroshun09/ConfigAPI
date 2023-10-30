@@ -23,8 +23,17 @@ import com.github.siroshun09.configapi.core.node.ValueNode;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AssertionFailureBuilder;
 
+/**
+ * A utility class for asserting {@link Node}s.
+ */
 public final class NodeAssertion {
 
+    /**
+     * Asserts that {@code a} and {@code b} {@link Node}s are equal.
+     *
+     * @param a a first {@link Node}
+     * @param b a second {@link Node}
+     */
     public static void assertEquals(@NotNull Node<?> a, @NotNull Node<?> b) {
         if (a instanceof ListNode listNodeA && b instanceof ListNode listNodeB) {
             assertEquals(listNodeA, listNodeB);
@@ -41,6 +50,12 @@ public final class NodeAssertion {
         }
     }
 
+    /**
+     * Asserts that {@code a} and {@code b} {@link ListNode}s are equal.
+     *
+     * @param a a first {@link ListNode}
+     * @param b a second {@link ListNode}
+     */
     public static void assertEquals(@NotNull ListNode a, @NotNull ListNode b) {
         var listA = a.value();
         var listB = b.value();
@@ -54,6 +69,12 @@ public final class NodeAssertion {
         }
     }
 
+    /**
+     * Asserts that {@code a} and {@code b} {@link MapNode}s are equal.
+     *
+     * @param a a first {@link MapNode}
+     * @param b a second {@link MapNode}
+     */
     public static void assertEquals(@NotNull MapNode a, @NotNull MapNode b) {
         var mapA = a.value();
         var mapB = b.value();
