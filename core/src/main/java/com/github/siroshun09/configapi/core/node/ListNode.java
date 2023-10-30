@@ -51,6 +51,7 @@ public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImp
     /**
      * Creates a new {@link ListNode} with values in the given {@link Collection}.
      *
+     * @param collection a {@link Collection} to add elements to the new {@link ListNode}
      * @return a new {@link ListNode} with values in the given {@link Collection}
      */
     static @NotNull ListNode create(@NotNull Collection<?> collection) {
@@ -96,6 +97,8 @@ public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImp
      * The list only contain elements such that {@link Class#isInstance} returns {@code true}.
      * Other elements are ignored.
      *
+     * @param elementClass a class to cast elements
+     * @param <T> a type of the class
      * @return a {@link List} containing elements of the specified {@link Class}
      */
     <T> @NotNull @Unmodifiable List<T> asList(@NotNull Class<? extends T> elementClass);

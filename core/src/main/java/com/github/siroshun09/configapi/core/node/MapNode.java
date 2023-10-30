@@ -53,6 +53,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
     /**
      * Creates a new {@link MapNode} with entries in the given {@link Map}.
      *
+     * @param map a {@link Map} to add entries to the new {@link MapNode}
      * @return a new {@link MapNode} with entries in the given {@link Map}
      */
     static @NotNull MapNode create(@NotNull Map<?, ?> map) {
