@@ -16,13 +16,20 @@
 
 package com.github.siroshun09.configapi.core.serialization.record;
 
+import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
+import com.github.siroshun09.configapi.core.node.ByteArray;
+import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.EnumValue;
+import com.github.siroshun09.configapi.core.node.FloatArray;
+import com.github.siroshun09.configapi.core.node.IntArray;
 import com.github.siroshun09.configapi.core.node.ListNode;
+import com.github.siroshun09.configapi.core.node.LongArray;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.core.node.NumberValue;
+import com.github.siroshun09.configapi.core.node.ShortArray;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.Deserializer;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
@@ -35,6 +42,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.RecordComponent;
 import java.util.Collection;
 import java.util.Collections;
@@ -164,6 +172,8 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                 arg = this.deserializeToCollection(node, component);
             } else if (type == Map.class) {
                 arg = this.deserializeToMap(node, component);
+            } else if (type.isArray()) {
+                arg = this.deserializeArray(node, component);
             } else if (node != NullNode.NULL) {
                 var deserialized = this.deserializeNode(node, type);
                 arg = deserialized != null ? deserialized : RecordUtils.getDefaultValue(component, this.defaultRecord);
@@ -302,6 +312,55 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         }
 
         return Collections.unmodifiableMap(map);
+    }
+
+    private @NotNull Object deserializeArray(@NotNull Node<?> node, @NotNull RecordComponent component) {
+        var componentType = component.getType().getComponentType();
+
+        if (componentType.isPrimitive()) {
+            return deserializePrimitiveArray(node, component);
+        }
+
+        if (!(node instanceof ListNode listNode)) {
+            return this.getDefaultOrEmptyArray(component, componentType);
+        }
+
+        if (listNode.value().isEmpty()) {
+            return Array.newInstance(componentType, 0);
+        }
+
+        return listNode.asList(componentType).toArray(length -> createArray(componentType, length));
+    }
+
+    private @NotNull Object deserializePrimitiveArray(@NotNull Node<?> node, @NotNull RecordComponent component) {
+        if (component.getType() == int[].class) {
+            return node instanceof IntArray intArray ? intArray.value() : this.getDefaultOrEmptyArray(component, int.class);
+        } else if (component.getType() == long[].class) {
+            return node instanceof LongArray longArray ? longArray.value() : this.getDefaultOrEmptyArray(component, long.class);
+        } else if (component.getType() == float[].class) {
+            return node instanceof FloatArray floatArray ? floatArray.value() : this.getDefaultOrEmptyArray(component, float.class);
+        } else if (component.getType() == double[].class) {
+            return node instanceof DoubleArray doubleArray ? doubleArray.value() : this.getDefaultOrEmptyArray(component, double.class);
+        } else if (component.getType() == byte[].class) {
+            return node instanceof ByteArray byteArray ? byteArray.value() : this.getDefaultOrEmptyArray(component, byte.class);
+        } else if (component.getType() == short[].class) {
+            return node instanceof ShortArray shortArray ? shortArray.value() : this.getDefaultOrEmptyArray(component, short.class);
+        } else if (component.getType() == boolean[].class) {
+            return node instanceof BooleanArray booleanArray ? booleanArray.value() : this.getDefaultOrEmptyArray(component, boolean.class);
+        } else {
+            throw new IllegalArgumentException("Unexpected primitive type: " + component.getType());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T[] createArray(Class<?> componentType, int length) {
+        return (T[]) Array.newInstance(componentType, length);
+    }
+
+    private @NotNull Object getDefaultOrEmptyArray(@NotNull RecordComponent component, @NotNull Class<?> componentType) {
+        return this.defaultRecord != null ?
+                RecordUtils.getValue(component, this.defaultRecord) :
+                Array.newInstance(componentType, 0);
     }
 
     private @Nullable Object deserializeKey(@NotNull Object key, @NotNull Class<?> clazz) {

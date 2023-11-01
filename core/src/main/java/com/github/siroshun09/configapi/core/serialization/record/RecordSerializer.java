@@ -147,6 +147,8 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
             return serializeCollection((Collection<?>) obj);
         } else if (Map.class.isAssignableFrom(obj.getClass())) {
             return serializeMap((Map<?, ?>) obj);
+        } else if (obj.getClass().isArray()) {
+            return Node.fromObject(obj);
         } else {
             throw new SerializationException("No serializer found for " + obj.getClass());
         }
