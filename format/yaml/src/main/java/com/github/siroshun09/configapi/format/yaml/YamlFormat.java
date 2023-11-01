@@ -53,6 +53,7 @@ import java.util.function.Supplier;
  *     </ul>
  *     </li>
  *     <li>{@link MapNode} and {@link ListNode}</li>
+ *     <li>{@link com.github.siroshun09.configapi.core.node.ArrayNode}s: serialize only</li>
  *     <li>{@link NullNode}</li>
  *     <li>{@link com.github.siroshun09.configapi.core.node.ObjectNode} that holds a basic Java object
  *     <ul>
