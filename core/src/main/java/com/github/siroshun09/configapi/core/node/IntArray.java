@@ -54,4 +54,23 @@ public record IntArray(int @NotNull [] value) implements ArrayNode<int[]> {
                 "value=" + Arrays.toString(this.value) +
                 ']';
     }
+
+    @Override
+    public void appendValue(@NotNull StringBuilder builder) {
+        int iMax = this.value.length - 1;
+        if (iMax == -1) {
+            builder.append("[]");
+        } else {
+            builder.append('[');
+
+            for (int i = 0; i <= iMax; i++) {
+                if (i != 0) {
+                    builder.append(", ");
+                }
+                builder.append(this.value[i]);
+            }
+
+            builder.append(']');
+        }
+    }
 }

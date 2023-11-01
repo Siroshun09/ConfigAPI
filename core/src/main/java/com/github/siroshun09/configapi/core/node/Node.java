@@ -93,4 +93,13 @@ public sealed interface Node<T> permits ArrayNode, ListNode, MapNode, NullNode, 
     default @NotNull Optional<T> asOptional() {
         return Optional.ofNullable(value());
     }
+
+    /**
+     * Appends the string representation of the {@link #value()}.
+     *
+     * @param builder a {@link StringBuilder}
+     */
+    default void appendValue(@NotNull StringBuilder builder) {
+        builder.append(this.value());
+    }
 }

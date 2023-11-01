@@ -115,4 +115,30 @@ final class MapNodeImpl implements MapNode {
                 "backing=" + this.backing +
                 '}';
     }
+
+    @Override
+    public void appendValue(@NotNull StringBuilder builder) {
+        if (this.backing.isEmpty()) {
+            builder.append("{}");
+        } else {
+            builder.append('{');
+
+            var iterator = this.backing.entrySet().iterator();
+
+            for (; ; ) {
+                var entry = iterator.next();
+                builder.append(entry.getKey() == this ? "(this Map)" : entry.getKey());
+                builder.append('=');
+                entry.getValue().appendValue(builder);
+
+                if (iterator.hasNext()) {
+                    builder.append(", ");
+                } else {
+                    break;
+                }
+            }
+
+            builder.append('}');
+        }
+    }
 }

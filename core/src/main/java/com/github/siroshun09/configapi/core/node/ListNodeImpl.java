@@ -139,6 +139,26 @@ final class ListNodeImpl implements ListNode {
                 '}';
     }
 
+    @Override
+    public void appendValue(@NotNull StringBuilder builder) {
+        int iMax = this.backing.size() - 1;
+
+        if (iMax == -1) {
+            builder.append("[]");
+        } else {
+            builder.append('[');
+
+            for (int i = 0; i <= iMax; i++) {
+                if (i != 0) {
+                    builder.append(", ");
+                }
+                this.backing.get(i).appendValue(builder);
+            }
+
+            builder.append(']');
+        }
+    }
+
     private static <T> @Nullable T castIfPossible(@NotNull Node<?> node, @NotNull Class<? extends T> clazz) {
         if (clazz.isInstance(node)) {
             return clazz.cast(node);

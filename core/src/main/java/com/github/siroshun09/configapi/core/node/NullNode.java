@@ -48,4 +48,9 @@ public final class NullNode implements Node<Object> {
     public @NotNull Optional<Object> asOptional() {
         return Optional.empty();
     }
+
+    @Override
+    public void appendValue(@NotNull StringBuilder builder) {
+        builder.append("null");
+    }
 }
