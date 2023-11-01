@@ -44,6 +44,7 @@ import java.io.Writer;
  *     </ul>
  *     </li>
  *     <li>{@link MapNode} and {@link ListNode}</li>
+ *     <li>{@link com.github.siroshun09.configapi.core.node.ArrayNode}s: serialize only</li>
  *     <li>{@link NullNode}</li>
  * </ul>
  */
