@@ -165,7 +165,9 @@ final class RecordUtils {
 
     static <R> @NotNull R createRecord(@NotNull Class<R> clazz, @NotNull Class<?> @NotNull [] types, @NotNull Object[] args) {
         try {
-            return clazz.getDeclaredConstructor(types).newInstance(args);
+            var constructor = clazz.getDeclaredConstructor(types);
+            constructor.setAccessible(true);
+            return constructor.newInstance(args);
         } catch (NoSuchMethodException e) {
             throw new SerializationException(e);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
