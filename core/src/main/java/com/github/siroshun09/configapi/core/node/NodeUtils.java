@@ -19,6 +19,7 @@ package com.github.siroshun09.configapi.core.node;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -42,6 +43,10 @@ final class NodeUtils {
             }
         }
 
+        if (value.getClass().isArray()) {
+            return fromArray(value);
+        }
+
         if (value instanceof String string) {
             return StringValue.fromString(string);
         } else if (value instanceof Number number) {
@@ -56,6 +61,28 @@ final class NodeUtils {
             return MapNode.create(map);
         } else {
             return new ObjectNode<>(value);
+        }
+    }
+
+    private static @NotNull Node<?> fromArray(@NotNull Object value) {
+        if (value instanceof int[] array) {
+            return new IntArray(array);
+        } else if (value instanceof long[] array) {
+            return new LongArray(array);
+        } else if (value instanceof float[] array) {
+            return new FloatArray(array);
+        } else if (value instanceof double[] array) {
+            return new DoubleArray(array);
+        } else if (value instanceof byte[] array) {
+            return new ByteArray(array);
+        } else if (value instanceof short[] array) {
+            return new ShortArray(array);
+        } else if (value instanceof boolean[] array) {
+            return new BooleanArray(array);
+        } else if (value instanceof Object[] array) {
+            return ListNode.create(Arrays.asList(array));
+        } else {
+            throw new IllegalArgumentException("unexpected array: " + value);
         }
     }
 
