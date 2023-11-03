@@ -128,6 +128,28 @@ public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImp
     void add(@NotNull Object value);
 
     /**
+     * Adds a new {@link ListNode} to this {@link ListNode}.
+     *
+     * @return a created {@link ListNode}
+     */
+    @NotNull ListNode addList();
+
+    /**
+     * Adds a new {@link ListNode} to this {@link ListNode}.
+     *
+     * @param initialCapacity the initial capacity of the list
+     * @return a created {@link ListNode}
+     */
+    @NotNull ListNode addList(int initialCapacity);
+
+    /**
+     * Adds a new {@link MapNode} to this {@link ListNode}.
+     *
+     * @return a created {@link MapNode}
+     */
+    @NotNull MapNode addMap();
+
+    /**
      * Removes an object from this {@link ListNode}.
      *
      * @param value an object to remove from this {@link ListNode}

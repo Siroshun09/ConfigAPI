@@ -82,6 +82,27 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
+    public @NotNull ListNode addList() {
+        var listNode = ListNode.create();
+        this.backing.add(listNode);
+        return listNode;
+    }
+
+    @Override
+    public @NotNull ListNode addList(int initialCapacity) {
+        var listNode = ListNode.create(initialCapacity);
+        this.backing.add(listNode);
+        return listNode;
+    }
+
+    @Override
+    public @NotNull MapNode addMap() {
+        var listNode = MapNode.create();
+        this.backing.add(listNode);
+        return listNode;
+    }
+
+    @Override
     public void remove(@NotNull Object value) {
         this.backing.remove(Node.fromObject(value));
     }
