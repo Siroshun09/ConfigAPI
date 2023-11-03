@@ -49,6 +49,16 @@ public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImp
     }
 
     /**
+     * Creates a new {@link ListNode}.
+     *
+     * @param initialCapacity the initial capacity of the list
+     * @return a new {@link ListNode}
+     */
+    static @NotNull ListNode create(int initialCapacity) {
+        return new ListNodeImpl(new ArrayList<>(initialCapacity));
+    }
+
+    /**
      * Creates a new {@link ListNode} with values in the given {@link Collection}.
      *
      * @param collection a {@link Collection} to add elements to the new {@link ListNode}
