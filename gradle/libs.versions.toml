@@ -5,7 +5,7 @@ gson = "2.10.1"
 snakeyaml = "2.2"
 
 # testing tool
-junit = "5.10.0"
+junit = "5.10.1"
 
 # gradle plugins
 aggregate-javadoc = "8.4"
