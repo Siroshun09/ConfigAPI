@@ -30,7 +30,7 @@ public record StringValue(@NotNull String value) implements ValueNode<String> {
     /**
      * A {@link StringValue} that represents an empty string.
      */
-    public static StringValue EMPTY = new StringValue("");
+    public static final StringValue EMPTY = new StringValue("");
 
     /**
      * Creates a {@link StringValue} from the given string or returns {@link #EMPTY} if the given string is empty.
