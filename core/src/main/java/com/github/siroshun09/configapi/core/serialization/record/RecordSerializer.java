@@ -21,10 +21,12 @@ import com.github.siroshun09.configapi.core.node.EnumValue;
 import com.github.siroshun09.configapi.core.node.ListNode;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
+import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.core.node.NumberValue;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.Serializer;
+import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
 import com.github.siroshun09.configapi.core.serialization.registry.SerializerRegistry;
 import org.jetbrains.annotations.ApiStatus;
@@ -98,6 +100,10 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
      */
     @Override
     public @NotNull MapNode serialize(@NotNull R input) throws SerializationException {
+        return this.serialize0(input);
+    }
+
+    private @NotNull MapNode serialize0(@NotNull Record input) throws SerializationException {
         var components = input.getClass().getRecordComponents();
         var mapNode = MapNode.create();
 
@@ -108,14 +114,31 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
                 continue;
             }
 
-            var serialized = serializeValue(value);
+            Node<?> serialized;
 
-            if (serialized != null) {
-                mapNode.set(RecordUtils.getKey(component, keyGenerator), serialized);
+            if (component.getType().isRecord() && component.getDeclaredAnnotation(Inline.class) != null) {
+                serialized = this.processInlinedRecord((Record) value);
+            } else {
+                serialized = this.serializeValue(value);
+            }
+
+            if (serialized != null && serialized != NullNode.NULL) {
+                mapNode.set(RecordUtils.getKey(component, this.keyGenerator), serialized);
             }
         }
 
         return mapNode;
+    }
+
+    private @NotNull Node<?> processInlinedRecord(@NotNull Record input) {
+        var components = input.getClass().getRecordComponents();
+
+        if (components.length != 1) {
+            throw new SerializationException("The component of the record for which @Inline is specified must be one.");
+        }
+
+        var value = RecordUtils.getValue(components[0], input);
+        return value != null ? this.serializeValue(value) : NullNode.NULL;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -142,7 +165,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
         if (serializer != null) {
             return serializer.serialize(obj);
         } else if (Record.class.isAssignableFrom(obj.getClass())) {
-            return create(this.keyGenerator).serialize((Record) obj);
+            return serialize0((Record) obj);
         } else if (Collection.class.isAssignableFrom(obj.getClass())) {
             return serializeCollection((Collection<?>) obj);
         } else if (Map.class.isAssignableFrom(obj.getClass())) {

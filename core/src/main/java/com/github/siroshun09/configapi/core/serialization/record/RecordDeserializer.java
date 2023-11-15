@@ -27,13 +27,15 @@ import com.github.siroshun09.configapi.core.node.ListNode;
 import com.github.siroshun09.configapi.core.node.LongArray;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
-import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.core.node.NumberValue;
 import com.github.siroshun09.configapi.core.node.ShortArray;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.Deserializer;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.annotation.CollectionType;
+import com.github.siroshun09.configapi.core.serialization.annotation.DefaultMapKey;
+import com.github.siroshun09.configapi.core.serialization.annotation.DefaultNull;
+import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
 import com.github.siroshun09.configapi.core.serialization.annotation.MapType;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
 import com.github.siroshun09.configapi.core.serialization.registry.DeserializerRegistry;
@@ -50,6 +52,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * A {@link Deserializer} implementation for deserializing {@link MapNode} to {@link Record} object.
@@ -156,7 +159,12 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      */
     @Override
     public @NotNull R deserialize(@NotNull MapNode input) throws SerializationException {
-        var components = this.recordClass.getRecordComponents();
+        return deserializeToRecord(this.recordClass, input, this.defaultRecord);
+    }
+
+    private <T extends Record> T deserializeToRecord(@NotNull Class<T> clazz, @NotNull MapNode input,
+                                                     @Nullable T defaultRecord) {
+        var components = clazz.getRecordComponents();
 
         var types = new Class<?>[components.length];
         var args = new Object[components.length];
@@ -164,36 +172,131 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         for (int i = 0; i < components.length; i++) {
             var component = components[i];
             var node = input.get(RecordUtils.getKey(component, this.keyGenerator));
-            var type = component.getType();
-
-            Object arg;
-
-            if (Collection.class.isAssignableFrom(type)) {
-                arg = this.deserializeToCollection(node, component);
-            } else if (type == Map.class) {
-                arg = this.deserializeToMap(node, component);
-            } else if (type.isArray()) {
-                arg = this.deserializeArray(node, component);
-            } else if (node != NullNode.NULL) {
-                var deserialized = this.deserializeNode(node, type);
-                arg = deserialized != null ? deserialized : RecordUtils.getDefaultValue(component, this.defaultRecord);
-            } else {
-                arg = RecordUtils.getDefaultValue(component, this.defaultRecord);
-            }
-
-            types[i] = type;
-            args[i] = arg;
+            types[i] = component.getType();
+            args[i] = processComponent(component, node, RecordUtils.getDefaultValue(component, defaultRecord));
         }
 
-        return RecordUtils.createRecord(this.recordClass, types, args);
+        return RecordUtils.createRecord(clazz, types, args);
+    }
+
+    private Object processComponent(@NotNull RecordComponent component, @NotNull Node<?> node,
+                                    @Nullable Object defaultValue) {
+        var type = component.getType();
+        var deserializer = this.deserializerRegistry.get(type);
+
+        if (deserializer != null) {
+            return deserializer.deserialize(node);
+        } else if (CollectionUtils.isSupportedCollectionType(type)) {
+            return this.processCollection(component, node, defaultValue);
+        } else if (type == Map.class) {
+            return this.processMap(component, node, defaultValue);
+        } else if (type.isArray()) {
+            return this.processArray(component, node, defaultValue);
+        } else if (type.isRecord()) {
+            return this.processRecord(component, node, defaultValue);
+        } else {
+            return this.deserializeNode(node, type, defaultValue);
+        }
+    }
+
+    private Object processCollection(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultCollection) {
+        var annotation = component.getDeclaredAnnotation(CollectionType.class);
+
+        if (annotation == null) {
+            throw new SerializationException("@CollectionType is not declared for " + component.getName());
+        }
+
+        if (node instanceof ListNode listNode) {
+            return this.deserializeToCollection(listNode, component.getType(), annotation.value());
+        } else if (defaultCollection != null) {
+            return defaultCollection;
+        } else {
+            return component.isAnnotationPresent(DefaultNull.class) ? null : CollectionUtils.emptyCollectionOrNull(component.getType());
+        }
+    }
+
+    private Object processMap(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultMap) {
+        var annotation = component.getDeclaredAnnotation(MapType.class);
+
+        if (annotation == null) {
+            throw new SerializationException("@MapType is not declared for " + component.getName());
+        }
+
+        var keyType = annotation.key();
+        var valueType = annotation.value();
+        var defaultMapKey = component.getDeclaredAnnotation(DefaultMapKey.class);
+
+        if (node instanceof MapNode mapNode) {
+            return this.deserializeToMap(mapNode, keyType, valueType, defaultMapKey);
+        } else if (defaultMap != null) {
+            return defaultMap;
+        } else if (keyType == String.class && defaultMapKey != null) {
+            var defaultValue = this.deserializeNode(MapNode.empty(), valueType, RecordUtils.createDefaultValue(valueType, false));
+            return defaultValue != null ? Map.of(defaultMapKey.value(), defaultValue) : null;
+        } else {
+            return component.isAnnotationPresent(DefaultNull.class) ? null : Collections.emptyMap();
+        }
+    }
+
+    private @NotNull Object processArray(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultArray) {
+        return this.deserializeToArray(
+                node,
+                component.getType(),
+                () -> {
+                    if (defaultArray != null) return defaultArray;
+                    else if (component.isAnnotationPresent(DefaultNull.class)) return null;
+                    else return createArray(component.getType().getComponentType(), 0);
+                }
+        );
+    }
+
+    private Object processRecord(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultValue) {
+        var clazz = component.getType();
+
+        Object result;
+
+        if (component.isAnnotationPresent(Inline.class)) {
+            result = this.processInlinedRecord(component, clazz, node, (Record) defaultValue);
+        } else {
+            result = this.deserializeNode(node, clazz, defaultValue);
+        }
+
+        return result;
+    }
+
+    private Object processInlinedRecord(@NotNull RecordComponent parent, @NotNull Class<?> clazz, @NotNull Node<?> node, @Nullable Record defaultRecord) {
+        var components = clazz.getRecordComponents();
+
+        if (components.length != 1) {
+            throw new SerializationException("The component of the record for which @Inline is specified must be one.");
+        }
+
+        var inlinedComponent = components[0];
+        var type = inlinedComponent.getType();
+
+        Object defaultObject;
+
+        if (defaultRecord != null) {
+            defaultObject = RecordUtils.getValue(inlinedComponent, defaultRecord);
+        } else {
+            var def = RecordUtils.getDefaultValueByAnnotation(type, parent);
+            if (def == null)
+                def = RecordUtils.getDefaultValueByAnnotation(type, inlinedComponent);
+            if (def == null)
+                def = RecordUtils.createDefaultValue(type, inlinedComponent.isAnnotationPresent(DefaultNull.class));
+            defaultObject = def;
+        }
+
+        return RecordUtils.createRecord(clazz, new Class[]{type}, new Object[]{this.processComponent(inlinedComponent, node, defaultObject)});
     }
 
     @SuppressWarnings("unchecked")
-    private @Nullable Object deserializeNode(@NotNull Node<?> node, @NotNull Class<?> clazz) {
+    private @Nullable Object deserializeNode(@NotNull Node<?> node, @NotNull Class<?> clazz,
+                                             @Nullable Object defaultObject) {
         if (clazz == boolean.class || clazz == Boolean.class) {
-            return node instanceof BooleanValue booleanValue && booleanValue.asBoolean();
+            return node instanceof BooleanValue booleanValue ? booleanValue.value() : defaultObject;
         } else if (clazz == String.class) {
-            return node instanceof StringValue stringValue ? stringValue.asString() : String.valueOf(node.value());
+            return node instanceof StringValue stringValue ? stringValue.asString() : defaultObject;
         } else if (Enum.class.isAssignableFrom(clazz)) {
             if (node instanceof EnumValue<?> enumValue && clazz.isInstance(enumValue.value())) {
                 return enumValue.value();
@@ -212,57 +315,46 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                 return null;
             }
         } else if (clazz == byte.class || clazz == Byte.class) {
-            return node instanceof NumberValue value ? value.asByte() : 0;
+            return node instanceof NumberValue value ? value.asByte() : defaultObject;
         } else if (clazz == double.class || clazz == Double.class) {
-            return node instanceof NumberValue value ? value.asDouble() : 0;
+            return node instanceof NumberValue value ? value.asDouble() : defaultObject;
         } else if (clazz == float.class || clazz == Float.class) {
-            return node instanceof NumberValue value ? value.asFloat() : 0;
+            return node instanceof NumberValue value ? value.asFloat() : defaultObject;
         } else if (clazz == int.class || clazz == Integer.class) {
-            return node instanceof NumberValue value ? value.asInt() : 0;
+            return node instanceof NumberValue value ? value.asInt() : defaultObject;
         } else if (clazz == long.class || clazz == Long.class) {
-            return node instanceof NumberValue value ? value.asLong() : 0;
+            return node instanceof NumberValue value ? value.asLong() : defaultObject;
         } else if (clazz == short.class || clazz == Short.class) {
-            return node instanceof NumberValue value ? value.asShort() : 0;
+            return node instanceof NumberValue value ? value.asShort() : defaultObject;
         }
 
         var deserializer = this.deserializerRegistry.get(clazz);
 
         if (deserializer != null) {
             return deserializer.deserialize(node);
+        } else if (CollectionUtils.isSupportedCollectionType(clazz)) {
+            return node instanceof ListNode listNode ? this.deserializeToCollection(listNode, clazz, Object.class) : defaultObject;
+        } else if (clazz == Map.class) {
+            return node instanceof MapNode mapNode ? this.deserializeToMap(mapNode, Object.class, Object.class, null) : defaultObject;
+        } else if (clazz.isArray()) {
+            return this.deserializeToArray(node, clazz, () -> defaultObject);
         } else if (clazz.isRecord()) {
-            return node instanceof MapNode mapNode ?
-                    create(clazz.asSubclass(Record.class), this.keyGenerator).deserialize(mapNode) :
-                    RecordUtils.createDefaultRecord(clazz);
+            var mapNode = node instanceof MapNode casted ? casted : MapNode.empty();
+            return this.deserializeToRecord(clazz.asSubclass(Record.class), mapNode, (Record) defaultObject);
         } else {
             throw new SerializationException("No deserializer found for " + clazz.getSimpleName());
         }
     }
 
-    private @Nullable Collection<?> deserializeToCollection(@NotNull Node<?> node, @NotNull RecordComponent component) {
-        if (!(node instanceof ListNode listNode)) {
-            return this.defaultRecord != null ?
-                    (Collection<?>) RecordUtils.getValue(component, this.defaultRecord) :
-                    CollectionUtils.emptyCollectionOrNull(component.getType());
+    private @NotNull Collection<?> deserializeToCollection(@NotNull ListNode node,
+                                                           @NotNull Class<?> collectionType,
+                                                           @NotNull Class<?> elementType) {
+        if (node.value().isEmpty()) {
+            return CollectionUtils.emptyCollectionOrNull(collectionType);
         }
 
-        if (listNode.value().isEmpty()) {
-            return CollectionUtils.emptyCollectionOrNull(component.getType());
-        }
-
-        var originalList = listNode.value();
-        var collection = CollectionUtils.createCollection(component.getType(), originalList.size());
-
-        if (collection == null) {
-            return null;
-        }
-
-        var annotation = component.getDeclaredAnnotation(CollectionType.class);
-
-        if (annotation == null) {
-            throw new SerializationException("@CollectionType is not declared for " + component.getName());
-        }
-
-        var elementType = annotation.value();
+        var originalList = node.value();
+        var collection = CollectionUtils.createCollection(collectionType, originalList.size());
 
         for (var elementNode : originalList) {
             var element = elementNode.value();
@@ -271,96 +363,86 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                 continue;
             }
 
-            var deserialized = this.deserializeNode(elementNode, elementType);
+            var deserialized = this.deserializeNode(elementNode, elementType, null);
 
             if (deserialized != null) {
                 collection.add(deserialized);
             }
         }
 
-        return CollectionUtils.unmodifiable(component.getType(), collection);
+        return CollectionUtils.unmodifiable(collectionType, collection);
     }
 
-    private @NotNull Map<?, ?> deserializeToMap(@NotNull Node<?> node, @NotNull RecordComponent component) {
-        if (!(node instanceof MapNode mapNode)) {
-            var def = this.defaultRecord != null ? (Map<?, ?>) RecordUtils.getValue(component, this.defaultRecord) : null;
-            return def != null ? def : Collections.emptyMap();
-        }
-
-        if (mapNode.value().isEmpty()) {
+    private @NotNull Map<?, ?> deserializeToMap(@NotNull MapNode node,
+                                                @NotNull Class<?> keyType, @NotNull Class<?> valueType,
+                                                @Nullable DefaultMapKey defaultMapKey) {
+        if (node.value().isEmpty()) {
             return Collections.emptyMap();
         }
 
-        var map = new HashMap<>(mapNode.value().size(), 1.0f);
+        var map = new HashMap<>(node.value().size(), 1.0f);
 
-        var annotation = component.getDeclaredAnnotation(MapType.class);
-
-        if (annotation == null) {
-            throw new SerializationException("@MapType is not declared for " + component.getName());
-        }
-
-        var keyType = annotation.key();
-        var valueType = annotation.value();
-
-        for (var entry : mapNode.value().entrySet()) {
+        for (var entry : node.value().entrySet()) {
             var key = deserializeKey(entry.getKey(), keyType);
-            var value = deserializeNode(entry.getValue(), valueType);
+            var value = deserializeNode(entry.getValue(), valueType, null);
 
             if (key != null && value != null) {
                 map.put(key, value);
             }
         }
 
-        return Collections.unmodifiableMap(map);
+        if (keyType.equals(String.class) && defaultMapKey != null && !map.containsKey(defaultMapKey.value())) {
+            var defaultValue = this.deserializeNode(MapNode.empty(), valueType, null);
+            if (defaultValue != null) {
+                map.put(defaultMapKey.value(), defaultValue);
+            }
+        }
+
+        return map.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(map);
     }
 
-    private @NotNull Object deserializeArray(@NotNull Node<?> node, @NotNull RecordComponent component) {
-        var componentType = component.getType().getComponentType();
-
-        if (componentType.isPrimitive()) {
-            return deserializePrimitiveArray(node, component);
-        }
-
-        if (!(node instanceof ListNode listNode)) {
-            return this.getDefaultOrEmptyArray(component, componentType);
-        }
-
-        if (listNode.value().isEmpty()) {
-            return Array.newInstance(componentType, 0);
-        }
-
-        return listNode.asList(componentType).toArray(length -> createArray(componentType, length));
-    }
-
-    private @NotNull Object deserializePrimitiveArray(@NotNull Node<?> node, @NotNull RecordComponent component) {
-        if (component.getType() == int[].class) {
-            return node instanceof IntArray intArray ? intArray.value() : this.getDefaultOrEmptyArray(component, int.class);
-        } else if (component.getType() == long[].class) {
-            return node instanceof LongArray longArray ? longArray.value() : this.getDefaultOrEmptyArray(component, long.class);
-        } else if (component.getType() == float[].class) {
-            return node instanceof FloatArray floatArray ? floatArray.value() : this.getDefaultOrEmptyArray(component, float.class);
-        } else if (component.getType() == double[].class) {
-            return node instanceof DoubleArray doubleArray ? doubleArray.value() : this.getDefaultOrEmptyArray(component, double.class);
-        } else if (component.getType() == byte[].class) {
-            return node instanceof ByteArray byteArray ? byteArray.value() : this.getDefaultOrEmptyArray(component, byte.class);
-        } else if (component.getType() == short[].class) {
-            return node instanceof ShortArray shortArray ? shortArray.value() : this.getDefaultOrEmptyArray(component, short.class);
-        } else if (component.getType() == boolean[].class) {
-            return node instanceof BooleanArray booleanArray ? booleanArray.value() : this.getDefaultOrEmptyArray(component, boolean.class);
+    private @NotNull Object deserializeToArray(@NotNull Node<?> node, @NotNull Class<?> clazz, @NotNull Supplier<Object> defaultArraySupplier) {
+        if (clazz == int[].class) {
+            return node instanceof IntArray intArray ? intArray.value() : defaultArraySupplier.get();
+        } else if (clazz == long[].class) {
+            return node instanceof LongArray longArray ? longArray.value() : defaultArraySupplier.get();
+        } else if (clazz == float[].class) {
+            return node instanceof FloatArray floatArray ? floatArray.value() : defaultArraySupplier.get();
+        } else if (clazz == double[].class) {
+            return node instanceof DoubleArray doubleArray ? doubleArray.value() : defaultArraySupplier.get();
+        } else if (clazz == byte[].class) {
+            return node instanceof ByteArray byteArray ? byteArray.value() : defaultArraySupplier.get();
+        } else if (clazz == short[].class) {
+            return node instanceof ShortArray shortArray ? shortArray.value() : defaultArraySupplier.get();
+        } else if (clazz == boolean[].class) {
+            return node instanceof BooleanArray booleanArray ? booleanArray.value() : defaultArraySupplier.get();
+        } else if (node instanceof ListNode listNode) {
+            var list = listNode.value();
+            var componentType = clazz.getComponentType();
+            if (list.isEmpty()) {
+                return createArray(componentType, 0);
+            } else {
+                var array = createArray(componentType, list.size());
+                for (int i = 0, size = list.size(); i < size; i++) {
+                    var element = list.get(i);
+                    if (componentType.isInstance(element)) {
+                        array[i] = element;
+                    } else if (componentType.isInstance(element.value())) {
+                        array[i] = element.value();
+                    } else {
+                        array[i] = deserializeNode(list.get(i), componentType, null);
+                    }
+                }
+                return array;
+            }
         } else {
-            throw new IllegalArgumentException("Unexpected primitive type: " + component.getType());
+            return defaultArraySupplier.get();
         }
     }
 
     @SuppressWarnings("unchecked")
     private static <T> T[] createArray(Class<?> componentType, int length) {
         return (T[]) Array.newInstance(componentType, length);
-    }
-
-    private @NotNull Object getDefaultOrEmptyArray(@NotNull RecordComponent component, @NotNull Class<?> componentType) {
-        return this.defaultRecord != null ?
-                RecordUtils.getValue(component, this.defaultRecord) :
-                Array.newInstance(componentType, 0);
     }
 
     private @Nullable Object deserializeKey(@NotNull Object key, @NotNull Class<?> clazz) {

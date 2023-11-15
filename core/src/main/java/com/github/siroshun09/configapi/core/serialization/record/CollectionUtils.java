@@ -17,7 +17,6 @@
 package com.github.siroshun09.configapi.core.serialization.record;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,17 +27,21 @@ import java.util.Set;
 
 final class CollectionUtils {
 
-    static @Nullable Collection<Object> emptyCollectionOrNull(@NotNull Class<?> clazz) {
+    static boolean isSupportedCollectionType(@NotNull Class<?> clazz) {
+        return clazz == List.class || clazz == Collection.class || clazz == Set.class;
+    }
+
+    static @NotNull Collection<Object> emptyCollectionOrNull(@NotNull Class<?> clazz) {
         if (clazz == List.class || clazz == Collection.class) {
             return Collections.emptyList();
         } else if (clazz == Set.class) {
             return Collections.emptySet();
         } else {
-            return null;
+            throw new IllegalArgumentException("Cannot create a new instance of " + clazz.getName());
         }
     }
 
-    static @Nullable Collection<Object> createCollection(@NotNull Class<?> clazz, int size) {
+    static @NotNull Collection<Object> createCollection(@NotNull Class<?> clazz, int size) {
         if (size < 1) {
             return emptyCollectionOrNull(clazz);
         }
@@ -48,7 +51,7 @@ final class CollectionUtils {
         } else if (clazz == Set.class) {
             return new HashSet<>(size, 1.0f);
         } else {
-            return null;
+            throw new IllegalArgumentException("Cannot create a new instance of " + clazz.getName());
         }
     }
 
@@ -57,8 +60,10 @@ final class CollectionUtils {
             return Collections.unmodifiableList((List<?>) collection);
         } else if (clazz == Set.class) {
             return Collections.unmodifiableSet((Set<?>) collection);
-        } else {
+        } else if (clazz == Collection.class) {
             return Collections.unmodifiableCollection(collection);
+        } else {
+            throw new IllegalArgumentException("Cannot create a new instance of " + clazz.getName());
         }
     }
 
