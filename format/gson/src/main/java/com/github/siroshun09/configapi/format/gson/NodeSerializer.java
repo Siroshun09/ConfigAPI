@@ -47,13 +47,18 @@ import java.io.IOException;
 
 final class NodeSerializer extends TypeAdapter<MapNode> {
 
+    static final NodeSerializer INSTANCE = new NodeSerializer();
+
+    private NodeSerializer() {
+    }
+
     @Override
     public MapNode read(JsonReader in) throws IOException {
         var mapNode = MapNode.create();
 
         var token = in.peek();
 
-        if (in.peek() == JsonToken.BEGIN_OBJECT) {
+        if (token == JsonToken.BEGIN_OBJECT) {
             in.beginObject();
 
             while (in.hasNext()) {

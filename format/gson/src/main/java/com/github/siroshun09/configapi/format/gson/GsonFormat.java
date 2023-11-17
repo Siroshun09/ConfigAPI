@@ -68,8 +68,7 @@ public final class GsonFormat implements FileFormat<MapNode> {
      * @param gsonBuilder the {@link GsonBuilder}
      */
     public GsonFormat(@NotNull GsonBuilder gsonBuilder) {
-        var serializer = new NodeSerializer();
-        this.gson = gsonBuilder.registerTypeAdapter(MapNode.class, serializer).create();
+        this.gson = gsonBuilder.registerTypeAdapter(MapNode.class, NodeSerializer.INSTANCE).create();
     }
 
     @Override
