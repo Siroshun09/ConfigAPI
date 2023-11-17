@@ -19,7 +19,7 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.configapiCore)
+    api(projects.configapiCore)
     api(libs.gson)
 
     testImplementation(projects.configapiTestSharedClasses)
