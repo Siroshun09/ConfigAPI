@@ -21,8 +21,9 @@ project(":$prefix-test-shared-classes").projectDir = file("test-shared-classes")
 
 // file formats
 sequenceOf(
-    "gson",
-    "yaml"
+        "gson",
+        "jackson",
+        "yaml"
 ).forEach {
     include("$prefix-format-$it")
     project(":$prefix-format-$it").projectDir = file("./format/$it")

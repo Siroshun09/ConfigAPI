@@ -2,6 +2,7 @@
 # libraries
 annotations = "24.1.0"
 gson = "2.10.1"
+jackson = "2.16.0"
 snakeyaml = "2.2"
 
 # testing tool
@@ -15,6 +16,8 @@ aggregate-javadoc = "8.4"
 # libraries
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-dataformat-toml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-toml", version.ref = "jackson" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 
 # testing tool
