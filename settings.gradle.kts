@@ -28,3 +28,6 @@ sequenceOf(
     include("$prefix-format-$it")
     project(":$prefix-format-$it").projectDir = file("./format/$it")
 }
+
+include("$prefix-bom")
+project(":$prefix-bom").projectDir = file("bom")
