@@ -18,7 +18,6 @@ package com.github.siroshun09.configapi.format.gson;
 
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.format.gson.GsonFormat;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.junit.jupiter.api.Assertions;

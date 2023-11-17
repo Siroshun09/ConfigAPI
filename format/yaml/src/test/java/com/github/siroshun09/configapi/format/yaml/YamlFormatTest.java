@@ -18,7 +18,6 @@ package com.github.siroshun09.configapi.format.yaml;
 
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.format.yaml.YamlFormat;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.junit.jupiter.api.Assertions;
