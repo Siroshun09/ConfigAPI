@@ -20,6 +20,7 @@ import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
+import com.github.siroshun09.configapi.test.shared.util.Replacer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -36,26 +37,27 @@ import java.nio.file.Path;
 class JacksonFormatTest {
 
     private static final String JSON_EXAMPLE = "{\"string\":\"value\",\"integer\":100,\"double\":3.14,\"bool\":true,\"list\":[\"A\",\"B\",\"C\"],\"map\":{\"key\":\"value\"},\"nested\":{\"map\":{\"key\":\"value\"}}}";
-    private static final String PRETTY_PRINTING_EXAMPLE = """
-            {
-              "string": "value",
-              "integer": 100,
-              "double": 3.14,
-              "bool": true,
-              "list": [
-                "A",
-                "B",
-                "C"
-              ],
-              "map": {
-                "key": "value"
-              },
-              "nested": {
-                "map": {
-                  "key": "value"
-                }
-              }
-            }""".replace("\n", System.lineSeparator());
+    private static final String PRETTY_PRINTING_EXAMPLE =
+            Replacer.lines("""
+                    {
+                      "string": "value",
+                      "integer": 100,
+                      "double": 3.14,
+                      "bool": true,
+                      "list": [
+                        "A",
+                        "B",
+                        "C"
+                      ],
+                      "map": {
+                        "key": "value"
+                      },
+                      "nested": {
+                        "map": {
+                          "key": "value"
+                        }
+                      }
+                    }""");
 
     @Test
     void testLoadFromFilepath(@TempDir Path directory) throws IOException {
