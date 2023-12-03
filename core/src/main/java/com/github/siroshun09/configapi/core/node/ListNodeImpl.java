@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.core.comment.Comment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +32,15 @@ import java.util.stream.Stream;
 
 final class ListNodeImpl implements ListNode {
 
-    static final ListNodeImpl EMPTY = new ListNodeImpl(Collections.emptyList());
+    static final ListNodeImpl EMPTY = new ListNodeImpl(Collections.emptyList(), true);
 
     private final List<Node<?>> backing;
+    private final boolean view;
+    private @Nullable Comment comment;
 
-    ListNodeImpl(@NotNull List<Node<?>> backing) {
+    ListNodeImpl(@NotNull List<Node<?>> backing, boolean view) {
         this.backing = backing;
+        this.view = view;
     }
 
     @Override
@@ -120,24 +124,50 @@ final class ListNodeImpl implements ListNode {
     @Contract(" -> new")
     @Override
     public @NotNull ListNode copy() {
+        ListNode copied;
+
         if (this.backing.isEmpty()) {
-            return ListNode.create();
+            copied = ListNode.create();
+        } else {
+            var copiedList = new ArrayList<Node<?>>(this.backing.size());
+
+            //noinspection ForLoopReplaceableByForEach
+            for (int i = 0, backingSize = this.backing.size(); i < backingSize; i++) {
+                copiedList.add(Node.fromObject(this.backing.get(i)));
+            }
+
+            copied = new ListNodeImpl(copiedList, false);
         }
 
-        var copied = new ArrayList<Node<?>>(this.backing.size());
-
-        //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, backingSize = this.backing.size(); i < backingSize; i++) {
-            copied.add(Node.fromObject(this.backing.get(i)));
-        }
-
-        return new ListNodeImpl(copied);
+        copied.setComment(this.comment);
+        return copied;
     }
 
     @Contract(" -> new")
     @Override
     public @NotNull @UnmodifiableView ListNode asView() {
-        return this == EMPTY ? EMPTY : new ListNodeImpl(Collections.unmodifiableList(this.backing));
+        return this == EMPTY ? EMPTY : new ListNodeImpl(Collections.unmodifiableList(this.backing), true);
+    }
+
+    @Override
+    public boolean hasComment() {
+        return this.comment != null;
+    }
+
+    @Override
+    public @NotNull Comment getComment() {
+        if (this.comment == null) {
+            throw new IllegalStateException("Comment is not set.");
+        }
+        return this.comment;
+    }
+
+    @Override
+    public void setComment(@Nullable Comment comment) {
+        if (this.view) {
+            throw new UnsupportedOperationException("Cannot change the comment of this ListNode because this is view mode.");
+        }
+        this.comment = comment;
     }
 
     @Override
@@ -156,7 +186,8 @@ final class ListNodeImpl implements ListNode {
     @Override
     public String toString() {
         return "ListNodeImpl{" +
-                "backing=" + this.backing +
+                "comment=" + this.comment +
+                ", backing=" + this.backing +
                 '}';
     }
 

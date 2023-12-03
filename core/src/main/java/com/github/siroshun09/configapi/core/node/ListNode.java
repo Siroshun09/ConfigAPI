@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 /**
  * A {@link Node} implementation that represents a {@link List} of {@link Node}s.
  */
-public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImpl {
+public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits ListNodeImpl {
 
     /**
      * An implementation {@link Class} of this interface.
@@ -45,7 +45,7 @@ public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImp
      * @return a new {@link ListNode}
      */
     static @NotNull ListNode create() {
-        return new ListNodeImpl(new ArrayList<>());
+        return new ListNodeImpl(new ArrayList<>(), false);
     }
 
     /**
@@ -55,7 +55,7 @@ public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImp
      * @return a new {@link ListNode}
      */
     static @NotNull ListNode create(int initialCapacity) {
-        return new ListNodeImpl(new ArrayList<>(initialCapacity));
+        return new ListNodeImpl(new ArrayList<>(initialCapacity), false);
     }
 
     /**
@@ -75,7 +75,7 @@ public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImp
             converted.add(Node.fromObject(element));
         }
 
-        return new ListNodeImpl(converted);
+        return new ListNodeImpl(converted, false);
     }
 
     /**
@@ -108,7 +108,7 @@ public sealed interface ListNode extends Node<List<Node<?>>> permits ListNodeImp
      * Other elements are ignored.
      *
      * @param elementClass a class to cast elements
-     * @param <T> a type of the class
+     * @param <T>          a type of the class
      * @return a {@link List} containing elements of the specified {@link Class}
      */
     <T> @NotNull @Unmodifiable List<T> asList(@NotNull Class<? extends T> elementClass);

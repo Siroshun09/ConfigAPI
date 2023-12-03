@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.test.shared.data.Samples;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,9 @@ class ListNodeTest {
         var listNode = ListNode.create();
         Assertions.assertTrue(listNode.value().isEmpty());
 
-        Assertions.assertDoesNotThrow(() -> listNode.add(1)); // checks if the list is modifiable
+        // checks if the list is modifiable
+        Assertions.assertDoesNotThrow(() -> listNode.add(1));
+        Assertions.assertDoesNotThrow(() -> listNode.setComment(Samples.comment()));
     }
 
     @Test
@@ -45,6 +48,7 @@ class ListNodeTest {
 
         // checks if the list is modifiable
         Assertions.assertDoesNotThrow(() -> listNode.add(1));
+        Assertions.assertDoesNotThrow(() -> listNode.setComment(Samples.comment()));
         Assertions.assertDoesNotThrow(() -> ListNode.create(List.of(1, 2, 3)).add(4));
     }
 
@@ -52,6 +56,7 @@ class ListNodeTest {
     void testEmpty() {
         Assertions.assertTrue(ListNode.empty().value().isEmpty());
         Assertions.assertThrows(UnsupportedOperationException.class, () -> ListNode.empty().add(4));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> ListNode.empty().setComment(Samples.comment()));
     }
 
     @Test
@@ -123,6 +128,8 @@ class ListNodeTest {
     @Test
     void testCopy() {
         var listNode = ListNode.create(List.of("a", "b", "c"));
+        listNode.setComment(Samples.comment());
+
         var copied = listNode.copy();
 
         listNode.add("d");
@@ -130,6 +137,8 @@ class ListNodeTest {
 
         Assertions.assertEquals(List.of("a", "b", "c", "d"), listNode.asList(String.class));
         Assertions.assertEquals(List.of("a", "b", "c", "e"), copied.asList(String.class));
+
+        Assertions.assertEquals(listNode.getCommentOrNull(), copied.getCommentOrNull());
     }
 
     @Test
@@ -143,6 +152,7 @@ class ListNodeTest {
         Assertions.assertEquals(List.of("a", "b", "c", "d"), view.asList(String.class));
 
         Assertions.assertThrows(UnsupportedOperationException.class, () -> view.add("e"));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> view.setComment(Samples.comment()));
 
         Assertions.assertEquals(List.of("a", "b", "c", "d"), listNode.asList(String.class));
         Assertions.assertEquals(List.of("a", "b", "c", "d"), view.asList(String.class));

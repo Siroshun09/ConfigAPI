@@ -38,6 +38,8 @@ final class NodeUtils {
                 return listNode.copy();
             } else if (value instanceof MapNode mapNode) {
                 return mapNode.copy();
+            } else if (value instanceof CommentedNode commentedNode) {
+                return CommentableNode.withComment(toNode(commentedNode.node()), commentedNode.getCommentOrNull());
             } else {
                 return toNode(((Node<?>) value).value());
             }

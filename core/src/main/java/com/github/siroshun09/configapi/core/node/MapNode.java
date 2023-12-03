@@ -33,7 +33,7 @@ import java.util.Objects;
  * <p>
  * The implementing class of this interface keeps the order of keys using {@link LinkedHashMap}.
  */
-public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNodeImpl {
+public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> permits MapNodeImpl {
 
     /**
      * An implementation {@link Class} of this interface.
@@ -47,7 +47,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return a new {@link MapNode}
      */
     static @NotNull MapNode create() {
-        return new MapNodeImpl(new LinkedHashMap<>());
+        return new MapNodeImpl(new LinkedHashMap<>(), false);
     }
 
     /**
@@ -65,7 +65,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
             converted.put(entry.getKey(), Node.fromObject(entry.getValue()));
         }
 
-        return new MapNodeImpl(converted);
+        return new MapNodeImpl(converted, false);
     }
 
     /**
@@ -138,7 +138,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the view of {@link ListNode} to which the specified key is mapped, or {@link ListNode#empty()} if the key is not mapped
      */
     default @NotNull @UnmodifiableView ListNode getList(@NotNull Object key) {
-        return this.get(key) instanceof ListNode listNode ? listNode.asView() : ListNode.empty();
+        return this.raw(key) instanceof ListNode listNode ? listNode.asView() : ListNode.empty();
     }
 
     /**
@@ -158,7 +158,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the {@link ListNode} to which the specified key is mapped, or {@link #createList(Object)} if the key is not mapped
      */
     default @NotNull ListNode getOrCreateList(@NotNull Object key) {
-        return this.get(key) instanceof ListNode listNode ? listNode : this.createList(key);
+        return this.raw(key) instanceof ListNode listNode ? listNode : this.createList(key);
     }
 
     /**
@@ -170,7 +170,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the view of {@link MapNode} to which the specified key is mapped, or {@link MapNode#empty()} if the key is not mapped to {@link MapNode}
      */
     default @NotNull @Unmodifiable MapNode getMap(@NotNull Object key) {
-        return this.get(key) instanceof MapNode mapNode ? mapNode.asView() : empty();
+        return this.raw(key) instanceof MapNode mapNode ? mapNode.asView() : empty();
     }
 
     /**
@@ -190,7 +190,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the {@link MapNode} to which the specified key is mapped, or {@link #createMap(Object)} if the key is not mapped to {@link MapNode}
      */
     default @NotNull MapNode getOrCreateMap(@NotNull Object key) {
-        return this.get(key) instanceof MapNode mapNode ? mapNode : this.createMap(key);
+        return this.raw(key) instanceof MapNode mapNode ? mapNode : this.createMap(key);
     }
 
     /**
@@ -211,7 +211,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the {@link String} to which the specified key is mapped, or the specified value if the key is not mapped to {@link StringValue}
      */
     default @NotNull String getString(@NotNull Object key, @NotNull String def) {
-        return this.get(key) instanceof StringValue value ? value.asString() : def;
+        return this.raw(key) instanceof StringValue value ? value.asString() : def;
     }
 
     /**
@@ -221,7 +221,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the {@link String} to which the specified key is mapped, or {@code null} if the key is not mapped to {@link StringValue}
      */
     default @Nullable String getStringOrNull(@NotNull Object key) {
-        return this.get(key) instanceof StringValue value ? value.asString() : null;
+        return this.raw(key) instanceof StringValue value ? value.asString() : null;
     }
 
     /**
@@ -273,7 +273,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the {@link Enum} value or {@code null}
      */
     default <E extends Enum<E>> @Nullable E getEnum(@NotNull Object key, @NotNull Class<E> enumClass) {
-        var node = this.get(key);
+        var node = this.raw(key);
 
         if (node instanceof EnumValue<?> enumValue) {
             return enumClass.isInstance(enumValue.value()) ? enumClass.cast(enumValue.value()) : null;
@@ -311,7 +311,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the boolean value to which the specified key is mapped, or the specified value if the key is not mapped to {@link BooleanValue}
      */
     default boolean getBoolean(@NotNull Object key, boolean def) {
-        return this.get(key) instanceof BooleanValue booleanValue ? booleanValue.asBoolean() : def;
+        return this.raw(key) instanceof BooleanValue booleanValue ? booleanValue.asBoolean() : def;
     }
 
     /**
@@ -332,7 +332,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the int value to which the specified key is mapped, or the specified value if the key is not mapped to {@link NumberValue}
      */
     default int getInteger(@NotNull Object key, int def) {
-        return this.get(key) instanceof NumberValue value ? value.asInt() : def;
+        return this.raw(key) instanceof NumberValue value ? value.asInt() : def;
     }
 
     /**
@@ -353,7 +353,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the long value to which the specified key is mapped, or the specified value if the key is not mapped to {@link NumberValue}
      */
     default long getLong(@NotNull Object key, long def) {
-        return this.get(key) instanceof NumberValue value ? value.asLong() : def;
+        return this.raw(key) instanceof NumberValue value ? value.asLong() : def;
     }
 
     /**
@@ -374,7 +374,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the float value to which the specified key is mapped, or the specified value if the key is not mapped to {@link NumberValue}
      */
     default float getFloat(@NotNull Object key, float def) {
-        return this.get(key) instanceof NumberValue value ? value.asFloat() : def;
+        return this.raw(key) instanceof NumberValue value ? value.asFloat() : def;
     }
 
     /**
@@ -395,7 +395,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the double value to which the specified key is mapped, or the specified value if the key is not mapped to {@link NumberValue}
      */
     default double getDouble(@NotNull Object key, double def) {
-        return this.get(key) instanceof NumberValue value ? value.asDouble() : def;
+        return this.raw(key) instanceof NumberValue value ? value.asDouble() : def;
     }
 
     /**
@@ -416,7 +416,7 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the byte value to which the specified key is mapped, or the specified value if the key is not mapped to {@link NumberValue}
      */
     default byte getByte(@NotNull Object key, byte def) {
-        return this.get(key) instanceof NumberValue value ? value.asByte() : def;
+        return this.raw(key) instanceof NumberValue value ? value.asByte() : def;
     }
 
     /**
@@ -437,6 +437,11 @@ public sealed interface MapNode extends Node<Map<Object, Node<?>>> permits MapNo
      * @return the short value to which the specified key is mapped, or the specified value if the key is not mapped to {@link NumberValue}
      */
     default short getShort(@NotNull Object key, short def) {
-        return this.get(key) instanceof NumberValue value ? value.asShort() : def;
+        return this.raw(key) instanceof NumberValue value ? value.asShort() : def;
+    }
+    
+    private @NotNull Node<?> raw(@NotNull Object key) {
+        var node = this.get(key);
+        return node instanceof CommentedNode<?> commentedNode ? commentedNode.node() : node;
     }
 }

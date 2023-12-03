@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.test.shared.data;
 
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.serialization.annotation.CollectionType;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultBoolean;
@@ -157,6 +158,12 @@ public final class Samples {
                              @CollectionType(UUID.class) List<UUID> uuidList,
                              @MapType(key = UUID.class, value = Integer.class) Map<UUID, Integer> uuidIntMap
     ) {
+    }
+
+    private static final SimpleComment COMMENT = SimpleComment.create("sample comment");
+
+    public static @NotNull SimpleComment comment() {
+        return COMMENT;
     }
 
     private Samples() {

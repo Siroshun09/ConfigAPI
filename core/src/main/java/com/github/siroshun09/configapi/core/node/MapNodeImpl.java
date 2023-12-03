@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.core.comment.Comment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -28,12 +29,16 @@ import java.util.Objects;
 
 final class MapNodeImpl implements MapNode {
 
-    static final MapNodeImpl EMPTY = new MapNodeImpl(Collections.emptyMap());
+    static final MapNodeImpl EMPTY = new MapNodeImpl(Collections.emptyMap(), true);
 
     private final Map<Object, Node<?>> backing;
+    private final boolean view;
 
-    MapNodeImpl(@NotNull Map<Object, Node<?>> backing) {
+    private @Nullable Comment comment;
+
+    MapNodeImpl(@NotNull Map<Object, Node<?>> backing, boolean view) {
         this.backing = backing;
+        this.view = view;
     }
 
     @Override
@@ -56,12 +61,14 @@ final class MapNodeImpl implements MapNode {
     public @NotNull Node<?> set(@NotNull Object key, @Nullable Object value) {
         Objects.requireNonNull(key);
 
-        Node<?> removed;
+        Node<?> removed = this.backing.remove(key);
 
-        if (value == null || value == NullNode.NULL) {
-            removed = this.backing.remove(key);
-        } else {
-            removed = this.backing.put(key, Node.fromObject(value));
+        if (value != null && value != NullNode.NULL) {
+            if (removed instanceof CommentableNode<?> commentableNode) {
+                this.backing.put(key, CommentableNode.withComment(Node.fromObject(value), commentableNode.getCommentOrNull()));
+            } else {
+                this.backing.put(key, Node.fromObject(value));
+            }
         }
 
         return removed != null ? removed : NullNode.NULL;
@@ -74,12 +81,16 @@ final class MapNodeImpl implements MapNode {
 
     @Override
     public @NotNull MapNode copy() {
-        return MapNode.create(this.backing);
+        var copied = MapNode.create(this.backing);
+        copied.setComment(this.comment);
+        return copied;
     }
 
     @Override
     public @NotNull @UnmodifiableView MapNode asView() {
-        return new MapNodeImpl(Collections.unmodifiableMap(this.backing));
+        var view = new MapNodeImpl(Collections.unmodifiableMap(this.backing), true);
+        view.comment = this.comment;
+        return view;
     }
 
     @Override
@@ -94,6 +105,27 @@ final class MapNodeImpl implements MapNode {
         var newNode = MapNode.create();
         this.backing.put(key, newNode);
         return newNode;
+    }
+
+    @Override
+    public boolean hasComment() {
+        return this.comment != null;
+    }
+
+    @Override
+    public @NotNull Comment getComment() {
+        if (this.comment == null) {
+            throw new IllegalStateException("Comment is not set.");
+        }
+        return this.comment;
+    }
+
+    @Override
+    public void setComment(@Nullable Comment comment) {
+        if (this.view) {
+            throw new UnsupportedOperationException("Cannot change the comment of this MapNode because this is view mode.");
+        }
+        this.comment = comment;
     }
 
     @Override
@@ -112,7 +144,8 @@ final class MapNodeImpl implements MapNode {
     @Override
     public String toString() {
         return "MapNodeImpl{" +
-                "backing=" + this.backing +
+                "comment=" + this.comment +
+                ", backing=" + this.backing +
                 '}';
     }
 

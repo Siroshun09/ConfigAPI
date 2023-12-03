@@ -27,7 +27,7 @@ import java.util.Optional;
  *
  * @param <T> a type of object
  */
-public sealed interface Node<T> permits ArrayNode, ListNode, MapNode, NullNode, ObjectNode, ValueNode {
+public sealed interface Node<T> permits ArrayNode, CommentableNode, NullNode, ObjectNode, ValueNode {
 
     /**
      * Creates a {@link Node} from the specified object.
@@ -41,6 +41,7 @@ public sealed interface Node<T> permits ArrayNode, ListNode, MapNode, NullNode, 
      *         <li>If the {@link Node} is implemented {@link ValueNode}, returns it as-is</li>
      *         <li>If the {@link Node} is {@link ListNode}, copies it by using {@link ListNode#copy()}</li>
      *         <li>If the {@link Node} is {@link MapNode}, copies it by using {@link MapNode#copy()}</li>
+     *         <li>If the {@link Node} is {@link CommentedNode}, recreate it with {@link CommentedNode#node()} that is passed to this method</li>
      *         <li>Other {@link Node}s will be re-created</li>
      *     </ul>
      *     </li>

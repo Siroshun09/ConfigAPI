@@ -32,7 +32,9 @@ class MapNodeTest {
         var mapNode = MapNode.create();
         Assertions.assertTrue(mapNode.value().isEmpty());
 
-        Assertions.assertDoesNotThrow(() -> mapNode.set(1, 1)); // checks if the list is modifiable
+        // checks if the list is modifiable
+        Assertions.assertDoesNotThrow(() -> mapNode.set(1, 1));
+        Assertions.assertDoesNotThrow(() -> mapNode.setComment(Samples.comment()));
     }
 
     @Test
@@ -48,6 +50,7 @@ class MapNodeTest {
 
         // checks if the list is modifiable
         Assertions.assertDoesNotThrow(() -> mapNode.set("e", "f"));
+        Assertions.assertDoesNotThrow(() -> mapNode.setComment(Samples.comment()));
         Assertions.assertDoesNotThrow(() -> MapNode.create(Map.of(1, 2)).set(3, 4));
     }
 
@@ -55,6 +58,7 @@ class MapNodeTest {
     void testEmpty() {
         Assertions.assertTrue(MapNode.empty().value().isEmpty());
         Assertions.assertThrows(UnsupportedOperationException.class, () -> MapNode.empty().set(1, 2));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> MapNode.empty().setComment(Samples.comment()));
     }
 
     @Test
@@ -96,22 +100,32 @@ class MapNodeTest {
         Assertions.assertEquals(NullNode.NULL, mapNode.get("d"));
 
         Assertions.assertEquals(Map.of("a", new StringValue("c")), mapNode.value());
+
+        var commented = MapNode.create(Map.of("x", "y"));
+        commented.setComment(Samples.comment());
+        mapNode.set("commented", commented);
+        NodeAssertion.assertEquals(commented, mapNode.get("commented"));
+        mapNode.set("commented", "new");
+        NodeAssertion.assertEquals(new CommentedNode<>(new StringValue("new"), Samples.comment()), mapNode.get("commented"));
     }
 
     @Test
     void testClear() {
         var mapNode = MapNode.create(Map.of("a", "b", 1, 2));
+        mapNode.setComment(Samples.comment());
 
         mapNode.clear();
 
         Assertions.assertTrue(mapNode.value().isEmpty());
         Assertions.assertSame(NullNode.NULL, mapNode.get("a"));
         Assertions.assertSame(NullNode.NULL, mapNode.get(1));
+        Assertions.assertEquals(Samples.comment(), mapNode.getCommentOrNull()); // comment should not be cleared
     }
 
     @Test
     void testCopy() {
         var mapNode = MapNode.create(Map.of("a", "b"));
+        mapNode.setComment(Samples.comment());
         var copied = mapNode.copy();
 
         mapNode.set("c", 3);
@@ -119,6 +133,7 @@ class MapNodeTest {
 
         Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new IntValue(3)), mapNode.value());
         Assertions.assertEquals(Map.of("a", new StringValue("b"), 3, new StringValue("c")), copied.value());
+        Assertions.assertEquals(mapNode.getCommentOrNull(), copied.getCommentOrNull());
     }
 
     @Test
@@ -134,6 +149,7 @@ class MapNodeTest {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("e", "f"));
         Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("c", "f"));
         Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("a", null));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> view.setComment(Samples.comment()));
 
         Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new StringValue("d")), mapNode.value());
         Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new StringValue("d")), view.value());
@@ -147,6 +163,7 @@ class MapNodeTest {
         Assertions.assertSame(ListNode.empty(), mapNode.getList("string"));
 
         Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getList("list").add("D"));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getList("list").setComment(Samples.comment()));
 
         NodeAssertion.assertEquals(ListNode.create(List.of("A", "B", "C")), mapNode.getOrCreateList("list"));
 
@@ -168,6 +185,7 @@ class MapNodeTest {
         Assertions.assertSame(MapNode.empty(), mapNode.getMap("string"));
 
         Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getMap("map").set("a", "b"));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getMap("map").setComment(Samples.comment()));
 
         NodeAssertion.assertEquals(MapNode.create(Map.of("key", "value")), mapNode.getOrCreateMap("map"));
 

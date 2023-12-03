@@ -22,6 +22,7 @@ import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.core.node.ValueNode;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AssertionFailureBuilder;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * A utility class for asserting {@link Node}s.
@@ -67,6 +68,8 @@ public final class NodeAssertion {
         for (int i = 0, mapASize = listA.size(); i < mapASize; i++) {
             assertEquals(listA.get(i), listB.get(i));
         }
+
+        Assertions.assertEquals(a.getCommentOrNull(), b.getCommentOrNull());
     }
 
     /**
@@ -93,6 +96,8 @@ public final class NodeAssertion {
 
             assertEquals(nodeA, nodeB);
         }
+
+        Assertions.assertEquals(a.getCommentOrNull(), b.getCommentOrNull());
     }
 
     private static void fail(@NotNull Node<?> a, @NotNull Node<?> b) {
