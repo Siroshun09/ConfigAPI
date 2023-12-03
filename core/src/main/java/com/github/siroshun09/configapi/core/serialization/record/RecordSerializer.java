@@ -16,7 +16,9 @@
 
 package com.github.siroshun09.configapi.core.serialization.record;
 
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
+import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.EnumValue;
 import com.github.siroshun09.configapi.core.node.ListNode;
 import com.github.siroshun09.configapi.core.node.MapNode;
@@ -26,6 +28,7 @@ import com.github.siroshun09.configapi.core.node.NumberValue;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.Serializer;
+import com.github.siroshun09.configapi.core.serialization.annotation.Comment;
 import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
 import com.github.siroshun09.configapi.core.serialization.registry.SerializerRegistry;
@@ -123,7 +126,16 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
             }
 
             if (serialized != null && serialized != NullNode.NULL) {
-                mapNode.set(RecordUtils.getKey(component, this.keyGenerator), serialized);
+                Node<?> toSet;
+
+                var commentAnnotation = component.getDeclaredAnnotation(Comment.class);
+                if (commentAnnotation != null) {
+                    toSet = CommentableNode.withComment(serialized, SimpleComment.create(commentAnnotation.value()));
+                } else {
+                    toSet = serialized;
+                }
+
+                mapNode.set(RecordUtils.getKey(component, this.keyGenerator), toSet);
             }
         }
 

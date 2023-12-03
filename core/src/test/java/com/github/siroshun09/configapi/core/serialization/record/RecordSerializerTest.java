@@ -16,8 +16,12 @@
 
 package com.github.siroshun09.configapi.core.serialization.record;
 
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
+import com.github.siroshun09.configapi.core.node.CommentableNode;
+import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
+import com.github.siroshun09.configapi.core.serialization.annotation.Comment;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
@@ -41,5 +45,38 @@ class RecordSerializerTest {
 
         var serializer = RecordSerializer.builder().addSerializer(UUID.class, uuid -> new StringValue(uuid.toString())).keyGenerator(KeyGenerator.CAMEL_TO_KEBAB).build();
         NodeAssertion.assertEquals(Samples.uuidRecordMapNode(), serializer.serialize(Samples.uuidRecord()));
+    }
+
+    @Test
+    void testComment() {
+        var expected = MapNode.create();
+
+        expected.set("str", CommentableNode.withComment(StringValue.fromString("str"), SimpleComment.create("test")));
+        NodeAssertion.assertEquals(
+                expected,
+                RecordSerializer.serializer().serialize(new CommentedRecord("str"))
+        );
+    }
+
+    @Test
+    void testNestedComment() {
+        var expected = MapNode.create();
+
+        var child = MapNode.create();
+        child.set("str", CommentableNode.withComment(StringValue.fromString("str"), SimpleComment.create("test")));
+        child.setComment(SimpleComment.create("nested"));
+
+        expected.set("commented", child);
+
+        NodeAssertion.assertEquals(
+                expected,
+                RecordSerializer.serializer().serialize(new Nested(new CommentedRecord("str")))
+        );
+    }
+
+    private record CommentedRecord(@Comment("test") String str) {
+    }
+
+    private record Nested(@Comment("nested") CommentedRecord commented) {
     }
 }
