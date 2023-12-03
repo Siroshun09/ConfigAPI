@@ -22,6 +22,7 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
 import com.github.siroshun09.configapi.core.node.EnumValue;
@@ -69,6 +70,7 @@ import java.util.Map;
  *     </li>
  *     <li>{@link ArrayNode}, {@link ListNode} and {@link MapNode}</li>
  *     <li>{@link NullNode}</li>
+ *     <li>{@link CommentedNode} - The comment will be dropped</li>
  * </ul>
  * <p>
  * For specifications of this format, please see the comments in the source code.
@@ -325,6 +327,8 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
                 write(Node.fromObject(entry.getKey()), out);
                 write(entry.getValue(), out);
             }
+        } else if (clazz == CommentedNode.class) {
+            write(((CommentedNode<?>) node).node(), out);
         } else if (clazz == ObjectNode.class) {
             Object obj = node.value();
             throw new IOException("Unsupported object type:" + obj.getClass());

@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.format.gson;
 
 import com.github.siroshun09.configapi.core.file.FileFormat;
+import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.EnumValue;
 import com.github.siroshun09.configapi.core.node.ListNode;
 import com.github.siroshun09.configapi.core.node.MapNode;
@@ -46,6 +47,7 @@ import java.io.Writer;
  *     <li>{@link MapNode} and {@link ListNode}</li>
  *     <li>{@link com.github.siroshun09.configapi.core.node.ArrayNode}s: serialize only</li>
  *     <li>{@link NullNode}</li>
+ *     <li>{@link CommentedNode} - The comment will be dropped</li>
  * </ul>
  */
 public final class GsonFormat implements FileFormat<MapNode> {

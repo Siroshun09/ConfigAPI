@@ -21,6 +21,7 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
 import com.github.siroshun09.configapi.core.node.EnumValue;
@@ -198,6 +199,8 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
             }
 
             out.endArray();
+        } else if (value instanceof CommentedNode<?> commentedNode) {
+            writeNode(out, commentedNode.node());
         } else {
             throw new IOException("Cannot serialize " + value.getClass().getName());
         }

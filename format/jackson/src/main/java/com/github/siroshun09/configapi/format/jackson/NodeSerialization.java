@@ -29,6 +29,7 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
 import com.github.siroshun09.configapi.core.node.EnumValue;
@@ -152,6 +153,8 @@ public final class NodeSerialization {
                 }
 
                 gen.writeEndArray();
+            } else if (value instanceof CommentedNode<?> commentedNode) {
+                this.writeNode(gen, commentedNode.node());
             } else {
                 throw new IOException("Cannot serialize " + value.getClass().getName());
             }
@@ -176,7 +179,7 @@ public final class NodeSerialization {
 
             if (parser.currentToken() == JsonToken.START_OBJECT) {
                 while (parser.nextToken() == JsonToken.FIELD_NAME) {
-                    var fieldName  = parser.currentName();
+                    var fieldName = parser.currentName();
                     mapNode.set(parser.currentName(), this.readNode(parser, parser.nextToken()));
                 }
             } else {
