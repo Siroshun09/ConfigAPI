@@ -28,16 +28,12 @@ import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.YAMLException;
-import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -70,16 +66,25 @@ public final class YamlFormat implements FileFormat<MapNode> {
      */
     public static final YamlFormat DEFAULT = new YamlFormat.Builder().build();
 
-    private final ThreadLocal<Yaml> yaml;
+    /**
+     * An instance of {@link YamlFormat} that processes the comments.
+     */
+    public static final YamlFormat COMMENT_PROCESSING = new YamlFormat.Builder().processComment(true).build();
 
-    private YamlFormat(@NotNull ThreadLocal<Yaml> yaml) {
-        this.yaml = yaml;
+    private final ThreadLocal<Yaml> yaml;
+    private final Supplier<ObjectConstructor> objectConstructorSupplier;
+    private final Supplier<Representer> representerSupplier;
+
+    private YamlFormat(@NotNull YamlFactory yamlFactory) {
+        this.yaml = ThreadLocal.withInitial(yamlFactory);
+        this.objectConstructorSupplier = yamlFactory::objectConstructor;
+        this.representerSupplier = yamlFactory::representer;
     }
 
     @Override
     public @NotNull MapNode load(@NotNull Reader reader) throws IOException {
         try {
-            return this.toMapNode(this.yaml.get().load(reader));
+            return NodeConverter.toMapNode(this.yaml.get().compose(reader), this.objectConstructorSupplier.get());
         } catch (YAMLException e) {
             throw new IOException(e);
         }
@@ -88,19 +93,9 @@ public final class YamlFormat implements FileFormat<MapNode> {
     @Override
     public void save(@NotNull MapNode node, @NotNull Writer writer) throws IOException {
         try {
-            this.yaml.get().dump(node, writer);
+            this.yaml.get().serialize(NodeConverter.toYamlNode(node, this.representerSupplier.get()), writer);
         } catch (YAMLException e) {
             throw new IOException(e);
-        }
-    }
-
-    private @NotNull MapNode toMapNode(Object obj) {
-        if (obj instanceof MapNode mapNode) {
-            return mapNode;
-        } else if (obj instanceof Map<?, ?> map) {
-            return MapNode.create(map);
-        } else {
-            return MapNode.create();
         }
     }
 
@@ -112,6 +107,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
         private DumperOptions.FlowStyle flowStyle = DumperOptions.FlowStyle.BLOCK;
         private DumperOptions.ScalarStyle scalarStyle = DumperOptions.ScalarStyle.PLAIN;
         private int indent = 2;
+        private boolean processComment;
 
         /**
          * Sets {@link org.yaml.snakeyaml.DumperOptions.FlowStyle}.
@@ -156,47 +152,74 @@ public final class YamlFormat implements FileFormat<MapNode> {
         }
 
         /**
+         * Sets whether to process comments.
+         *
+         * @param processComment {@code true} to process comments, {@code false} to ignore comments
+         * @return this {@link Builder} instance
+         */
+        @Contract("_ -> this")
+        public @NotNull Builder processComment(boolean processComment) {
+            this.processComment = processComment;
+            return this;
+        }
+
+        /**
          * Builds {@link YamlFormat}.
          *
          * @return a created {@link YamlFormat}
          */
         public @NotNull YamlFormat build() {
-            return new YamlFormat(ThreadLocal.withInitial(new YamlFactory(this.flowStyle, this.scalarStyle, this.indent)));
+            return new YamlFormat(new YamlFactory(this.flowStyle, this.scalarStyle, this.indent, this.processComment));
         }
     }
 
     private record YamlFactory(@NotNull DumperOptions.FlowStyle flowStyle,
                                @NotNull DumperOptions.ScalarStyle scalarStyle,
-                               int indent) implements Supplier<Yaml> {
+                               int indent,
+                               boolean processComment) implements Supplier<Yaml> {
         @Override
         public Yaml get() {
-            var dumperOptions = new DumperOptions();
-            dumperOptions.setDefaultFlowStyle(this.flowStyle);
-            dumperOptions.setIndent(this.indent);
+            var loaderOptions = this.loaderOptions();
+            var dumperOptions = this.dumperOptions();
+            return new Yaml(objectConstructor(loaderOptions), representer(dumperOptions), dumperOptions, loaderOptions);
+        }
 
-            var representer = new NodeRepresenter(dumperOptions);
-            representer.setDefaultFlowStyle(this.flowStyle);
-
+        private @NotNull LoaderOptions loaderOptions() {
             var loaderOptions = new LoaderOptions();
 
-            loaderOptions.setProcessComments(false);
             loaderOptions.setCodePointLimit(Integer.MAX_VALUE);
+            loaderOptions.setMaxAliasesForCollections(Integer.MAX_VALUE);
+            loaderOptions.setProcessComments(this.processComment);
 
-            var constructor = new Constructor(LinkedHashMap.class, loaderOptions);
-
-            return new Yaml(constructor, representer, dumperOptions, loaderOptions);
+            return loaderOptions;
         }
-    }
 
-    private static final class NodeRepresenter extends Representer {
-        private NodeRepresenter(DumperOptions options) {
-            super(options);
+        private @NotNull DumperOptions dumperOptions() {
+            var dumperOptions = new DumperOptions();
 
-            this.representers.put(MapNode.IMPLEMENTATION_CLASS, data -> representMapping(Tag.MAP, ((MapNode) data).value(), options.getDefaultFlowStyle()));
-            this.representers.put(ListNode.IMPLEMENTATION_CLASS, data -> representSequence(Tag.SEQ, ((ListNode) data).value(), options.getDefaultFlowStyle()));
-            this.representers.put(EnumValue.class, data -> representData(((EnumValue<?>) data).value().name()));
-            this.representers.put(NullNode.class, data -> this.nullRepresenter.representData(null));
-            this.multiRepresenters.put(Node.class, data -> representData(((Node<?>) data).value()));
+            dumperOptions.setDefaultFlowStyle(this.flowStyle);
+            dumperOptions.setIndent(this.indent);
+            dumperOptions.setProcessComments(this.processComment);
+
+            return dumperOptions;
+        }
+
+        private @NotNull ObjectConstructor objectConstructor() {
+            return this.objectConstructor(this.loaderOptions());
+        }
+
+        private @NotNull ObjectConstructor objectConstructor(@NotNull LoaderOptions loaderOptions) {
+            return new ObjectConstructor(loaderOptions);
+        }
+
+        private @NotNull Representer representer() {
+            return this.representer(this.dumperOptions());
+        }
+
+        private @NotNull Representer representer(@NotNull DumperOptions dumperOptions) {
+            var representer = new Representer(dumperOptions);
+            representer.setDefaultFlowStyle(this.flowStyle);
+            return representer;
         }
     }
 }
