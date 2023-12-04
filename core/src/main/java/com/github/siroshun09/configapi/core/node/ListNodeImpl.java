@@ -212,10 +212,16 @@ final class ListNodeImpl implements ListNode {
     }
 
     private static <T> @Nullable T castIfPossible(@NotNull Node<?> node, @NotNull Class<? extends T> clazz) {
+        if (node instanceof CommentedNode<?> commented) {
+            return castIfPossible(commented.node(), clazz);
+        }
+
         if (clazz.isInstance(node)) {
             return clazz.cast(node);
         } else if (clazz.isInstance(node.value())) {
             return clazz.cast(node.value());
+        } else if (clazz == String.class && node instanceof StringRepresentable stringRepresentable) {
+            return clazz.cast(stringRepresentable.asString());
         } else {
             return null;
         }

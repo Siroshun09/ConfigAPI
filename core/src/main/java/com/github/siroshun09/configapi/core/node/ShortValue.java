@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param shortValue a short value
  */
-public record ShortValue(short shortValue) implements NumberValue {
+public record ShortValue(short shortValue) implements NumberValue, StringRepresentable {
 
     @Override
     public @NotNull Short value() {
@@ -60,4 +60,8 @@ public record ShortValue(short shortValue) implements NumberValue {
         return this.shortValue;
     }
 
+    @Override
+    public @NotNull String asString() {
+        return Short.toString(this.shortValue);
+    }
 }

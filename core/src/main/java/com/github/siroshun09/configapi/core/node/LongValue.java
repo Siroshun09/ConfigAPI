@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param longValue a long value
  */
-public record LongValue(long longValue) implements NumberValue {
+public record LongValue(long longValue) implements NumberValue , StringRepresentable{
 
     @Override
     public @NotNull Long value() {
@@ -58,5 +58,10 @@ public record LongValue(long longValue) implements NumberValue {
     @Override
     public short asShort() {
         return (short) this.longValue;
+    }
+
+    @Override
+    public @NotNull String asString() {
+        return Long.toString(this.longValue);
     }
 }

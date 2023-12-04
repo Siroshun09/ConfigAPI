@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param booleanValue a boolean
  */
-public record BooleanValue(boolean booleanValue) implements ValueNode<Boolean> {
+public record BooleanValue(boolean booleanValue) implements ValueNode<Boolean>, StringRepresentable {
 
     /**
      * An instance of {@link BooleanValue} that indicates {@code true}.
@@ -90,4 +90,8 @@ public record BooleanValue(boolean booleanValue) implements ValueNode<Boolean> {
         return this.booleanValue;
     }
 
+    @Override
+    public @NotNull String asString() {
+        return Boolean.toString(this.booleanValue);
+    }
 }

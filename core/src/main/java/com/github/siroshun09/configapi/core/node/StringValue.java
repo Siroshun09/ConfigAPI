@@ -25,7 +25,7 @@ import java.util.Objects;
  *
  * @param value a {@link String} value
  */
-public record StringValue(@NotNull String value) implements ValueNode<String> {
+public record StringValue(@NotNull String value) implements ValueNode<String>, StringRepresentable {
 
     /**
      * A {@link StringValue} that represents an empty string.
@@ -61,6 +61,7 @@ public record StringValue(@NotNull String value) implements ValueNode<String> {
      *
      * @return the value as {@link String}
      */
+    @Override
     public @NotNull String asString() {
         return this.value;
     }

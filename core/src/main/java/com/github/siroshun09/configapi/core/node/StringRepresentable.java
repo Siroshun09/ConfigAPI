@@ -18,27 +18,8 @@ package com.github.siroshun09.configapi.core.node;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+interface StringRepresentable {
 
-/**
- * A {@link Node} implementation that holds an {@link Enum} value.
- *
- * @param value an {@link Enum} value
- * @param <E>   a type of {@link Enum}
- */
-public record EnumValue<E extends Enum<E>>(@NotNull E value) implements ValueNode<E>, StringRepresentable {
+    @NotNull String asString();
 
-    /**
-     * A constructor of {@link EnumValue}.
-     *
-     * @param value an {@link Enum} value
-     */
-    public EnumValue {
-        Objects.requireNonNull(value);
-    }
-
-    @Override
-    public @NotNull String asString() {
-        return this.value.name();
-    }
 }

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param floatValue a float value
  */
-public record FloatValue(float floatValue) implements NumberValue {
+public record FloatValue(float floatValue) implements NumberValue, StringRepresentable {
 
     @Override
     public @NotNull Float value() {
@@ -60,4 +60,8 @@ public record FloatValue(float floatValue) implements NumberValue {
         return (short) this.floatValue;
     }
 
+    @Override
+    public @NotNull String asString() {
+        return Float.toString(this.floatValue);
+    }
 }

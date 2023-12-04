@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param intValue a int value
  */
-public record IntValue(int intValue) implements NumberValue {
+public record IntValue(int intValue) implements NumberValue, StringRepresentable {
 
     @Override
     public @NotNull Integer value() {
@@ -60,4 +60,8 @@ public record IntValue(int intValue) implements NumberValue {
         return (short) this.intValue;
     }
 
+    @Override
+    public @NotNull String asString() {
+        return Integer.toString(this.intValue);
+    }
 }

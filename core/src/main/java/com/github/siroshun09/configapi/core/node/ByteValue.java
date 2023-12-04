@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param byteValue a byte value
  */
-public record ByteValue(byte byteValue) implements NumberValue {
+public record ByteValue(byte byteValue) implements NumberValue, StringRepresentable {
 
     @Override
     public @NotNull Byte value() {
@@ -60,4 +60,8 @@ public record ByteValue(byte byteValue) implements NumberValue {
         return this.byteValue;
     }
 
+    @Override
+    public @NotNull String asString() {
+        return Byte.toString(this.byteValue);
+    }
 }
