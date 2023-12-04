@@ -180,6 +180,21 @@ class JacksonFormatTest {
         }
     }
 
+    @Test
+    void testNonExistentFile(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("test.json");
+        NodeAssertion.assertEquals(MapNode.empty(), JacksonFormat.DEFAULT.load(filepath));
+        NodeAssertion.assertEquals(MapNode.empty(), JacksonFormat.PRETTY_PRINTING.load(filepath));
+    }
+
+    @Test
+    void testSaveInNonExistentDirectory(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("parent").resolve("test.json");
+        MapNode expected = Samples.mapNode();
+        JacksonFormat.DEFAULT.save(expected, filepath);
+        NodeAssertion.assertEquals(expected, JacksonFormat.DEFAULT.load(filepath));
+    }
+
     private static class CustomObject {
         private final int value = 100;
     }

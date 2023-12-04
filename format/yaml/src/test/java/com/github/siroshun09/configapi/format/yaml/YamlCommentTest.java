@@ -26,10 +26,12 @@ import com.github.siroshun09.configapi.format.yaml.comment.YamlRootComment;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.file.Path;
 
 import static com.github.siroshun09.configapi.test.shared.util.Replacer.lines;
 
@@ -61,5 +63,11 @@ class YamlCommentTest {
                 Assertions.assertEquals(LOAD_AND_SAVE_WITH_COMMENTS_YAML, lines(writer.toString()));
             }
         }
+    }
+
+    @Test
+    void testNonExistentFile(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("test.yml");
+        NodeAssertion.assertEquals(MapNode.empty(), YamlFormat.COMMENT_PROCESSING.load(filepath));
     }
 }

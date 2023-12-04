@@ -153,6 +153,20 @@ class YamlFormatTest {
         }
     }
 
+    @Test
+    void testNonExistentFile(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("test.yml");
+        NodeAssertion.assertEquals(MapNode.empty(), YamlFormat.DEFAULT.load(filepath));
+    }
+
+    @Test
+    void testSaveInNonExistentDirectory(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("parent").resolve("test.json");
+        MapNode expected = Samples.mapNode();
+        YamlFormat.DEFAULT.save(expected, filepath);
+        NodeAssertion.assertEquals(expected, YamlFormat.DEFAULT.load(filepath));
+    }
+
     private static class CustomObject {
         private static final String YAML = "custom: !!com.github.siroshun09.configapi.format.yaml.test.YamlFormatTest$CustomObject {}";
         private final int value = 100;

@@ -29,6 +29,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public final class JacksonFormat implements FileFormat<MapNode> {
 
@@ -54,6 +57,15 @@ public final class JacksonFormat implements FileFormat<MapNode> {
     public JacksonFormat(@NotNull ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         objectMapper.registerModule(NodeSerialization.createModule());
+    }
+
+    @Override
+    public @NotNull MapNode load(@NotNull Path filepath) throws IOException {
+        if (Files.isRegularFile(filepath)) {
+            return this.load(Files.newBufferedReader(filepath, StandardCharsets.UTF_8));
+        } else {
+            return MapNode.create();
+        }
     }
 
     @Override

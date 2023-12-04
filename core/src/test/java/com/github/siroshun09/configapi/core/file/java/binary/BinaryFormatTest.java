@@ -16,7 +16,9 @@
 
 package com.github.siroshun09.configapi.core.file.java.binary;
 
+import com.github.siroshun09.configapi.core.node.IntValue;
 import com.github.siroshun09.configapi.core.node.Node;
+import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.junit.jupiter.api.Test;
@@ -58,5 +60,19 @@ class BinaryFormatTest {
         Node<?> loaded = BinaryFormat.DEFAULT.load(filepath);
 
         NodeAssertion.assertEquals(sample, loaded);
+    }
+
+    @Test
+    void testNonExistentFile(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("node.dat");
+        NodeAssertion.assertEquals(NullNode.NULL, BinaryFormat.DEFAULT.load(filepath));
+    }
+
+    @Test
+    void testSaveInNonExistentDirectory(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("parent").resolve("node.dat");
+        IntValue expected = new IntValue(1);
+        BinaryFormat.DEFAULT.save(expected, filepath);
+        NodeAssertion.assertEquals(expected, BinaryFormat.DEFAULT.load(filepath));
     }
 }

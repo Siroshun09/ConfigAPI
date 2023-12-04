@@ -203,8 +203,12 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
 
     @Override
     public @NotNull Node<?> load(@NotNull Path filepath) throws IOException {
-        try (InputStream in = Files.newInputStream(filepath)) {
-            return this.load(in);
+        if (Files.isRegularFile(filepath)) {
+            try (InputStream in = Files.newInputStream(filepath)) {
+                return this.load(in);
+            }
+        } else {
+            return NullNode.NULL;
         }
     }
 
@@ -215,6 +219,12 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
 
     @Override
     public void save(@NotNull Node<?> node, @NotNull Path filepath) throws IOException {
+        var parent = filepath.getParent();
+
+        if (parent != null && !Files.isDirectory(parent)) {
+            Files.createDirectories(parent);
+        }
+
         try (OutputStream out = Files.newOutputStream(filepath)) {
             this.save(node, out);
         }

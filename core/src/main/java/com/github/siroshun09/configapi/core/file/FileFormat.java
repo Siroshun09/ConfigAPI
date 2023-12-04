@@ -55,7 +55,7 @@ public interface FileFormat<N extends Node<?>> {
      * @throws IOException if I/O error occurred
      */
     default @NotNull N load(@NotNull Path filepath) throws IOException {
-        try (var reader = Files.newBufferedReader(filepath, StandardCharsets.UTF_8)) {
+        try (var reader = Files.isRegularFile(filepath) ? Files.newBufferedReader(filepath, StandardCharsets.UTF_8) : Reader.nullReader()) {
             return this.load(reader);
         }
     }
@@ -90,6 +90,12 @@ public interface FileFormat<N extends Node<?>> {
      * @throws IOException if I/O error occurred
      */
     default void save(@NotNull N node, @NotNull Path filepath) throws IOException {
+        var parent = filepath.getParent();
+
+        if (parent != null && !Files.isDirectory(parent)) {
+            Files.createDirectories(parent);
+        }
+
         try (var writer = Files.newBufferedWriter(filepath, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
             this.save(node, writer);
         }

@@ -189,6 +189,21 @@ class GsonFormatTest {
         }
     }
 
+    @Test
+    void testNonExistentFile(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("test.json");
+        NodeAssertion.assertEquals(MapNode.empty(), GsonFormat.DEFAULT.load(filepath));
+        NodeAssertion.assertEquals(MapNode.empty(), GsonFormat.PRETTY_PRINTING.load(filepath));
+    }
+
+    @Test
+    void testSaveInNonExistentDirectory(@TempDir Path directory) throws IOException {
+        Path filepath = directory.resolve("parent").resolve("test.json");
+        MapNode expected = Samples.mapNode();
+        GsonFormat.DEFAULT.save(expected, filepath);
+        NodeAssertion.assertEquals(expected, GsonFormat.DEFAULT.load(filepath));
+    }
+
     private static class CustomObject {
         private final int value = 100;
     }
