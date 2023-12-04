@@ -75,6 +75,13 @@ final class MapNodeImpl implements MapNode {
     }
 
     @Override
+    public Node<?> setIfAbsent(@NotNull Object key, @NotNull Object value) {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(value);
+        return this.backing.putIfAbsent(key, Node.fromObject(value));
+    }
+
+    @Override
     public void clear() {
         this.backing.clear();
     }

@@ -110,6 +110,17 @@ class MapNodeTest {
     }
 
     @Test
+    void testSetIfAbsent() {
+        var mapNode = MapNode.create(Map.of("a", "b"));
+
+        Assertions.assertEquals(new StringValue("b"), mapNode.setIfAbsent("a", "c"));
+        Assertions.assertEquals(new StringValue("b"), mapNode.get("a"));
+
+        Assertions.assertNull(mapNode.setIfAbsent("c", "d"));
+        Assertions.assertEquals(new StringValue("d"), mapNode.get("c"));
+    }
+
+    @Test
     void testClear() {
         var mapNode = MapNode.create(Map.of("a", "b", 1, 2));
         mapNode.setComment(Samples.comment());

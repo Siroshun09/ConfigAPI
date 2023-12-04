@@ -104,6 +104,15 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
     @NotNull Node<?> set(@NotNull Object key, @Nullable Object value);
 
     /**
+     * Sets a {@link Node} if this {@link MapNode} does not contain the specified key.
+     *
+     * @param key   the key to set
+     * @param value the value to set
+     * @return the {@link Node} to which the specified key is mapped previously, or {@code null} if the key is not mapped
+     */
+    @Nullable Node<?> setIfAbsent(@NotNull Object key, @NotNull Object value);
+
+    /**
      * Clears this {@link MapNode}.
      */
     void clear();
