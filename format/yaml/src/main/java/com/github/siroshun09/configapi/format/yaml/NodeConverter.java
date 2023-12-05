@@ -318,14 +318,21 @@ class NodeConverter {
             blockTarget.setBlockComments(toCommentLines(nodeComment.block()));
             inlineTarget.setInLineComments(toCommentLines(nodeComment.inline()));
         } else if (comment instanceof SimpleComment simpleComment) {
+            boolean inline = simpleComment.type().equalsIgnoreCase(YamlInlineComment.TYPE);
+            CommentType type = inline ? CommentType.IN_LINE : CommentType.BLOCK;
+
             var lines = simpleComment.content().lines().toList();
             var commentLines = new ArrayList<CommentLine>(lines.size());
 
             for (var line : lines) {
-                commentLines.add(new CommentLine(null, null, " " + line, CommentType.BLOCK));
+                commentLines.add(new CommentLine(null, null, " " + line, type));
             }
 
-            blockTarget.setBlockComments(commentLines);
+            if (inline) {
+                inlineTarget.setInLineComments(commentLines);
+            } else {
+                blockTarget.setBlockComments(commentLines);
+            }
         }
     }
 }

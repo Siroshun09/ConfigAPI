@@ -25,4 +25,14 @@ import org.jetbrains.annotations.NotNull;
  * @param content the content of the comment
  */
 public record YamlInlineComment(@NotNull String content) implements SimpleComment {
+
+    /**
+     * The type of this comment.
+     */
+    public static final String TYPE = "inline";
+
+    @Override
+    public @NotNull String type() {
+        return TYPE;
+    }
 }

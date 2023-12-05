@@ -16,9 +16,11 @@
 
 package com.github.siroshun09.configapi.format.yaml;
 
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.MapNode;
+import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.format.yaml.comment.YamlBlockComment;
 import com.github.siroshun09.configapi.format.yaml.comment.YamlInlineComment;
 import com.github.siroshun09.configapi.format.yaml.comment.YamlNodeComment;
@@ -62,6 +64,16 @@ class YamlCommentTest {
                 YamlFormat.COMMENT_PROCESSING.save(loaded, writer);
                 Assertions.assertEquals(LOAD_AND_SAVE_WITH_COMMENTS_YAML, lines(writer.toString()));
             }
+        }
+    }
+
+    @Test
+    void testInlineComment() throws IOException {
+        try (var writer = new StringWriter()) {
+            var mapNode = MapNode.create();
+            mapNode.set("key", CommentableNode.withComment(new StringValue("value"), SimpleComment.create("test", "inline")));
+            YamlFormat.COMMENT_PROCESSING.save(mapNode, writer);
+            Assertions.assertEquals(lines("key: value # test\n"), lines(writer.toString()));
         }
     }
 

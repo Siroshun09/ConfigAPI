@@ -26,4 +26,14 @@ import org.jetbrains.annotations.NotNull;
  * @param prependBlankLines the number of blank lines before the block comments
  */
 public record YamlBlockComment(@NotNull String content, int prependBlankLines) implements SimpleComment {
+
+    /**
+     * The type of this comment.
+     */
+    public static final String TYPE = "block";
+
+    @Override
+    public @NotNull String type() {
+        return TYPE;
+    }
 }
