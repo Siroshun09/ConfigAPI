@@ -113,7 +113,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
      * @return a default {@link MapNode} of the given record class
      * @throws SerializationException if {@link Serializer} for the custom objects is not found, etc
      */
-    public @NotNull MapNode serializeDefault(@NotNull Class<R> clazz) throws SerializationException {
+    public @NotNull MapNode serializeDefault(@NotNull Class<? extends R> clazz) throws SerializationException {
         return this.serialize0(RecordUtils.createDefaultRecord(clazz));
     }
 

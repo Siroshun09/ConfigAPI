@@ -22,6 +22,7 @@ import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.annotation.Comment;
+import com.github.siroshun09.configapi.core.serialization.annotation.DefaultString;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
@@ -77,11 +78,22 @@ class RecordSerializerTest {
     @Test
     void testTypeSpecifiedComment() {
         var expected = MapNode.create();
-
         expected.set("str", CommentableNode.withComment(StringValue.fromString("str"), SimpleComment.create("test", "block")));
+
         NodeAssertion.assertEquals(
                 expected,
                 RecordSerializer.serializer().serialize(new TypeSpecified("str"))
+        );
+    }
+
+    @Test
+    void testSerializeDefault() {
+        var expected = MapNode.create();
+        expected.set("str", CommentableNode.withComment(StringValue.fromString("default"), SimpleComment.create("test", "block")));
+
+        NodeAssertion.assertEquals(
+                expected,
+                RecordSerializer.serializer().serializeDefault(TypeSpecified.class)
         );
     }
 
@@ -91,6 +103,6 @@ class RecordSerializerTest {
     private record Nested(@Comment("nested") CommentedRecord commented) {
     }
 
-    private record TypeSpecified(@Comment(value = "test", type = "block") String str) {
+    private record TypeSpecified(@Comment(value = "test", type = "block") @DefaultString("default") String str) {
     }
 }
