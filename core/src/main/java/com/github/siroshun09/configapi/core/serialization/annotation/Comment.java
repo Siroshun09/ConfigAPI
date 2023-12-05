@@ -39,4 +39,11 @@ public @interface Comment {
      */
     String value();
 
+    /**
+     * Returns the type of the comment.
+
+     * @return the type of the comment
+     */
+    String type() default "";
+
 }

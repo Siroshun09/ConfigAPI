@@ -141,7 +141,9 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
 
                 var commentAnnotation = component.getDeclaredAnnotation(Comment.class);
                 if (commentAnnotation != null) {
-                    toSet = CommentableNode.withComment(serialized, SimpleComment.create(commentAnnotation.value()));
+                    var content = commentAnnotation.value();
+                    var type = commentAnnotation.type();
+                    toSet = CommentableNode.withComment(serialized, SimpleComment.create(content, type));
                 } else {
                     toSet = serialized;
                 }

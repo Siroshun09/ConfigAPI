@@ -18,5 +18,5 @@ package com.github.siroshun09.configapi.core.comment;
 
 import org.jetbrains.annotations.NotNull;
 
-record SimpleCommentImpl(@NotNull String content) implements SimpleComment {
+record SimpleCommentImpl(@NotNull String content, @NotNull String type) implements SimpleComment {
 }

@@ -74,9 +74,23 @@ class RecordSerializerTest {
         );
     }
 
+    @Test
+    void testTypeSpecifiedComment() {
+        var expected = MapNode.create();
+
+        expected.set("str", CommentableNode.withComment(StringValue.fromString("str"), SimpleComment.create("test", "block")));
+        NodeAssertion.assertEquals(
+                expected,
+                RecordSerializer.serializer().serialize(new TypeSpecified("str"))
+        );
+    }
+
     private record CommentedRecord(@Comment("test") String str) {
     }
 
     private record Nested(@Comment("nested") CommentedRecord commented) {
+    }
+
+    private record TypeSpecified(@Comment(value = "test", type = "block") String str) {
     }
 }

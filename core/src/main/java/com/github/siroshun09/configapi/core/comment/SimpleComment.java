@@ -36,7 +36,19 @@ public interface SimpleComment extends Comment {
      */
     @Contract("_ -> new")
     static @NotNull SimpleComment create(@NotNull String content) {
-        return new SimpleCommentImpl(Objects.requireNonNull(content));
+        return create(content, "");
+    }
+
+    /**
+     * Creates a new {@link SimpleComment}.
+     *
+     * @param content the content
+     * @param type the type of the comment
+     * @return a new {@link SimpleComment}
+     */
+    @Contract("_, _ -> new")
+    static @NotNull SimpleComment create(@NotNull String content, @NotNull String type) {
+        return new SimpleCommentImpl(Objects.requireNonNull(content), Objects.requireNonNull(type));
     }
 
     /**
@@ -46,4 +58,12 @@ public interface SimpleComment extends Comment {
      */
     @NotNull String content();
 
+    /**
+     * Returns the type of this comment.
+     *
+     * @return the type of this comment
+     */
+    default @NotNull String type() {
+        return "";
+    }
 }
