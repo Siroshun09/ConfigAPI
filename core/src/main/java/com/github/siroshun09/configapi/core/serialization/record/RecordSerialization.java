@@ -39,8 +39,8 @@ import java.util.Objects;
  * @param <R>          the type of the {@link Record}
  */
 @ApiStatus.Experimental
-public record RecordSerialization<R extends Record>(@NotNull Serializer<R, MapNode> serializer,
-                                                    @NotNull Deserializer<MapNode, R> deserializer) implements Serialization<R, MapNode> {
+public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R> serializer,
+                                                    @NotNull RecordDeserializer<R> deserializer) implements Serialization<R, MapNode> {
 
     /**
      * Creates a new {@link RecordSerialization} of the specified {@link Record} class.
