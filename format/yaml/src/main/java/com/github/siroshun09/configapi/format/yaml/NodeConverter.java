@@ -325,7 +325,8 @@ class NodeConverter {
             var commentLines = new ArrayList<CommentLine>(lines.size());
 
             for (var line : lines) {
-                commentLines.add(new CommentLine(null, null, " " + line, type));
+                var value = line.isEmpty() ? "" : " " + line;
+                commentLines.add(new CommentLine(null, null, value, type));
             }
 
             if (inline) {
