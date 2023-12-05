@@ -70,4 +70,14 @@ class RecordSerializationTest {
         var serialization = RecordSerialization.create(expected);
         Assertions.assertEquals(expected, serialization.deserializer().deserialize(MapNode.empty()));
     }
+
+    @Test
+    void testSerializeDefault() {
+        var expected = Samples.record();
+        var serialization = RecordSerialization.create(Samples.Record.class);
+        NodeAssertion.assertEquals(
+                serialization.serializer().serialize(serialization.deserializer().deserialize(MapNode.empty())),
+                serialization.serializer().serializeDefault(Samples.Record.class)
+        );
+    }
 }
