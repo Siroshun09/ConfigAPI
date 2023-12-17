@@ -162,6 +162,11 @@ public final class Samples {
 
     private static final SimpleComment COMMENT = SimpleComment.create("sample comment");
 
+    /**
+     * Gets a {@link SimpleComment} ("sample comment").
+     *
+     * @return {@link SimpleComment} ("sample comment")
+     */
     public static @NotNull SimpleComment comment() {
         return COMMENT;
     }
