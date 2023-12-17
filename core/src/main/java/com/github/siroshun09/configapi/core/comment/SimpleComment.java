@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.configapi.core.comment;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +24,6 @@ import java.util.Objects;
 /**
  * An interface that has the comment as a {@link String}.
  */
-@ApiStatus.Experimental
 public interface SimpleComment extends Comment {
 
     /**

@@ -16,13 +16,10 @@
 
 package com.github.siroshun09.configapi.core.comment;
 
-import org.jetbrains.annotations.ApiStatus;
-
 /**
  * An interface to represent the comment.
  * <p>
  * The classes that implements this interface should be immutable.
  */
-@ApiStatus.Experimental
 public interface Comment {
 }

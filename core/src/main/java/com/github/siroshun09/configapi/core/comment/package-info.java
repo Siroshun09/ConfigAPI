@@ -17,7 +17,4 @@
 /**
  * A package for handling comments.
  */
-@ApiStatus.Experimental
 package com.github.siroshun09.configapi.core.comment;
-
-import org.jetbrains.annotations.ApiStatus;
