@@ -51,18 +51,34 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+/**
+ * A class that provides serialization of {@link MapNode} for Jackson.
+ */
 public final class NodeSerialization {
 
+    /**
+     * A {@link JsonSerializer} for {@link MapNode}.
+     */
+    public static final JsonSerializer<MapNode> SERIALIZER = new NodeSerializer();
+
+    /**
+     * A {@link JsonDeserializer} for {@link MapNode}.
+     */
+    public static final JsonDeserializer<MapNode> DESERIALIZER = new NodeDeserializer();
+
+    /**
+     * Creates a new {@link SimpleModule} that has {@link #SERIALIZER} and {@link #DESERIALIZER}.
+     *
+     * @return a new {@link SimpleModule} that has {@link #SERIALIZER} and {@link #DESERIALIZER}
+     */
     public static @NotNull SimpleModule createModule() {
         var module = new SimpleModule();
-        module.addSerializer(NodeSerializer.INSTANCE);
-        module.addDeserializer(MapNode.class, NodeDeserializer.INSTANCE);
+        module.addSerializer(SERIALIZER);
+        module.addDeserializer(MapNode.class, DESERIALIZER);
         return module;
     }
 
-    public static final class NodeSerializer extends JsonSerializer<MapNode> {
-
-        public static final NodeSerializer INSTANCE = new NodeSerializer();
+    private static final class NodeSerializer extends JsonSerializer<MapNode> {
 
         private NodeSerializer() {
         }
@@ -161,9 +177,7 @@ public final class NodeSerialization {
         }
     }
 
-    public static final class NodeDeserializer extends JsonDeserializer<MapNode> {
-
-        public static final NodeDeserializer INSTANCE = new NodeDeserializer();
+    private static final class NodeDeserializer extends JsonDeserializer<MapNode> {
 
         private NodeDeserializer() {
         }
