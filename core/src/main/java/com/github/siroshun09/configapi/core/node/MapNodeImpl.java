@@ -17,6 +17,8 @@
 package com.github.siroshun09.configapi.core.node;
 
 import com.github.siroshun09.configapi.core.comment.Comment;
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -136,6 +138,36 @@ final class MapNodeImpl implements MapNode {
     }
 
     @Override
+    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+        switch (visitor.startMap(this)) {
+            case SKIP -> {
+                return VisitResult.SKIP;
+            }
+            case STOP -> {
+                return VisitResult.STOP;
+            }
+        }
+
+        int index = 0;
+        for (var entry : this.backing.entrySet()) {
+            var result = switch (visitor.visitEntry(index++, entry.getKey(), entry.getValue())) {
+                case CONTINUE -> entry.getValue().accept(visitor);
+                case BREAK -> VisitResult.BREAK;
+                case SKIP -> VisitResult.SKIP;
+                case STOP -> VisitResult.STOP;
+            };
+
+            if (result == VisitResult.BREAK) {
+                break;
+            } else if (result == VisitResult.STOP) {
+                return VisitResult.STOP;
+            }
+        }
+
+        return visitor.endMap(this);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -154,31 +186,5 @@ final class MapNodeImpl implements MapNode {
                 "comment=" + this.comment +
                 ", backing=" + this.backing +
                 '}';
-    }
-
-    @Override
-    public void appendValue(@NotNull StringBuilder builder) {
-        if (this.backing.isEmpty()) {
-            builder.append("{}");
-        } else {
-            builder.append('{');
-
-            var iterator = this.backing.entrySet().iterator();
-
-            for (; ; ) {
-                var entry = iterator.next();
-                builder.append(entry.getKey() == this ? "(this Map)" : entry.getKey());
-                builder.append('=');
-                entry.getValue().appendValue(builder);
-
-                if (iterator.hasNext()) {
-                    builder.append(", ");
-                } else {
-                    break;
-                }
-            }
-
-            builder.append('}');
-        }
     }
 }

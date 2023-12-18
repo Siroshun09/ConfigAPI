@@ -16,6 +16,8 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -96,11 +98,11 @@ public sealed interface Node<T> permits ArrayNode, CommentableNode, NullNode, Ob
     }
 
     /**
-     * Appends the string representation of the {@link #value()}.
+     * Accepts a {@link NodeVisitor} for this {@link Node}.
      *
-     * @param builder a {@link StringBuilder}
+     * @param visitor a {@link NodeVisitor} to accept
+     * @return a {@link VisitResult}
      */
-    default void appendValue(@NotNull StringBuilder builder) {
-        builder.append(this.value());
-    }
+    @NotNull VisitResult accept(@NotNull NodeVisitor visitor);
+
 }

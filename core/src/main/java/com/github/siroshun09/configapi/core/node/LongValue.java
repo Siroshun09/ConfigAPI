@@ -16,6 +16,8 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -58,6 +60,11 @@ public record LongValue(long longValue) implements NumberValue , StringRepresent
     @Override
     public short asShort() {
         return (short) this.longValue;
+    }
+
+    @Override
+    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+        return visitor.visit(this);
     }
 
     @Override

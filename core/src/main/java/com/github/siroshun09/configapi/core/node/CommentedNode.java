@@ -17,6 +17,8 @@
 package com.github.siroshun09.configapi.core.node;
 
 import com.github.siroshun09.configapi.core.comment.Comment;
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -68,6 +70,12 @@ public final class CommentedNode<T> implements CommentableNode<T> {
     @Override
     public void setComment(@Nullable Comment comment) {
         this.comment = comment;
+    }
+
+    @Override
+    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+        var result = visitor.visit(this);
+        return result == VisitResult.CONTINUE ? this.node.accept(visitor) : result;
     }
 
     @Override

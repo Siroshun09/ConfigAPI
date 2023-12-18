@@ -14,23 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.configapi.core.node;
-
-import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
-import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * A {@link Node} implementation that holds an object.
- *
- * @param value an object
- * @param <T>   a type of object
+ * A package for classes of visiting {@link com.github.siroshun09.configapi.core.node.Node}s.
  */
-public record ObjectNode<T>(T value) implements Node<T> {
-
-    @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
-        return visitor.visit(this);
-    }
-
-}
+package com.github.siroshun09.configapi.core.node.visitor;

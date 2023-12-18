@@ -16,6 +16,8 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -58,6 +60,11 @@ public record FloatValue(float floatValue) implements NumberValue, StringReprese
     @Override
     public short asShort() {
         return (short) this.floatValue;
+    }
+
+    @Override
+    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+        return visitor.visit(this);
     }
 
     @Override

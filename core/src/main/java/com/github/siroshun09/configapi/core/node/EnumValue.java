@@ -16,6 +16,8 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -35,6 +37,11 @@ public record EnumValue<E extends Enum<E>>(@NotNull E value) implements ValueNod
      */
     public EnumValue {
         Objects.requireNonNull(value);
+    }
+
+    @Override
+    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+        return visitor.visit(this);
     }
 
     @Override

@@ -16,6 +16,8 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +52,7 @@ public final class NullNode implements Node<Object> {
     }
 
     @Override
-    public void appendValue(@NotNull StringBuilder builder) {
-        builder.append("null");
+    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+        return visitor.visit(this);
     }
 }

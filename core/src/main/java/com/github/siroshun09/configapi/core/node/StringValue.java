@@ -16,6 +16,8 @@
 
 package com.github.siroshun09.configapi.core.node;
 
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -54,6 +56,11 @@ public record StringValue(@NotNull String value) implements ValueNode<String>, S
     @Override
     public boolean hasValue() {
         return true;
+    }
+
+    @Override
+    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+        return visitor.visit(this);
     }
 
     /**

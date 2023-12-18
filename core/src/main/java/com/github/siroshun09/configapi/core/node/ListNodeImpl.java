@@ -17,6 +17,8 @@
 package com.github.siroshun09.configapi.core.node;
 
 import com.github.siroshun09.configapi.core.comment.Comment;
+import com.github.siroshun09.configapi.core.node.visitor.NodeVisitor;
+import com.github.siroshun09.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -171,6 +173,36 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
+    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+        switch (visitor.startList(this)) {
+            case SKIP -> {
+                return VisitResult.SKIP;
+            }
+            case STOP -> {
+                return VisitResult.STOP;
+            }
+        }
+
+        for (int i = 0, backingSize = this.backing.size(); i < backingSize; i++) {
+            var node = this.backing.get(i);
+            var result = switch (visitor.visitElement(i, node)) {
+                case CONTINUE -> node.accept(visitor);
+                case BREAK -> VisitResult.BREAK;
+                case SKIP -> VisitResult.SKIP;
+                case STOP -> VisitResult.STOP;
+            };
+
+            if (result == VisitResult.BREAK) {
+                break;
+            } else if (result == VisitResult.STOP) {
+                return VisitResult.STOP;
+            }
+        }
+
+        return visitor.endList(this);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -189,26 +221,6 @@ final class ListNodeImpl implements ListNode {
                 "comment=" + this.comment +
                 ", backing=" + this.backing +
                 '}';
-    }
-
-    @Override
-    public void appendValue(@NotNull StringBuilder builder) {
-        int iMax = this.backing.size() - 1;
-
-        if (iMax == -1) {
-            builder.append("[]");
-        } else {
-            builder.append('[');
-
-            for (int i = 0; i <= iMax; i++) {
-                if (i != 0) {
-                    builder.append(", ");
-                }
-                this.backing.get(i).appendValue(builder);
-            }
-
-            builder.append(']');
-        }
     }
 
     private static <T> @Nullable T castIfPossible(@NotNull Node<?> node, @NotNull Class<? extends T> clazz) {
