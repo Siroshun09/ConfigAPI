@@ -37,6 +37,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
+/**
+ * An abstract class for testing {@link FileFormat} implementation.
+ *
+ * @param <N> a {@link Node} type
+ * @param <F> a {@link FileFormat} type
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileFormat<N>> {
 
@@ -142,14 +148,41 @@ public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileForma
         }
     }
 
+    /**
+     * Gets the sample {@link Node}s that are used for testing.
+     *
+     * @return the sample {@link Node}s that are used for testing
+     */
     protected abstract @NotNull Stream<Sample<N, F>> samples();
 
+    /**
+     * Gets the extension of files.
+     *
+     * @return the extension of files
+     */
     protected abstract @NotNull String extension();
 
+    /**
+     * Gets the empty (default) {@link Node} that is returned when the file does not exist.
+     *
+     * @return the empty (default) {@link Node}
+     */
     protected abstract @NotNull N emptyNode();
 
+    /**
+     * Checks if the {@link FileFormat} supports loading from an empty file.
+     *
+     * @return {@code true} if the {@link FileFormat} can load from an empty file, otherwise {@code false}
+     */
     protected abstract boolean supportEmptyFile();
 
+    /**
+     * Checks the file content.
+     *
+     * @param sample the expected {@link Node} as a result of loading file
+     * @param filepath the filepath
+     * @throws IOException if I/O error occurred
+     */
     protected void checkFileLoading(@NotNull Sample<N, F> sample, @NotNull Path filepath) throws IOException {
         NodeAssertion.assertEquals(sample.node(), sample.fileFormat().load(filepath));
 
@@ -166,6 +199,15 @@ public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileForma
         Assertions.assertEquals(Replacer.lines(expected), Replacer.lines(actual));
     }
 
+    /**
+     * A record to define sample data.
+     *
+     * @param fileFormat the {@link FileFormat}
+     * @param node the sample {@link Node}
+     * @param text the expected output text
+     * @param <N> the {@link Node} type
+     * @param <F> the {@link FileFormat} type
+     */
     public record Sample<N extends Node<?>, F extends FileFormat<N>>(@NotNull F fileFormat, @NotNull N node,
                                                                      @NotNull String text) {
     }
