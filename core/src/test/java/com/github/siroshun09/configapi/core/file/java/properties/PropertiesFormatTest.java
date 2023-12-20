@@ -16,19 +16,33 @@
 
 package com.github.siroshun09.configapi.core.file.java.properties;
 
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
+import com.github.siroshun09.configapi.core.node.BooleanArray;
+import com.github.siroshun09.configapi.core.node.ByteArray;
+import com.github.siroshun09.configapi.core.node.CommentableNode;
+import com.github.siroshun09.configapi.core.node.DoubleArray;
+import com.github.siroshun09.configapi.core.node.FloatArray;
+import com.github.siroshun09.configapi.core.node.IntArray;
 import com.github.siroshun09.configapi.core.node.ListNode;
+import com.github.siroshun09.configapi.core.node.LongArray;
 import com.github.siroshun09.configapi.core.node.MapNode;
-import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
+import com.github.siroshun09.configapi.core.node.Node;
+import com.github.siroshun09.configapi.core.node.ObjectNode;
+import com.github.siroshun09.configapi.core.node.ShortArray;
+import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
 import com.github.siroshun09.configapi.test.shared.util.Replacer;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.stream.Stream;
 
-class PropertiesFormatTest {
+class PropertiesFormatTest extends BasicFileFormatTest<MapNode, PropertiesFormat> {
 
     private static final String SAMPLE_PROPERTIES = Replacer.lines("""
             a=b
@@ -38,26 +52,40 @@ class PropertiesFormatTest {
             =empty
             """);
 
-    @Test
-    void testLoading() throws IOException {
-        var expected = MapNode.create();
+    private static @NotNull MapNode sampleMapNode() {
+        var mapNode = MapNode.create();
+        mapNode.set("a", "b");
+        mapNode.set("1", "2=3");
+        mapNode.set("1=2", "3");
+        mapNode.set("empty", "");
+        mapNode.set("", "empty");
+        return mapNode;
+    }
 
-        expected.set("a", "b");
-        expected.set("1", "2=3");
-        expected.set("1=2", "3");
-        expected.set("empty", "");
-        expected.set("", "empty");
+    @Override
+    protected @NotNull Stream<Sample<MapNode, PropertiesFormat>> samples() {
+        return Stream.of(
+                new Sample<>(PropertiesFormat.DEFAULT, sampleMapNode(), SAMPLE_PROPERTIES)
+        );
+    }
 
-        MapNode mapNode;
-        try (var reader = new StringReader(SAMPLE_PROPERTIES)) {
-            mapNode = PropertiesFormat.DEFAULT.load(reader);
-        }
+    @Override
+    protected @NotNull String extension() {
+        return ".properties";
+    }
 
-        NodeAssertion.assertEquals(expected, mapNode);
+    @Override
+    protected @NotNull MapNode emptyNode() {
+        return MapNode.empty();
+    }
+
+    @Override
+    protected boolean supportEmptyFile() {
+        return true;
     }
 
     @Test
-    void testSaving() throws IOException {
+    void testNonStringKeyAndValue() throws IOException {
         var mapNode = MapNode.create();
 
         mapNode.set("a", "b");
@@ -70,8 +98,25 @@ class PropertiesFormatTest {
             PropertiesFormat.DEFAULT.save(mapNode, writer);
             Assertions.assertEquals(SAMPLE_PROPERTIES, Replacer.lines(writer.toString()));
         }
+    }
 
-        mapNode.set("invalid", ListNode.create());
+    @ParameterizedTest
+    @MethodSource("nonStringRepresentableNodes")
+    void testNonStringRepresentableNode(@NotNull Node<?> node) {
+        var mapNode = MapNode.create();
+
+        mapNode.set("invalid", node);
         Assertions.assertThrows(IllegalArgumentException.class, () -> PropertiesFormat.DEFAULT.save(mapNode, Writer.nullWriter()));
+
+        mapNode.set("invalid", CommentableNode.withComment(node, SimpleComment.create("test")));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> PropertiesFormat.DEFAULT.save(mapNode, Writer.nullWriter()));
+    }
+
+    private @NotNull Stream<Node<?>> nonStringRepresentableNodes() {
+        return Stream.of(
+                ListNode.create(), MapNode.create(), new ObjectNode<>(new Object()),
+                new BooleanArray(new boolean[0]), new ByteArray(new byte[0]), new DoubleArray(new double[0]),
+                new FloatArray(new float[0]), new IntArray(new int[0]), new LongArray(new long[0]), new ShortArray(new short[0])
+        );
     }
 }

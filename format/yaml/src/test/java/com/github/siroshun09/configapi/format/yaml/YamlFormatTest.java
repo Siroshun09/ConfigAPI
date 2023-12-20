@@ -19,23 +19,19 @@ package com.github.siroshun09.configapi.format.yaml;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
-import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
+import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.stream.Stream;
 
-class YamlFormatTest {
+class YamlFormatTest extends BasicFileFormatTest<MapNode, YamlFormat> {
 
-    private static final String YAML_EXAMPLE = """
+    private static final String SAMPLE_MAP_NODE_YAML = """
             string: value
             integer: 100
             double: 3.14
@@ -51,76 +47,27 @@ class YamlFormatTest {
                 key: value
             """;
 
-    @Test
-    void testLoadFromFilepath(@TempDir Path directory) throws IOException {
-        var path = directory.resolve("load-from-filepath.yml");
-
-        try {
-            Files.createFile(path);
-            Files.writeString(path, YAML_EXAMPLE, StandardCharsets.UTF_8);
-            var node = YamlFormat.DEFAULT.load(path);
-            NodeAssertion.assertEquals(Samples.mapNode(), node);
-        } finally {
-            Files.deleteIfExists(path);
-        }
+    @Override
+    protected @NotNull Stream<Sample<MapNode, YamlFormat>> samples() {
+        return Stream.of(
+                new Sample<>(YamlFormat.DEFAULT, Samples.mapNode(), SAMPLE_MAP_NODE_YAML),
+                new Sample<>(YamlFormat.COMMENT_PROCESSING, Samples.mapNode(), SAMPLE_MAP_NODE_YAML)
+        );
     }
 
-    @Test
-    void testLoadFromInputStream() throws IOException {
-        try (var input = new ByteArrayInputStream(YAML_EXAMPLE.getBytes(StandardCharsets.UTF_8))) {
-            var node = YamlFormat.DEFAULT.load(input);
-            NodeAssertion.assertEquals(Samples.mapNode(), node);
-        }
+    @Override
+    protected @NotNull String extension() {
+        return ".yml";
     }
 
-    @Test
-    void testLoadFromReader() throws IOException {
-        try (var input = new StringReader(YAML_EXAMPLE)) {
-            var node = YamlFormat.DEFAULT.load(input);
-            NodeAssertion.assertEquals(Samples.mapNode(), node);
-        }
+    @Override
+    protected @NotNull MapNode emptyNode() {
+        return MapNode.empty();
     }
 
-    @Test
-    void testEmptyFile() throws IOException {
-        var path = Path.of("empty.yml");
-
-        try {
-            Files.createFile(path);
-            var node = YamlFormat.DEFAULT.load(path);
-            Assertions.assertNotNull(node);
-            Assertions.assertTrue(node.value().isEmpty());
-        } finally {
-            Files.deleteIfExists(path);
-        }
-    }
-
-    @Test
-    void testSaveToFilepath(@TempDir Path directory) throws IOException {
-        var path = directory.resolve("save-to-filepath.yml");
-
-        try {
-            YamlFormat.DEFAULT.save(Samples.mapNode(), path);
-            Assertions.assertEquals(YAML_EXAMPLE, Files.readString(path));
-        } finally {
-            Files.deleteIfExists(path);
-        }
-    }
-
-    @Test
-    void testSaveToOutputStream() throws IOException {
-        try (var output = new ByteArrayOutputStream()) {
-            YamlFormat.DEFAULT.save(Samples.mapNode(), output);
-            Assertions.assertEquals(YAML_EXAMPLE, output.toString(StandardCharsets.UTF_8));
-        }
-    }
-
-    @Test
-    void testSaveToWriter() throws IOException {
-        try (var writer = new StringWriter()) {
-            YamlFormat.DEFAULT.save(Samples.mapNode(), writer);
-            Assertions.assertEquals(YAML_EXAMPLE, writer.toString());
-        }
+    @Override
+    protected boolean supportEmptyFile() {
+        return true;
     }
 
     @Test
@@ -151,20 +98,6 @@ class YamlFormatTest {
         try (var reader = new StringReader(CustomObject.YAML)) {
             Assertions.assertThrows(IOException.class, () -> YamlFormat.DEFAULT.load(reader));
         }
-    }
-
-    @Test
-    void testNonExistentFile(@TempDir Path directory) throws IOException {
-        Path filepath = directory.resolve("test.yml");
-        NodeAssertion.assertEquals(MapNode.empty(), YamlFormat.DEFAULT.load(filepath));
-    }
-
-    @Test
-    void testSaveInNonExistentDirectory(@TempDir Path directory) throws IOException {
-        Path filepath = directory.resolve("parent").resolve("test.json");
-        MapNode expected = Samples.mapNode();
-        YamlFormat.DEFAULT.save(expected, filepath);
-        NodeAssertion.assertEquals(expected, YamlFormat.DEFAULT.load(filepath));
     }
 
     private static class CustomObject {
