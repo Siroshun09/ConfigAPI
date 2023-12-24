@@ -2,7 +2,7 @@
 # libraries
 annotations = "24.1.0"
 gson = "2.10.1"
-jackson = "2.16.0"
+jackson = "2.16.1"
 snakeyaml = "2.2"
 
 # testing tool
