@@ -52,4 +52,4 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 
 This project is under the Apache License version 2.0. Please see [LICENSE](LICENSE) for more info.
 
-Copyright © 2020-2023, Siroshun09
+Copyright © 2020-2024, Siroshun09
