@@ -54,9 +54,10 @@ final class MapNodeImpl implements MapNode {
     }
 
     @Override
-    public @NotNull Node<?> get(@NotNull Object key) {
+    public @NotNull Node<?> getOrDefault(@NotNull Object key, @NotNull Node<?> defaultNode) {
         Objects.requireNonNull(key);
-        return this.backing.getOrDefault(key, NullNode.NULL);
+        Objects.requireNonNull(defaultNode);
+        return this.backing.getOrDefault(key, defaultNode);
     }
 
     @Override

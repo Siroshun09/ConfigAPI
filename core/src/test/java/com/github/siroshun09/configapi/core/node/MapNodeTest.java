@@ -79,8 +79,12 @@ class MapNodeTest {
         var mapNode = MapNode.create(Map.of("a", "b", 1, 2));
         Assertions.assertEquals(new StringValue("b"), mapNode.get("a"));
         Assertions.assertEquals(new IntValue(2), mapNode.get(1));
+
         Assertions.assertSame(NullNode.NULL, mapNode.get("b"));
         Assertions.assertSame(NullNode.NULL, MapNode.empty().get("a"));
+
+        Assertions.assertSame(BooleanValue.TRUE, mapNode.getOrDefault("b", BooleanValue.TRUE));
+        Assertions.assertSame(BooleanValue.TRUE, MapNode.empty().getOrDefault("a", BooleanValue.TRUE));
     }
 
     @Test

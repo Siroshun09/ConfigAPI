@@ -89,7 +89,19 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
      * @param key the key to get
      * @return a {@link Node} to which the specified key is mapped, or {@link NullNode#NULL} if this {@link MapNode} contains no mapping for the key
      */
-    @NotNull Node<?> get(@NotNull Object key);
+    default @NotNull Node<?> get(@NotNull Object key) {
+        return this.getOrDefault(key, NullNode.NULL);
+    }
+
+    /**
+     * Gets a {@link Node} to which the specified key is mapped,
+     * or the specified {@link Node} if this {@link MapNode} contains no mapping for the key.
+     *
+     * @param key         the key to get
+     * @param defaultNode the {@link Node} to return when this {@link MapNode} contains no mapping for the key
+     * @return a {@link Node} to which the specified key is mapped, or the specified {@link Node} if this {@link MapNode} contains no mapping for the key
+     */
+    @NotNull Node<?> getOrDefault(@NotNull Object key, @NotNull Node<?> defaultNode);
 
     /**
      * Sets a {@link Node} to the specified key.
@@ -448,7 +460,7 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
     default short getShort(@NotNull Object key, short def) {
         return this.raw(key) instanceof NumberValue value ? value.asShort() : def;
     }
-    
+
     private @NotNull Node<?> raw(@NotNull Object key) {
         var node = this.get(key);
         return node instanceof CommentedNode<?> commentedNode ? commentedNode.node() : node;
