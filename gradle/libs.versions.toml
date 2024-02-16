@@ -9,7 +9,7 @@ snakeyaml = "2.2"
 junit = "5.10.2"
 
 # gradle plugins
-aggregate-javadoc = "8.4"
+aggregate-javadoc = "8.6"
 
 [libraries]
 
