@@ -19,6 +19,7 @@ package com.github.siroshun09.configapi.core.serialization.record;
 import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
+import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.EnumValue;
 import com.github.siroshun09.configapi.core.node.FloatArray;
@@ -293,7 +294,9 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
     @SuppressWarnings("unchecked")
     private @Nullable Object deserializeNode(@NotNull Node<?> node, @NotNull Class<?> clazz,
                                              @Nullable Object defaultObject) {
-        if (clazz == boolean.class || clazz == Boolean.class) {
+        if (node instanceof CommentedNode<?> commentedNode) {
+            return this.deserializeNode(commentedNode.node(), clazz, defaultObject);
+        } else if (clazz == boolean.class || clazz == Boolean.class) {
             return node instanceof BooleanValue booleanValue ? booleanValue.value() : defaultObject;
         } else if (clazz == String.class) {
             return node instanceof StringValue stringValue ? stringValue.asString() : defaultObject;
