@@ -93,11 +93,11 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
 
       The "Data type" field can also be further divided:
 
-        | Is structure? | Value type |
-        |       0       |    0000    |
+        | Value (0) or Structure (1) | Type |
+        |             0              | 0000 |
 
-      For value nodes, the "Is structure?" field is 0 and the value type is stored in the "Value type" field.
-      The current Value Types are as follows:
+      For value nodes, the most significant bit is 0 and the value type is stored in the "Type" field.
+      The current value types are as follows:
 
         NullNode     - 0x00
         BooleanValue - 0x01
@@ -109,8 +109,8 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         ShortValue   - 0x07
         StringValue  - 0x08
 
-      If the "Is structure?" field is true (1), it creates an array, list, or map with a Value Type based on the lower 4 bits.
-      The mapping to the node class is as follows:
+      If the most significant bit is 1, it means that the data is a structure.
+      The mapping to the node classes that are structures, is as follows:
 
         ListNode               - 0x10
         BooleanArray           - 0x11
@@ -123,7 +123,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         ListNode (Only String) - 0x18
         MapNode                - 0x1f
 
-      In the case of a structure, length information is given in the "Length type" field (high 3 bits).
+      In the case of a structure, length information is given in the "Length info" field (high 3 bits) of the header.
       To reduce data size, they are represented differently depending on their length.
       If the length is equal to or less than 4, it is written directly in the header.
       When 5 or more, add the minimum required data using the appropriate numeric type.
@@ -133,19 +133,19 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
       |    <= 4    |      000 ~ 100      |  No additional data  |
       |   <= 255   |         101         |         Byte         |
       |  <= 65535  |         110         |         Short        |
-      |   65535 <  |         111         |          Int         |
+      |   65535 <  |         111         |         Int          |
 
       The elements in ListNode or the entries in MapNode are also stored according to the above.
       This means that ListNode/MapNode will be output as follows:
 
         ListNode: [header](length data)[header][element data]...
-        MapNode: [header](length data)[header][key data][value data]...
+        MapNode:  [header](length data)[header][key data][value data]...
 
       Additionally, ListNode and MapNode can be nested.
       This is because the length value is used as the number of elements (entries) and writes/reads that number of them.
 
       Based on these specifications, DataInput/DataOutput methods are called.
-      Therefore, the data representation depends on their implementation and format.
+      Therefore, the actual data representation depends on their implementation and format.
      */
 
     /*
@@ -167,7 +167,6 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
 
     /*
       Structure Types: (N is the value type)
-        Plain Value: 0x0N
         Array: 0x1N
           List: 0x10 (Array + NULL)
           Primitive Array: 0x11 ~ 0x17
@@ -179,7 +178,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
 
     /*
       Length Types:
-        0 ~ 4: The length (no additional data)
+        0 ~ 4: Represents the length itself, no additional data
         5: The length is represented as byte
         6: The length is represented as short
         7: The length is represented as int
