@@ -20,6 +20,8 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CommentableNode;
+import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
 import com.github.siroshun09.configapi.core.node.FloatArray;
@@ -124,11 +126,13 @@ class BinaryFormatTest {
                 BinaryFormat.DEFAULT.save(testCase.node, out);
 
                 try (var in = new ByteArrayInputStream(out.toByteArray())) {
-                    NodeAssertion.assertEquals(testCase.node, BinaryFormat.DEFAULT.load(in));
+                    Node<?> expected = testCase.node instanceof CommentedNode<?> commentedNode ? commentedNode.node() : testCase.node;
+                    NodeAssertion.assertEquals(expected, BinaryFormat.DEFAULT.load(in));
                 }
             }
         }
 
+        @SuppressWarnings("unchecked")
         private static Stream<TestCase<?>> testCases() {
             return Stream.of(
                             Stream.of(NullNode.NULL),
@@ -143,6 +147,7 @@ class BinaryFormatTest {
                     )
                     .flatMap(Function.identity())
                     .map(Node.class::cast) // I don't know why, but I need this to compile.
+                    .flatMap(node -> Stream.of(node, CommentableNode.withComment(node, null))) // Also, tests nodes wrapped by CommentedNode
                     .map(TestCase::new);
         }
 
@@ -163,7 +168,8 @@ class BinaryFormatTest {
                 BinaryFormat.DEFAULT.save(testCase.node, out);
 
                 try (var in = new ByteArrayInputStream(out.toByteArray())) {
-                    NodeAssertion.assertEquals(testCase.node, BinaryFormat.DEFAULT.load(in));
+                    Node<?> expected = testCase.node instanceof CommentedNode<?> commentedNode ? commentedNode.node() : testCase.node;
+                    NodeAssertion.assertEquals(expected, BinaryFormat.DEFAULT.load(in));
                 }
             }
         }
@@ -215,7 +221,13 @@ class BinaryFormatTest {
                     256, // length data: 110 + short data
                     65535, // length data: 110 + short data
                     65536 // length data: 111 + int data
-            ).mapToObj(base::create));
+            ).mapToObj(base::create)).flatMap(testCase -> {  // Also, tests nodes wrapped by CommentedNode
+                if (testCase.node instanceof CommentableNode) { // ListNode and MapNode cannot be wrapped
+                    return Stream.of(testCase);
+                } else {
+                    return Stream.of(testCase, new TestCase<>(testCase.testName + " (commented)", CommentableNode.withComment(testCase.node, null)));
+                }
+            });
         }
 
         private record TestCaseBase<N extends Node<?>>(String name, IntFunction<N> function) {
