@@ -457,7 +457,13 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         return switch (lengthType) {
             case LENGTH_TYPE_BYTE -> in.readUnsignedByte();
             case LENGTH_TYPE_SHORT -> in.readUnsignedShort();
-            case LENGTH_TYPE_INT -> in.readInt();
+            case LENGTH_TYPE_INT -> {
+                int length = in.readInt();
+                if (length < 0) {
+                    throw new IOException("Length cannot be negative (got " + length + ")");
+                }
+                yield length;
+            }
             default -> {
                 if (lengthType < LENGTH_TYPE_BYTE) {
                     yield lengthType;
