@@ -19,16 +19,22 @@ package com.github.siroshun09.configapi.core.file.java.binary;
 import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
+import com.github.siroshun09.configapi.core.node.ByteValue;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
+import com.github.siroshun09.configapi.core.node.DoubleValue;
 import com.github.siroshun09.configapi.core.node.FloatArray;
+import com.github.siroshun09.configapi.core.node.FloatValue;
 import com.github.siroshun09.configapi.core.node.IntArray;
 import com.github.siroshun09.configapi.core.node.IntValue;
 import com.github.siroshun09.configapi.core.node.ListNode;
 import com.github.siroshun09.configapi.core.node.LongArray;
+import com.github.siroshun09.configapi.core.node.LongValue;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.core.node.ShortArray;
+import com.github.siroshun09.configapi.core.node.ShortValue;
+import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
@@ -42,8 +48,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 class BinaryFormatTest {
@@ -103,6 +112,45 @@ class BinaryFormatTest {
 
         try (var in = Files.newInputStream(filepath)) {
             NodeAssertion.assertEquals(sample, BinaryFormat.DEFAULT.load(in));
+        }
+    }
+
+    static class ValueNodeTest {
+
+        @ParameterizedTest
+        @MethodSource("testCases")
+        void test(TestCase<?> testCase) throws IOException {
+            try (var out = new ByteArrayOutputStream()) {
+                BinaryFormat.DEFAULT.save(testCase.node, out);
+
+                try (var in = new ByteArrayInputStream(out.toByteArray())) {
+                    NodeAssertion.assertEquals(testCase.node, BinaryFormat.DEFAULT.load(in));
+                }
+            }
+        }
+
+        private static Stream<TestCase<?>> testCases() {
+            return Stream.of(
+                            Stream.of(NullNode.NULL),
+                            Stream.of(BooleanValue.TRUE, BooleanValue.FALSE),
+                            IntStream.of(Byte.MIN_VALUE, 0, Byte.MAX_VALUE).mapToObj(value -> new ByteValue((byte) value)),
+                            DoubleStream.of(Double.MIN_VALUE, 0, Double.MAX_VALUE).mapToObj(DoubleValue::new),
+                            DoubleStream.of(Float.MIN_VALUE, 0, Float.MAX_VALUE).mapToObj(value -> new FloatValue((float) value)),
+                            IntStream.of(Integer.MIN_VALUE, 0, Integer.MAX_VALUE).mapToObj(IntValue::new),
+                            LongStream.of(Long.MIN_VALUE, 0, Long.MAX_VALUE).mapToObj(LongValue::new),
+                            IntStream.of(Short.MIN_VALUE, 0, Short.MAX_VALUE).mapToObj(value -> new ShortValue((short) value)),
+                            Stream.of("a", "", "あ", "a\na").map(StringValue::fromString)
+                    )
+                    .flatMap(Function.identity())
+                    .map(Node.class::cast) // I don't know why, but I need this to compile.
+                    .map(TestCase::new);
+        }
+
+        private record TestCase<N extends Node<?>>(N node) {
+            @Override
+            public String toString() {
+                return node.toString();
+            }
         }
     }
 
