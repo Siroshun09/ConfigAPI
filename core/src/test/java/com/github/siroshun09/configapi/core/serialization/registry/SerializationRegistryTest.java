@@ -71,6 +71,10 @@ class SerializationRegistryTest {
 
         Assertions.assertNull(registry.get(Integer.class));
         Assertions.assertNull(registry.get(Long.class));
+
+        Assertions.assertTrue(registry.isFrozen());
+        Assertions.assertSame(registry, registry.freeze());
+        Assertions.assertTrue(registry.isFrozen());
     }
 
     @Test
