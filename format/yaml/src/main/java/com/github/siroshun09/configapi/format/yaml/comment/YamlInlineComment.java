@@ -19,6 +19,8 @@ package com.github.siroshun09.configapi.format.yaml.comment;
 import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * A {@link SimpleComment} implementation that holds the inline comments in Yaml.
  *
@@ -30,6 +32,10 @@ public record YamlInlineComment(@NotNull String content) implements SimpleCommen
      * The type of this comment.
      */
     public static final String TYPE = "inline";
+
+    public YamlInlineComment {
+        Objects.requireNonNull(content);
+    }
 
     @Override
     public @NotNull String type() {

@@ -19,6 +19,8 @@ package com.github.siroshun09.configapi.format.yaml.comment;
 import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * A {@link SimpleComment} implementation that holds the block comments in Yaml.
  *
@@ -31,6 +33,13 @@ public record YamlBlockComment(@NotNull String content, int prependBlankLines) i
      * The type of this comment.
      */
     public static final String TYPE = "block";
+
+    public YamlBlockComment {
+        Objects.requireNonNull(content);
+        if (prependBlankLines < 0) {
+            throw new IllegalArgumentException("prependBlankLines cannot be negative.");
+        }
+    }
 
     @Override
     public @NotNull String type() {

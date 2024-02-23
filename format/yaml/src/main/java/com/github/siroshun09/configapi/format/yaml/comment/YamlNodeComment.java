@@ -17,8 +17,6 @@
 package com.github.siroshun09.configapi.format.yaml.comment;
 
 import com.github.siroshun09.configapi.core.comment.Comment;
-import com.github.siroshun09.configapi.core.comment.SimpleComment;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
