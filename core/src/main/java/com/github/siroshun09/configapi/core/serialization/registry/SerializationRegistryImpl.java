@@ -28,6 +28,8 @@ import java.util.Objects;
 
 final class SerializationRegistryImpl<S> extends AbstractRegistry<Serialization<?, S>> implements SerializationRegistry<S> {
 
+    static final EmptySerializationRegistry EMPTY = new EmptySerializationRegistry();
+
     private final ReferenceSerializerRegistry serializerRegistry = new ReferenceSerializerRegistry();
     private final ReferenceDeserializerRegistry deserializerRegistry = new ReferenceDeserializerRegistry();
 
@@ -234,6 +236,19 @@ final class SerializationRegistryImpl<S> extends AbstractRegistry<Serialization<
 
         @NotNull SerializationRegistryImpl<S> ref() {
             return SerializationRegistryImpl.this;
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    static final class EmptySerializationRegistry extends AbstractEmptyRegistry<Serialization, SerializationRegistry> implements SerializationRegistry {
+        @Override
+        public @NotNull SerializerRegistry asSerializerRegistry() {
+            return SerializerRegistryImpl.EMPTY;
+        }
+
+        @Override
+        public @NotNull DeserializerRegistry asDeserializerRegistry() {
+            return DeserializerRegistryImpl.EMPTY;
         }
     }
 }

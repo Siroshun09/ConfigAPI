@@ -25,6 +25,8 @@ import java.util.Objects;
 
 final class DeserializerRegistryImpl<S> extends AbstractRegistry<Deserializer<S, ?>> implements DeserializerRegistry<S> {
 
+    static final EmptyDeserializerRegistry EMPTY = new EmptyDeserializerRegistry();
+
     @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T> Deserializer<S, T> get(@NotNull Class<T> clazz) {
@@ -77,5 +79,9 @@ final class DeserializerRegistryImpl<S> extends AbstractRegistry<Deserializer<S,
     public @NotNull DeserializerRegistry<S> freeze() {
         this.freezeRegistry();
         return this;
+    }
+
+    @SuppressWarnings("rawtypes")
+    static final class EmptyDeserializerRegistry extends AbstractEmptyRegistry<Deserializer, DeserializerRegistry> implements DeserializerRegistry {
     }
 }

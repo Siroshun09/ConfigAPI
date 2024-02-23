@@ -25,6 +25,8 @@ import java.util.Objects;
 
 final class SerializerRegistryImpl<S> extends AbstractRegistry<Serializer<?, S>> implements SerializerRegistry<S> {
 
+    static final EmptySerializerRegistry EMPTY = new EmptySerializerRegistry();
+
     @SuppressWarnings("unchecked")
     @Override
     public @Nullable <T> Serializer<T, S> get(@NotNull Class<T> clazz) {
@@ -77,5 +79,9 @@ final class SerializerRegistryImpl<S> extends AbstractRegistry<Serializer<?, S>>
     public @NotNull SerializerRegistry<S> freeze() {
         this.freezeRegistry();
         return this;
+    }
+
+    @SuppressWarnings("rawtypes")
+    static final class EmptySerializerRegistry extends AbstractEmptyRegistry<Serializer, SerializerRegistry> implements SerializerRegistry {
     }
 }

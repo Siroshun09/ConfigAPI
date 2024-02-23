@@ -16,16 +16,30 @@
 
 package com.github.siroshun09.configapi.core.serialization.registry;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 @SuppressWarnings("rawtypes")
-final class EmptyRegistries {
+abstract class AbstractEmptyRegistry<T, C> {
 
-    static final SerializerRegistry SERIALIZER = new SerializerRegistryImpl();
-    static final DeserializerRegistry DESERIALIZER = new DeserializerRegistryImpl();
-    static final SerializationRegistry SERIALIZATION = new SerializationRegistryImpl();
+    public @Nullable T get(@NotNull Class clazz) {
+        return null;
+    }
 
-    static {
-        SERIALIZER.freeze();
-        DESERIALIZER.freeze();
-        SERIALIZATION.freeze();
+    public @NotNull C register(@NotNull Class clazz, @NotNull T serializer) {
+        throw new IllegalStateException("This registry is frozen.");
+    }
+
+    public @NotNull C registerAll(@NotNull C registry) {
+        throw new IllegalStateException("This registry is frozen.");
+    }
+
+    @SuppressWarnings("unchecked")
+    public @NotNull C freeze() {
+        return (C) this;
+    }
+
+    public boolean isFrozen() {
+        return true;
     }
 }

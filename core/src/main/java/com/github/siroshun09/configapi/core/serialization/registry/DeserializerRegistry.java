@@ -30,7 +30,7 @@ import java.util.Optional;
  *
  * @param <S> a type of objects to deserialize
  */
-public sealed interface DeserializerRegistry<S> permits DeserializerRegistryImpl, SerializationRegistryImpl.ReferenceDeserializerRegistry {
+public sealed interface DeserializerRegistry<S> permits DeserializerRegistryImpl, DeserializerRegistryImpl.EmptyDeserializerRegistry, SerializationRegistryImpl.ReferenceDeserializerRegistry {
 
     /**
      * Creates a new {@link DeserializerRegistry}.
@@ -53,7 +53,7 @@ public sealed interface DeserializerRegistry<S> permits DeserializerRegistryImpl
      */
     @SuppressWarnings("unchecked")
     static <S> @NotNull DeserializerRegistry<S> empty() {
-        return EmptyRegistries.DESERIALIZER;
+        return (DeserializerRegistry<S>) DeserializerRegistryImpl.EMPTY;
     }
 
     /**

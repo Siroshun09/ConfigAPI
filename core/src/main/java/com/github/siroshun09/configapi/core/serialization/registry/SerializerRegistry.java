@@ -30,7 +30,7 @@ import java.util.Optional;
  *
  * @param <S> a type of objects after serializing
  */
-public sealed interface SerializerRegistry<S> permits SerializationRegistryImpl.ReferenceSerializerRegistry, SerializerRegistryImpl {
+public sealed interface SerializerRegistry<S> permits SerializationRegistryImpl.ReferenceSerializerRegistry, SerializerRegistryImpl, SerializerRegistryImpl.EmptySerializerRegistry {
 
     /**
      * Creates a new {@link SerializerRegistry}.
@@ -53,7 +53,7 @@ public sealed interface SerializerRegistry<S> permits SerializationRegistryImpl.
      */
     @SuppressWarnings("unchecked")
     static <S> @NotNull SerializerRegistry<S> empty() {
-        return EmptyRegistries.SERIALIZER;
+        return SerializerRegistryImpl.EMPTY;
     }
 
     /**
