@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -47,6 +48,7 @@ public final class PropertiesFormat implements FileFormat<MapNode> {
 
     @Override
     public @NotNull MapNode load(@NotNull Reader reader) throws IOException {
+        Objects.requireNonNull(reader);
         var collector = new CollectToMapNode();
         collector.load(reader);
         return collector.mapNode;
@@ -54,6 +56,9 @@ public final class PropertiesFormat implements FileFormat<MapNode> {
 
     @Override
     public void save(@NotNull MapNode node, @NotNull Writer writer) throws IOException {
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(writer);
+
         for (var entry : node.value().entrySet()) {
             var key = entry.getKey();
             appendEscapedString(String.valueOf(key), true, writer);

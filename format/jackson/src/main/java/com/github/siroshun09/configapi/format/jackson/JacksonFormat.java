@@ -37,6 +37,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * A {@link FileFormat} implementation that loading/saving {@link MapNode} from/to json files using Jackson's {@link ObjectMapper}.
@@ -99,6 +100,7 @@ public final class JacksonFormat implements FileFormat<MapNode> {
 
     @Override
     public @NotNull MapNode load(@NotNull Path filepath) throws IOException {
+        Objects.requireNonNull(filepath);
         if (Files.isRegularFile(filepath)) {
             return this.load(Files.newBufferedReader(filepath, StandardCharsets.UTF_8));
         } else {

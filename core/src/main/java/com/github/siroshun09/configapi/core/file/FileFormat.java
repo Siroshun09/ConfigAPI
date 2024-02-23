@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 
 /**
  * An interface for loading/saving {@link Node}s from/to files.
@@ -55,6 +56,7 @@ public interface FileFormat<N extends Node<?>> {
      * @throws IOException if I/O error occurred
      */
     default @NotNull N load(@NotNull Path filepath) throws IOException {
+        Objects.requireNonNull(filepath);
         try (var reader = Files.isRegularFile(filepath) ? Files.newBufferedReader(filepath, StandardCharsets.UTF_8) : Reader.nullReader()) {
             return this.load(reader);
         }
@@ -68,6 +70,7 @@ public interface FileFormat<N extends Node<?>> {
      * @throws IOException if I/O error occurred
      */
     default @NotNull N load(@NotNull InputStream input) throws IOException {
+        Objects.requireNonNull(input);
         try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
             return this.load(reader);
         }

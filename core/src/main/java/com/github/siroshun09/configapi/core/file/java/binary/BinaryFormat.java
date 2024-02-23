@@ -55,6 +55,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A {@link FileFormat} implementation that loading/saving {@link MapNode} from/to binary format.
@@ -202,6 +203,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
 
     @Override
     public @NotNull Node<?> load(@NotNull Path filepath) throws IOException {
+        Objects.requireNonNull(filepath);
         if (Files.isRegularFile(filepath)) {
             try (InputStream in = Files.newInputStream(filepath)) {
                 return this.load(in);
@@ -213,7 +215,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
 
     @Override
     public @NotNull Node<?> load(@NotNull InputStream input) throws IOException {
-        return read(new DataInputStream(input));
+        return read(new DataInputStream(Objects.requireNonNull(input)));
     }
 
     @Override
@@ -231,7 +233,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
 
     @Override
     public void save(@NotNull Node<?> node, @NotNull OutputStream output) throws IOException {
-        write(node, new DataOutputStream(output));
+        write(node, new DataOutputStream(Objects.requireNonNull(output)));
     }
 
     /**
