@@ -18,8 +18,11 @@ package com.github.siroshun09.configapi.core.serialization.key;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 class KeyGeneratorTest {
 
@@ -43,5 +46,20 @@ class KeyGeneratorTest {
                 "tTE1ST", "t_te_1_st",
                 "tTEsT", "t_t_es_t"
         ).forEach((camel, snake) -> Assertions.assertEquals(snake, KeyGenerator.CAMEL_TO_SNAKE.generate(camel)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("generators")
+    void testNullOrEmpty(KeyGenerator generator) {
+        Assertions.assertEquals("", generator.generate(""));
+        Assertions.assertEquals("", generator.generate(null));
+    }
+
+    private static Stream<KeyGenerator> generators() {
+        return Stream.of(
+                KeyGenerator.AS_IS,
+                KeyGenerator.CAMEL_TO_KEBAB,
+                KeyGenerator.CAMEL_TO_SNAKE
+        );
     }
 }
