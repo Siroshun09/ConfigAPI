@@ -34,6 +34,10 @@ public record YamlBlockComment(@NotNull String content, int prependBlankLines) i
      */
     public static final String TYPE = "block";
 
+    /**
+     * @param content           the content of the comment
+     * @param prependBlankLines the number of blank lines before the block comments
+     */
     public YamlBlockComment {
         Objects.requireNonNull(content);
         if (prependBlankLines < 0) {

@@ -33,6 +33,9 @@ public record YamlInlineComment(@NotNull String content) implements SimpleCommen
      */
     public static final String TYPE = "inline";
 
+    /**
+     * @param content the content of the comment
+     */
     public YamlInlineComment {
         Objects.requireNonNull(content);
     }
