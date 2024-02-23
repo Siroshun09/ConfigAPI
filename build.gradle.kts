@@ -1,11 +1,10 @@
 plugins {
-    alias(libs.plugins.aggregate.javadoc)
+    id("configapi.aggregate-javadoc")
 }
 
 tasks {
-    aggregateJavadoc {
-        (options as StandardJavadocDocletOptions)
-            .docTitle("ConfigAPI $version")
-            .windowTitle("ConfigAPI $version")
+    register<Delete>("clean") {
+        group = "build"
+        layout.buildDirectory.get().asFile.deleteRecursively()
     }
 }

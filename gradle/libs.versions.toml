@@ -8,9 +8,6 @@ snakeyaml = "2.2"
 # testing tool
 junit = "5.10.2"
 
-# gradle plugins
-aggregate-javadoc = "8.6"
-
 [libraries]
 
 # libraries
@@ -23,7 +20,3 @@ snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 # testing tool
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
-
-[plugins]
-
-aggregate-javadoc = { id = "io.freefair.aggregate-javadoc-legacy", version.ref = "aggregate-javadoc" }
