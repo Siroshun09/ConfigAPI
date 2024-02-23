@@ -114,7 +114,7 @@ abstract class AbstractRegistry<T> {
         return ret;
     }
 
-    protected void freezeRegistry() {
+    protected final void freezeRegistry() {
         long stamp = this.lock.writeLock();
 
         try {
@@ -146,7 +146,7 @@ abstract class AbstractRegistry<T> {
         return frozen;
     }
 
-    protected void throwISE() {
+    protected final void throwISE() {
         throw new IllegalStateException("This registry is frozen.");
     }
 }
