@@ -118,15 +118,34 @@ final class RecordUtils {
     static Object createDefaultValue(@NotNull Class<?> clazz, boolean defaultNull) {
         if (clazz == String.class) {
             return defaultNull ? null : "";
-        } else if (clazz == boolean.class || clazz == Boolean.class) {
+        } else if (clazz == boolean.class) {
             return false;
-        } else if (clazz == byte.class || clazz == Byte.class ||
-                clazz == double.class || clazz == Double.class ||
-                clazz == float.class || clazz == Float.class ||
-                clazz == int.class || clazz == Integer.class ||
-                clazz == long.class || clazz == Long.class ||
-                clazz == short.class || clazz == Short.class) {
-            return defaultNull && !clazz.isPrimitive() ? null : 0;
+        } else if (clazz == Boolean.class) {
+            return defaultNull ? null : Boolean.FALSE;
+        } else if (clazz == byte.class) {
+            return (byte) 0;
+        } else if (clazz == Byte.class) {
+            return defaultNull ? null : (byte) 0;
+        } else if (clazz == double.class) {
+            return 0.0;
+        } else if (clazz == Double.class) {
+            return defaultNull ? null : 0.0;
+        } else if (clazz == float.class) {
+            return 0.0f;
+        } else if (clazz == Float.class) {
+            return defaultNull ? null : 0.0f;
+        } else if (clazz == int.class) {
+            return 0;
+        } else if (clazz == Integer.class) {
+            return defaultNull ? null : 0;
+        } else if (clazz == long.class) {
+            return 0L;
+        } else if (clazz == Long.class) {
+            return defaultNull ? null : 0L;
+        } else if (clazz == short.class) {
+            return (short) 0;
+        } else if (clazz == Short.class) {
+            return defaultNull ? null : (short) 0;
         } else if (clazz.isRecord()) {
             return defaultNull ? null : createDefaultRecord(clazz);
         } else if (CollectionUtils.isSupportedCollectionType(clazz)) {
