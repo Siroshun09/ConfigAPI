@@ -172,32 +172,31 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
 
         for (int i = 0; i < components.length; i++) {
             var component = components[i];
-            var node = input.get(RecordUtils.getKey(component, this.keyGenerator));
-            types[i] = component.getType();
-            args[i] = processComponent(component, node, RecordUtils.getDefaultValue(component, defaultRecord));
+
+            var type = component.getType();
+            types[i] = type;
+
+            var deserializer = this.deserializerRegistry.get(type);
+            var key = RecordUtils.getKey(component, this.keyGenerator);
+            var defaultValue = RecordUtils.getDefaultValue(component, defaultRecord);
+
+            if (deserializer != null) {
+                args[i] = deserializer.deserialize(input.get(key));
+            } else if (type.isRecord()) {
+                MapNode source = component.isAnnotationPresent(Inline.class) ? input : input.getMap(key);
+                args[i] = this.deserializeToRecord(type.asSubclass(Record.class), source, (Record) defaultValue);
+            } else if (CollectionUtils.isSupportedCollectionType(type)) {
+                args[i] = this.processCollection(component, input.get(key), defaultValue);
+            } else if (type == Map.class) {
+                args[i] = this.processMap(component, input.get(key), defaultValue);
+            } else if (type.isArray()) {
+                args[i] = this.processArray(component, input.get(key), defaultValue);
+            } else {
+                args[i] = this.deserializeNode(input.get(key), type, defaultValue);
+            }
         }
 
         return RecordUtils.createRecord(clazz, types, args);
-    }
-
-    private Object processComponent(@NotNull RecordComponent component, @NotNull Node<?> node,
-                                    @Nullable Object defaultValue) {
-        var type = component.getType();
-        var deserializer = this.deserializerRegistry.get(type);
-
-        if (deserializer != null) {
-            return deserializer.deserialize(node);
-        } else if (CollectionUtils.isSupportedCollectionType(type)) {
-            return this.processCollection(component, node, defaultValue);
-        } else if (type == Map.class) {
-            return this.processMap(component, node, defaultValue);
-        } else if (type.isArray()) {
-            return this.processArray(component, node, defaultValue);
-        } else if (type.isRecord()) {
-            return this.processRecord(component, node, defaultValue);
-        } else {
-            return this.deserializeNode(node, type, defaultValue);
-        }
     }
 
     private Object processCollection(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultCollection) {
@@ -249,46 +248,6 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                     else return createArray(component.getType().getComponentType(), 0);
                 }
         );
-    }
-
-    private Object processRecord(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultValue) {
-        var clazz = component.getType();
-
-        Object result;
-
-        if (component.isAnnotationPresent(Inline.class)) {
-            result = this.processInlinedRecord(component, clazz, node, (Record) defaultValue);
-        } else {
-            result = this.deserializeNode(node, clazz, defaultValue);
-        }
-
-        return result;
-    }
-
-    private Object processInlinedRecord(@NotNull RecordComponent parent, @NotNull Class<?> clazz, @NotNull Node<?> node, @Nullable Record defaultRecord) {
-        var components = clazz.getRecordComponents();
-
-        if (components.length != 1) {
-            throw new SerializationException("The component of the record for which @Inline is specified must be one.");
-        }
-
-        var inlinedComponent = components[0];
-        var type = inlinedComponent.getType();
-
-        Object defaultObject;
-
-        if (defaultRecord != null) {
-            defaultObject = RecordUtils.getValue(inlinedComponent, defaultRecord);
-        } else {
-            var def = RecordUtils.getDefaultValueByAnnotation(type, parent);
-            if (def == null)
-                def = RecordUtils.getDefaultValueByAnnotation(type, inlinedComponent);
-            if (def == null)
-                def = RecordUtils.createDefaultValue(type, inlinedComponent.isAnnotationPresent(DefaultNull.class));
-            defaultObject = def;
-        }
-
-        return RecordUtils.createRecord(clazz, new Class[]{type}, new Object[]{this.processComponent(inlinedComponent, node, defaultObject)});
     }
 
     @SuppressWarnings("unchecked")

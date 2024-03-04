@@ -28,7 +28,6 @@ import com.github.siroshun09.configapi.core.node.NumberValue;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.Serializer;
-import com.github.siroshun09.configapi.core.serialization.annotation.Comment;
 import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
 import com.github.siroshun09.configapi.core.serialization.registry.SerializerRegistry;
@@ -118,52 +117,41 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
     }
 
     private @NotNull MapNode serialize0(@NotNull Record input) throws SerializationException {
-        var components = input.getClass().getRecordComponents();
         var mapNode = MapNode.create();
+        this.serializeRecord(input, mapNode);
+        return mapNode;
+    }
+
+    private void serializeRecord(@NotNull Record record, @NotNull MapNode target) {
+        var components = record.getClass().getRecordComponents();
 
         for (var component : components) {
-            var value = RecordUtils.getValue(component, input);
+            var value = RecordUtils.getValue(component, record);
 
             if (value == null) {
                 continue;
             }
 
-            Node<?> serialized;
+            var commentAnnotation = component.getDeclaredAnnotation(com.github.siroshun09.configapi.core.serialization.annotation.Comment.class);
+            var comment = commentAnnotation != null ? SimpleComment.create(commentAnnotation.value(), commentAnnotation.type()) : null;
 
-            if (component.getType().isRecord() && component.getDeclaredAnnotation(Inline.class) != null) {
-                serialized = this.processInlinedRecord((Record) value);
-            } else {
-                serialized = this.serializeValue(value);
-            }
-
-            if (serialized != null && serialized != NullNode.NULL) {
-                Node<?> toSet;
-
-                var commentAnnotation = component.getDeclaredAnnotation(Comment.class);
-                if (commentAnnotation != null) {
-                    var content = commentAnnotation.value();
-                    var type = commentAnnotation.type();
-                    toSet = CommentableNode.withComment(serialized, SimpleComment.create(content, type));
+            if (component.getType().isRecord()) {
+                if (component.isAnnotationPresent(Inline.class)) {
+                    this.serializeRecord((Record) value, target);
                 } else {
-                    toSet = serialized;
+                    var mapNode = MapNode.create();
+                    mapNode.setComment(comment);
+                    this.serializeRecord((Record) value, mapNode);
+                    target.set(RecordUtils.getKey(component, this.keyGenerator), mapNode);
                 }
+            } else {
+                var serialized = this.serializeValue(value);
 
-                mapNode.set(RecordUtils.getKey(component, this.keyGenerator), toSet);
+                if (serialized != null && serialized != NullNode.NULL) {
+                    target.set(RecordUtils.getKey(component, this.keyGenerator), comment != null ? CommentableNode.withComment(serialized, comment) : serialized);
+                }
             }
         }
-
-        return mapNode;
-    }
-
-    private @NotNull Node<?> processInlinedRecord(@NotNull Record input) {
-        var components = input.getClass().getRecordComponents();
-
-        if (components.length != 1) {
-            throw new SerializationException("The component of the record for which @Inline is specified must be one.");
-        }
-
-        var value = RecordUtils.getValue(components[0], input);
-        return value != null ? this.serializeValue(value) : NullNode.NULL;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
