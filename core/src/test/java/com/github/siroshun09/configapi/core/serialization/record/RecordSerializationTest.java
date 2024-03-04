@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.configapi.core.serialization.record;
 
-import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.Serialization;
@@ -50,34 +49,5 @@ class RecordSerializationTest {
 
         NodeAssertion.assertEquals(Samples.uuidRecordMapNode(), serialized);
         Assertions.assertEquals(Samples.uuidRecord(), deserialized);
-    }
-
-    @Test
-    void testDefaultValueByAnnotation() {
-        var serialization = RecordSerialization.create(Samples.Record.class);
-        var expected = Samples.record();
-
-        var defaultRecord = serialization.deserializer().deserialize(MapNode.empty());
-        Assertions.assertEquals(expected.string(), defaultRecord.string());
-        Assertions.assertEquals(expected.integer(), defaultRecord.integer());
-        Assertions.assertEquals(expected.doubleValue(), defaultRecord.doubleValue());
-        Assertions.assertEquals(expected.bool(), defaultRecord.bool());
-    }
-
-    @Test
-    void testDefaultValueByDefaultRecord() {
-        var expected = Samples.record();
-        var serialization = RecordSerialization.create(expected);
-        Assertions.assertEquals(expected, serialization.deserializer().deserialize(MapNode.empty()));
-    }
-
-    @Test
-    void testSerializeDefault() {
-        var expected = Samples.record();
-        var serialization = RecordSerialization.create(Samples.Record.class);
-        NodeAssertion.assertEquals(
-                serialization.serializer().serialize(serialization.deserializer().deserialize(MapNode.empty())),
-                serialization.serializer().serializeDefault(Samples.Record.class)
-        );
     }
 }

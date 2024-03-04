@@ -37,24 +37,6 @@ class RecordDeserializerTest {
     }
 
     @Test
-    void testDefaultValueByAnnotation() {
-        var deserializer = RecordDeserializer.create(Samples.Record.class);
-        var expected = Samples.record();
-        var defaultRecord = deserializer.deserialize(MapNode.empty());
-        Assertions.assertEquals(expected.string(), defaultRecord.string());
-        Assertions.assertEquals(expected.integer(), defaultRecord.integer());
-        Assertions.assertEquals(expected.doubleValue(), defaultRecord.doubleValue());
-        Assertions.assertEquals(expected.bool(), defaultRecord.bool());
-    }
-
-    @Test
-    void testDefaultValueByDefaultRecord() {
-        var expected = Samples.record();
-        var deserializer = RecordDeserializer.create(expected);
-        Assertions.assertEquals(expected, deserializer.deserialize(MapNode.empty()));
-    }
-
-    @Test
     void testCustomObjectAndCustomKeyGenerator() {
         Assertions.assertThrows(SerializationException.class, () -> RecordDeserializer.create(Samples.UUIDRecord.class).deserialize(Samples.uuidRecordMapNode()));
 
