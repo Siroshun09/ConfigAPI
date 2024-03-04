@@ -146,7 +146,7 @@ final class RecordUtils {
         }
     }
 
-    static Object getDefaultValueByAnnotation(@NotNull Class<?> clazz, @NotNull RecordComponent component) {
+    private static Object getDefaultValueByAnnotation(@NotNull Class<?> clazz, @NotNull RecordComponent component) {
         if (clazz == String.class) {
             var annotation = component.getDeclaredAnnotation(DefaultString.class);
             return annotation != null ? annotation.value() : null;
@@ -181,7 +181,7 @@ final class RecordUtils {
         }
     }
 
-    static Object createDefaultValue(@NotNull Class<?> clazz, boolean defaultNull) {
+    private static Object createDefaultValue(@NotNull Class<?> clazz, boolean defaultNull) {
         if (clazz == String.class) {
             return defaultNull ? null : "";
         } else if (clazz == boolean.class) {
@@ -212,17 +212,33 @@ final class RecordUtils {
             return (short) 0;
         } else if (clazz == Short.class) {
             return defaultNull ? null : (short) 0;
-        } else if (clazz.isRecord()) {
-            return defaultNull ? null : createDefaultRecord(clazz);
-        } else if (CollectionUtils.isSupportedCollectionType(clazz)) {
+        }  else if (CollectionUtils.isSupportedCollectionType(clazz)) {
             return defaultNull ? null : CollectionUtils.emptyCollection(clazz);
         } else if (clazz == Map.class) {
             return defaultNull ? null : Collections.emptyMap();
         } else if (clazz.isArray()) {
             return defaultNull ? null : Array.newInstance(clazz.getComponentType(), 0);
+        }else if (clazz.isRecord()) {
+            return defaultNull ? null : createDefaultRecord(clazz);
         } else {
             return null;
         }
+    }
+
+    private static Object createDefaultMap(@NotNull RecordComponent component) {
+        if (component.isAnnotationPresent(DefaultNull.class)) {
+            return null;
+        }
+
+        var mapType = component.getDeclaredAnnotation(MapType.class);
+        var defaultMapKey = component.getDeclaredAnnotation(DefaultMapKey.class);
+
+        if (mapType == null || mapType.key() != String.class || defaultMapKey == null) {
+            return Collections.emptyMap();
+        }
+
+        var defaultValue = createDefaultValue(mapType.value(), false);
+        return defaultValue != null ? Map.of(defaultMapKey.value(), defaultValue) : Collections.emptyMap();
     }
 
     static @NotNull Record createDefaultRecord(@NotNull Class<?> clazz) {
@@ -265,21 +281,5 @@ final class RecordUtils {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new SerializationException("Could not create " + clazz.getName() + " instance.", e);
         }
-    }
-
-    static Object createDefaultMap(@NotNull RecordComponent component) {
-        if (component.isAnnotationPresent(DefaultNull.class)) {
-            return null;
-        }
-
-        var mapType = component.getDeclaredAnnotation(MapType.class);
-        var defaultMapKey = component.getDeclaredAnnotation(DefaultMapKey.class);
-
-        if (mapType == null || mapType.key() != String.class || defaultMapKey == null) {
-            return Collections.emptyMap();
-        }
-
-        var defaultValue = createDefaultValue(mapType.value(), false);
-        return defaultValue != null ? Map.of(defaultMapKey.value(), defaultValue) : Collections.emptyMap();
     }
 }
