@@ -58,6 +58,22 @@ public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R>
     }
 
     /**
+     * Creates a new {@link RecordSerialization} of the specified {@link Record} class.
+     *
+     * @param recordClass  a class of the {@link Record}
+     * @param keyGenerator the {@link KeyGenerator} to generate keys from field names
+     * @param <R>          the type of the {@link Record}
+     * @return a new {@link RecordSerialization} of the specified {@link Record} class
+     */
+    @Contract("_, _ -> new")
+    public static <R extends Record> @NotNull RecordSerialization<R> create(@NotNull Class<R> recordClass, @NotNull KeyGenerator keyGenerator) {
+        return new RecordSerialization<>(
+                RecordSerializer.create(keyGenerator),
+                RecordDeserializer.create(recordClass, keyGenerator)
+        );
+    }
+
+    /**
      * Creates a new {@link RecordSerialization} with the default record.
      *
      * @param defaultRecord the default {@link Record} to get the default value if the value is not found in the {@link MapNode}
@@ -69,6 +85,22 @@ public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R>
         return new RecordSerialization<>(
                 RecordSerializer.serializer(),
                 RecordDeserializer.create(defaultRecord)
+        );
+    }
+
+    /**
+     * Creates a new {@link RecordSerialization} with the default record.
+     *
+     * @param defaultRecord the default {@link Record} to get the default value if the value is not found in the {@link MapNode}
+     * @param keyGenerator  the {@link KeyGenerator} to generate keys from field names
+     * @param <R>           the type of the {@link Record}
+     * @return a new {@link RecordSerialization} of the specified {@link Record} class
+     */
+    @Contract("_, _ -> new")
+    public static <R extends Record> @NotNull RecordSerialization<R> create(@NotNull R defaultRecord, @NotNull KeyGenerator keyGenerator) {
+        return new RecordSerialization<>(
+                RecordSerializer.create(keyGenerator),
+                RecordDeserializer.create(defaultRecord, keyGenerator)
         );
     }
 
@@ -180,9 +212,9 @@ public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R>
         /**
          * Adds a {@link Serialization} for the specifies {@link Class}.
          *
-         * @param clazz        a type of objects of the {@link Serialization}
+         * @param clazz         a type of objects of the {@link Serialization}
          * @param serialization a {@link Serialization}
-         * @param <T>         a type of objects of the {@link Serialization}
+         * @param <T>           a type of objects of the {@link Serialization}
          * @return this {@link Builder} instance
          */
         @Contract("_, _ -> this")
