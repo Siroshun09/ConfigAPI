@@ -215,7 +215,7 @@ final class RecordUtils {
         } else if (clazz.isRecord()) {
             return defaultNull ? null : createDefaultRecord(clazz);
         } else if (CollectionUtils.isSupportedCollectionType(clazz)) {
-            return defaultNull ? null : CollectionUtils.emptyCollectionOrNull(clazz);
+            return defaultNull ? null : CollectionUtils.emptyCollection(clazz);
         } else if (clazz == Map.class) {
             return defaultNull ? null : Collections.emptyMap();
         } else if (clazz.isArray()) {
@@ -237,7 +237,7 @@ final class RecordUtils {
             Object arg;
 
             if (CollectionUtils.isSupportedCollectionType(type)) {
-                arg = component.isAnnotationPresent(DefaultNull.class) ? null : CollectionUtils.emptyCollectionOrNull(type);
+                arg = component.isAnnotationPresent(DefaultNull.class) ? null : CollectionUtils.emptyCollection(type);
             } else if (type == Map.class) {
                 arg = createDefaultMap(component);
             } else if (type.isArray()) {

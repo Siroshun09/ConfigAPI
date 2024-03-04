@@ -31,7 +31,7 @@ final class CollectionUtils {
         return clazz == List.class || clazz == Collection.class || clazz == Set.class;
     }
 
-    static @NotNull Collection<Object> emptyCollectionOrNull(@NotNull Class<?> clazz) {
+    static @NotNull Collection<Object> emptyCollection(@NotNull Class<?> clazz) {
         if (clazz == List.class || clazz == Collection.class) {
             return Collections.emptyList();
         } else if (clazz == Set.class) {
@@ -43,7 +43,7 @@ final class CollectionUtils {
 
     static @NotNull Collection<Object> createCollection(@NotNull Class<?> clazz, int size) {
         if (size < 1) {
-            return emptyCollectionOrNull(clazz);
+            return emptyCollection(clazz);
         }
 
         if (clazz == List.class || clazz == Collection.class) {

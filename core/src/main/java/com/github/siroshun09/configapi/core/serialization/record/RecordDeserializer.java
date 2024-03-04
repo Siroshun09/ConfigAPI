@@ -211,7 +211,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         } else if (defaultCollection != null) {
             return defaultCollection;
         } else {
-            return component.isAnnotationPresent(DefaultNull.class) ? null : CollectionUtils.emptyCollectionOrNull(component.getType());
+            return component.isAnnotationPresent(DefaultNull.class) ? null : CollectionUtils.emptyCollection(component.getType());
         }
     }
 
@@ -309,7 +309,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                                                            @NotNull Class<?> collectionType,
                                                            @NotNull Class<?> elementType) {
         if (node.value().isEmpty()) {
-            return CollectionUtils.emptyCollectionOrNull(collectionType);
+            return CollectionUtils.emptyCollection(collectionType);
         }
 
         var originalList = node.value();
