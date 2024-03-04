@@ -21,10 +21,12 @@ import com.github.siroshun09.configapi.core.serialization.annotation.DefaultBool
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultByte;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultDouble;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultEnum;
+import com.github.siroshun09.configapi.core.serialization.annotation.DefaultField;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultFloat;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultInt;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultLong;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultMapKey;
+import com.github.siroshun09.configapi.core.serialization.annotation.DefaultMethod;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultNull;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultShort;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultString;
@@ -36,7 +38,9 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
 import java.util.Collections;
 import java.util.Map;
@@ -71,6 +75,18 @@ final class RecordUtils {
             return RecordUtils.getValue(component, defaultRecord);
         }
 
+        var byFieldAnnotation = component.getDeclaredAnnotation(DefaultField.class);
+
+        if (byFieldAnnotation != null) {
+            return getDefaultObjectFromField(component.getType(), byFieldAnnotation);
+        }
+
+        var byMethodAnnotation = component.getDeclaredAnnotation(DefaultMethod.class);
+
+        if (byMethodAnnotation != null) {
+            return getDefaultObjectFromMethod(component.getType(), byMethodAnnotation);
+        }
+
         var byAnnotation = getDefaultValueByAnnotation(component.getType(), component);
 
         if (byAnnotation != null) {
@@ -78,6 +94,56 @@ final class RecordUtils {
         }
 
         return createDefaultValue(component.getType(), component.isAnnotationPresent(DefaultNull.class));
+    }
+
+    private static @Nullable Object getDefaultObjectFromField(@NotNull Class<?> clazz, @NotNull DefaultField annotation) {
+        Field field;
+
+        try {
+            field = annotation.clazz().getDeclaredField(annotation.name());
+        } catch (NoSuchFieldException e) {
+            throw new SerializationException(e);
+        }
+
+        field.setAccessible(true);
+        Object object;
+
+        try {
+            object = field.get(null);
+        } catch (IllegalAccessException e) {
+            throw new SerializationException(e);
+        }
+
+        if (object == null || clazz.isInstance(object)) {
+            return object;
+        } else {
+            throw new SerializationException("Type mismatch of @DefaultField: expected " + clazz + " but got " + object.getClass());
+        }
+    }
+
+    private static @Nullable Object getDefaultObjectFromMethod(@NotNull Class<?> clazz, @NotNull DefaultMethod annotation) {
+        Method method;
+
+        try {
+            method = annotation.clazz().getDeclaredMethod(annotation.name());
+        } catch (NoSuchMethodException e) {
+            throw new SerializationException(e);
+        }
+
+        method.setAccessible(true);
+        Object object;
+
+        try {
+            object = method.invoke(null);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new SerializationException(e);
+        }
+
+        if (object == null || clazz.isInstance(object)) {
+            return object;
+        } else {
+            throw new SerializationException("Type mismatch of @DefaultMethod: expected " + clazz + " but got " + object.getClass());
+        }
     }
 
     static Object getDefaultValueByAnnotation(@NotNull Class<?> clazz, @NotNull RecordComponent component) {
