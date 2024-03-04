@@ -28,7 +28,6 @@ import com.github.siroshun09.configapi.core.serialization.annotation.DefaultMapK
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultNull;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultShort;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultString;
-import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
 import com.github.siroshun09.configapi.core.serialization.annotation.MapType;
 import com.github.siroshun09.configapi.core.serialization.key.Key;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
@@ -157,11 +156,7 @@ final class RecordUtils {
             } else if (type.isArray()) {
                 arg = Array.newInstance(type.getComponentType(), 0);
             } else if (type.isRecord()) {
-                if (component.isAnnotationPresent(Inline.class)) {
-                    arg = createInlinedRecord(component, type);
-                } else {
-                    arg = component.isAnnotationPresent(DefaultNull.class) ? null : createDefaultRecord(type);
-                }
+                arg = component.isAnnotationPresent(DefaultNull.class) ? null : createDefaultRecord(type);
             } else {
                 arg = getDefaultValue(component, null);
             }
@@ -171,25 +166,6 @@ final class RecordUtils {
         }
 
         return createRecord(clazz.asSubclass(Record.class), types, args);
-    }
-
-    static <R> @NotNull R createInlinedRecord(@NotNull RecordComponent parent, @NotNull Class<R> clazz) {
-        var recordComponents = parent.getType().getRecordComponents();
-
-        if (recordComponents.length != 1) {
-            throw new SerializationException("The component of the record for which @Inline is specified must be one.");
-        }
-
-        var inlinedComponent = recordComponents[0];
-        var type = inlinedComponent.getType();
-
-        var defaultValue = RecordUtils.getDefaultValueByAnnotation(type, parent);
-        if (defaultValue == null)
-            defaultValue = RecordUtils.getDefaultValueByAnnotation(type, inlinedComponent);
-        if (defaultValue == null)
-            defaultValue = RecordUtils.createDefaultValue(type, inlinedComponent.isAnnotationPresent(DefaultNull.class));
-
-        return createRecord(clazz, new Class[]{type}, new Object[]{defaultValue});
     }
 
     static <R> @NotNull R createRecord(@NotNull Class<R> clazz, @NotNull Class<?> @NotNull [] types, Object @NotNull [] args) {
