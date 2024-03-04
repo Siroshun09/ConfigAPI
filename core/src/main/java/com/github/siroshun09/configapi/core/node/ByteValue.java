@@ -63,6 +63,11 @@ public record ByteValue(byte byteValue) implements NumberValue, StringRepresenta
     }
 
     @Override
+    public int compareTo(@NotNull NumberValue o) {
+        return Byte.compare(this.byteValue, o.asByte());
+    }
+
+    @Override
     public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
         return visitor.visit(this);
     }

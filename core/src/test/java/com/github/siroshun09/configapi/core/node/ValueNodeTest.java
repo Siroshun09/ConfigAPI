@@ -53,10 +53,7 @@ class ValueNodeTest {
     private void testByteValue(@NotNull ByteValue expected, @NotNull ByteValue actual) {
         Assertions.assertEquals(expected.asByte(), actual.asByte());
         Assertions.assertEquals(expected.byteValue(), actual.byteValue());
-        Assertions.assertTrue(actual.hasValue());
-        Assertions.assertEquals(expected, actual);
-
-        Assertions.assertSame(actual, Node.fromObject(actual));
+        testNumberValue(expected, actual);
     }
 
     @SuppressWarnings("UnnecessaryBoxing")
@@ -72,10 +69,7 @@ class ValueNodeTest {
     private void testDoubleValue(@NotNull DoubleValue expected, @NotNull DoubleValue actual) {
         Assertions.assertEquals(expected.asDouble(), actual.asDouble());
         Assertions.assertEquals(expected.doubleValue(), actual.doubleValue());
-        Assertions.assertTrue(actual.hasValue());
-        Assertions.assertEquals(expected, actual);
-
-        Assertions.assertSame(actual, Node.fromObject(actual));
+        testNumberValue(expected, actual);
     }
 
     @Test
@@ -110,10 +104,7 @@ class ValueNodeTest {
     private void testFloatValue(@NotNull FloatValue expected, @NotNull FloatValue actual) {
         Assertions.assertEquals(expected.asFloat(), actual.asFloat());
         Assertions.assertEquals(expected.floatValue(), actual.floatValue());
-        Assertions.assertTrue(actual.hasValue());
-        Assertions.assertEquals(expected, actual);
-
-        Assertions.assertSame(actual, Node.fromObject(actual));
+        testNumberValue(expected, actual);
     }
 
     @SuppressWarnings("UnnecessaryBoxing")
@@ -129,10 +120,7 @@ class ValueNodeTest {
     private void testIntValue(@NotNull IntValue expected, @NotNull IntValue actual) {
         Assertions.assertEquals(expected.asInt(), actual.asInt());
         Assertions.assertEquals(expected.intValue(), actual.intValue());
-        Assertions.assertTrue(actual.hasValue());
-        Assertions.assertEquals(expected, actual);
-
-        Assertions.assertSame(actual, Node.fromObject(actual));
+        testNumberValue(expected, actual);
     }
 
     @SuppressWarnings("UnnecessaryBoxing")
@@ -148,10 +136,7 @@ class ValueNodeTest {
     private void testLongValue(@NotNull LongValue expected, @NotNull LongValue actual) {
         Assertions.assertEquals(expected.asLong(), actual.asLong());
         Assertions.assertEquals(expected.longValue(), actual.longValue());
-        Assertions.assertTrue(actual.hasValue());
-        Assertions.assertEquals(expected, actual);
-
-        Assertions.assertSame(actual, Node.fromObject(actual));
+        testNumberValue(expected, actual);
     }
 
     @SuppressWarnings("UnnecessaryBoxing")
@@ -167,8 +152,13 @@ class ValueNodeTest {
     private void testShortValue(@NotNull ShortValue expected, @NotNull ShortValue actual) {
         Assertions.assertEquals(expected.asShort(), actual.asShort());
         Assertions.assertEquals(expected.shortValue(), actual.shortValue());
+        testNumberValue(expected, actual);
+    }
+
+    private static void testNumberValue(@NotNull NumberValue expected, @NotNull NumberValue actual) {
         Assertions.assertTrue(actual.hasValue());
         Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(0, expected.compareTo(actual));
 
         Assertions.assertSame(actual, Node.fromObject(actual));
     }

@@ -63,6 +63,11 @@ public record FloatValue(float floatValue) implements NumberValue, StringReprese
     }
 
     @Override
+    public int compareTo(@NotNull NumberValue o) {
+        return Float.compare(this.floatValue, o.asFloat());
+    }
+
+    @Override
     public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
         return visitor.visit(this);
     }

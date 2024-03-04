@@ -63,6 +63,11 @@ public record IntValue(int intValue) implements NumberValue, StringRepresentable
     }
 
     @Override
+    public int compareTo(@NotNull NumberValue o) {
+        return Integer.compare(this.intValue, o.asInt());
+    }
+
+    @Override
     public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
         return visitor.visit(this);
     }

@@ -63,6 +63,11 @@ public record DoubleValue(double doubleValue) implements NumberValue, StringRepr
     }
 
     @Override
+    public int compareTo(@NotNull NumberValue o) {
+        return Double.compare(this.doubleValue, o.asDouble());
+    }
+
+    @Override
     public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
         return visitor.visit(this);
     }

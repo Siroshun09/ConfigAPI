@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * An interface to represent that {@link Node} holds number.
  */
-public sealed interface NumberValue extends ValueNode<Number> permits IntValue, LongValue, FloatValue, DoubleValue, ByteValue, ShortValue {
+public sealed interface NumberValue extends ValueNode<Number>, Comparable<NumberValue> permits IntValue, LongValue, FloatValue, DoubleValue, ByteValue, ShortValue {
 
     /**
      * A {@link NumberValue} that represents zero.

@@ -63,6 +63,11 @@ public record ShortValue(short shortValue) implements NumberValue, StringReprese
     }
 
     @Override
+    public int compareTo(@NotNull NumberValue o) {
+        return Short.compare(this.shortValue, o.asShort());
+    }
+
+    @Override
     public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
         return visitor.visit(this);
     }
