@@ -35,7 +35,6 @@ import com.github.siroshun09.configapi.core.serialization.Deserializer;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.annotation.CollectionType;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultMapKey;
-import com.github.siroshun09.configapi.core.serialization.annotation.DefaultNull;
 import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
 import com.github.siroshun09.configapi.core.serialization.annotation.MapType;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
@@ -53,7 +52,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * A {@link Deserializer} implementation for deserializing {@link MapNode} to {@link Record} object.
@@ -160,11 +158,11 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      */
     @Override
     public @NotNull R deserialize(@NotNull MapNode input) throws SerializationException {
-        return deserializeToRecord(this.recordClass, input, this.defaultRecord);
+        return this.deserializeToRecord(this.recordClass, input, () -> this.defaultRecord);
     }
 
     private <T extends Record> @NotNull T deserializeToRecord(@NotNull Class<T> clazz, @NotNull MapNode input,
-                                                              @Nullable T defaultRecord) {
+                                                              @NotNull DefaultRecordSupplier<?> defaultRecordSupplier) {
         var components = clazz.getRecordComponents();
 
         var types = new Class<?>[components.length];
@@ -178,28 +176,27 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
 
             var deserializer = this.deserializerRegistry.get(type);
             var key = RecordUtils.getKey(component, this.keyGenerator);
-            var defaultValue = RecordUtils.getDefaultValue(component, defaultRecord);
 
             if (deserializer != null) {
                 args[i] = deserializer.deserialize(input.get(key));
             } else if (type.isRecord()) {
                 MapNode source = component.isAnnotationPresent(Inline.class) ? input : input.getMap(key);
-                args[i] = this.deserializeToRecord(type.asSubclass(Record.class), source, (Record) defaultValue);
+                args[i] = this.deserializeToRecord(type.asSubclass(Record.class), source, defaultRecordSupplier.defaultRecord(component));
             } else if (CollectionUtils.isSupportedCollectionType(type)) {
-                args[i] = this.processCollection(component, input.get(key), defaultValue);
+                args[i] = this.processCollection(component, input.get(key), defaultRecordSupplier.defaultValue(component));
             } else if (type == Map.class) {
-                args[i] = this.processMap(component, input.get(key), defaultValue);
+                args[i] = this.processMap(component, input.get(key), defaultRecordSupplier.defaultValue(component));
             } else if (type.isArray()) {
-                args[i] = this.processArray(component, input.get(key), defaultValue);
+                args[i] = this.deserializeToArray(input.get(key), component.getType(), defaultRecordSupplier.defaultValue(component));
             } else {
-                args[i] = this.deserializeNode(input.get(key), type, defaultValue);
+                args[i] = this.deserializeNode(input.get(key), type, defaultRecordSupplier.defaultValue(component));
             }
         }
 
         return RecordUtils.createRecord(clazz, types, args);
     }
 
-    private @Nullable Object processCollection(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultCollection) {
+    private @Nullable Object processCollection(@NotNull RecordComponent component, @NotNull Node<?> node, @NotNull DefaultValueSupplier<?> defaultCollectionSupplier) {
         var annotation = component.getDeclaredAnnotation(CollectionType.class);
 
         if (annotation == null) {
@@ -208,14 +205,12 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
 
         if (node instanceof ListNode listNode) {
             return this.deserializeToCollection(listNode, component.getType(), annotation.value());
-        } else if (defaultCollection != null) {
-            return defaultCollection;
         } else {
-            return component.isAnnotationPresent(DefaultNull.class) ? null : CollectionUtils.emptyCollection(component.getType());
+            return defaultCollectionSupplier.get();
         }
     }
 
-    private @Nullable Object processMap(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultMap) {
+    private @Nullable Object processMap(@NotNull RecordComponent component, @NotNull Node<?> node, @NotNull DefaultValueSupplier<?> defaultMapSupplier) {
         var annotation = component.getDeclaredAnnotation(MapType.class);
 
         if (annotation == null) {
@@ -228,34 +223,23 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
 
         if (node instanceof MapNode mapNode) {
             return this.deserializeToMap(mapNode, keyType, valueType, defaultMapKey);
-        } else if (defaultMap != null) {
-            return defaultMap;
         } else {
-            return component.isAnnotationPresent(DefaultNull.class) ? null : Collections.emptyMap();
+            return defaultMapSupplier.get();
         }
     }
 
-    private @Nullable Object processArray(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultArray) {
-        return this.deserializeToArray(
-                node,
-                component.getType(),
-                () -> {
-                    if (defaultArray != null) return defaultArray;
-                    else if (component.isAnnotationPresent(DefaultNull.class)) return null;
-                    else return createArray(component.getType().getComponentType(), 0);
-                }
-        );
+    private @Nullable Object processArray(@NotNull RecordComponent component, @NotNull Node<?> node, @NotNull DefaultValueSupplier<?> defaultArraySupplier) {
+        return this.deserializeToArray(node, component.getType(), defaultArraySupplier);
     }
 
     @SuppressWarnings("unchecked")
-    private @Nullable Object deserializeNode(@NotNull Node<?> node, @NotNull Class<?> clazz,
-                                             @Nullable Object defaultObject) {
+    private @Nullable Object deserializeNode(@NotNull Node<?> node, @NotNull Class<?> clazz, @NotNull DefaultValueSupplier<?> defaultValueSupplier) {
         if (node instanceof CommentedNode<?> commentedNode) {
-            return this.deserializeNode(commentedNode.node(), clazz, defaultObject);
+            return this.deserializeNode(commentedNode.node(), clazz, defaultValueSupplier);
         } else if (clazz == boolean.class || clazz == Boolean.class) {
-            return node instanceof BooleanValue booleanValue ? booleanValue.value() : defaultObject;
+            return node instanceof BooleanValue booleanValue ? booleanValue.value() : defaultValueSupplier.get();
         } else if (clazz == String.class) {
-            return node instanceof StringValue stringValue ? stringValue.asString() : defaultObject;
+            return node instanceof StringValue stringValue ? stringValue.asString() : defaultValueSupplier.get();
         } else if (Enum.class.isAssignableFrom(clazz)) {
             if (node instanceof EnumValue<?> enumValue && clazz.isInstance(enumValue.value())) {
                 return enumValue.value();
@@ -267,24 +251,24 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                     try {
                         return Enum.valueOf(subClass, stringValue.value().toUpperCase(Locale.ENGLISH));
                     } catch (IllegalArgumentException ignored2) {
-                        return defaultObject;
+                        return defaultValueSupplier.get();
                     }
                 }
             } else {
-                return defaultObject;
+                return defaultValueSupplier.get();
             }
         } else if (clazz == byte.class || clazz == Byte.class) {
-            return node instanceof NumberValue value ? value.asByte() : defaultObject;
+            return node instanceof NumberValue value ? value.asByte() : defaultValueSupplier.get();
         } else if (clazz == double.class || clazz == Double.class) {
-            return node instanceof NumberValue value ? value.asDouble() : defaultObject;
+            return node instanceof NumberValue value ? value.asDouble() : defaultValueSupplier.get();
         } else if (clazz == float.class || clazz == Float.class) {
-            return node instanceof NumberValue value ? value.asFloat() : defaultObject;
+            return node instanceof NumberValue value ? value.asFloat() : defaultValueSupplier.get();
         } else if (clazz == int.class || clazz == Integer.class) {
-            return node instanceof NumberValue value ? value.asInt() : defaultObject;
+            return node instanceof NumberValue value ? value.asInt() : defaultValueSupplier.get();
         } else if (clazz == long.class || clazz == Long.class) {
-            return node instanceof NumberValue value ? value.asLong() : defaultObject;
+            return node instanceof NumberValue value ? value.asLong() : defaultValueSupplier.get();
         } else if (clazz == short.class || clazz == Short.class) {
-            return node instanceof NumberValue value ? value.asShort() : defaultObject;
+            return node instanceof NumberValue value ? value.asShort() : defaultValueSupplier.get();
         }
 
         var deserializer = this.deserializerRegistry.get(clazz);
@@ -292,14 +276,14 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         if (deserializer != null) {
             return deserializer.deserialize(node);
         } else if (CollectionUtils.isSupportedCollectionType(clazz)) {
-            return node instanceof ListNode listNode ? this.deserializeToCollection(listNode, clazz, Object.class) : defaultObject;
+            return node instanceof ListNode listNode ? this.deserializeToCollection(listNode, clazz, Object.class) : defaultValueSupplier.get();
         } else if (clazz == Map.class) {
-            return node instanceof MapNode mapNode ? this.deserializeToMap(mapNode, Object.class, Object.class, null) : defaultObject;
+            return node instanceof MapNode mapNode ? this.deserializeToMap(mapNode, Object.class, Object.class, null) : defaultValueSupplier.get();
         } else if (clazz.isArray()) {
-            return this.deserializeToArray(node, clazz, () -> defaultObject);
+            return this.deserializeToArray(node, clazz, defaultValueSupplier);
         } else if (clazz.isRecord()) {
             var mapNode = node instanceof MapNode casted ? casted : MapNode.empty();
-            return this.deserializeToRecord(clazz.asSubclass(Record.class), mapNode, (Record) defaultObject);
+            return this.deserializeToRecord(clazz.asSubclass(Record.class), mapNode, defaultValueSupplier.asRecord());
         } else {
             throw new SerializationException("No deserializer found for " + clazz.getSimpleName());
         }
@@ -322,7 +306,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                 continue;
             }
 
-            var deserialized = this.deserializeNode(elementNode, elementType, null);
+            var deserialized = this.deserializeNode(elementNode, elementType, DefaultValueSupplier.nullSupplier());
 
             if (deserialized != null) {
                 collection.add(deserialized);
@@ -343,7 +327,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
 
         for (var entry : node.value().entrySet()) {
             var key = deserializeKey(entry.getKey(), keyType);
-            var value = deserializeNode(entry.getValue(), valueType, null);
+            var value = deserializeNode(entry.getValue(), valueType, DefaultValueSupplier.nullSupplier());
 
             if (key != null && value != null) {
                 map.put(key, value);
@@ -351,7 +335,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         }
 
         if (keyType.equals(String.class) && defaultMapKey != null && !map.containsKey(defaultMapKey.value())) {
-            var defaultValue = this.deserializeNode(MapNode.empty(), valueType, null);
+            var defaultValue = this.deserializeNode(MapNode.empty(), valueType, DefaultValueSupplier.nullSupplier());
             if (defaultValue != null) {
                 map.put(defaultMapKey.value(), defaultValue);
             }
@@ -360,7 +344,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         return map.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(map);
     }
 
-    private @Nullable Object deserializeToArray(@NotNull Node<?> node, @NotNull Class<?> clazz, @NotNull Supplier<@Nullable Object> defaultArraySupplier) {
+    private @Nullable Object deserializeToArray(@NotNull Node<?> node, @NotNull Class<?> clazz, @NotNull DefaultValueSupplier<?> defaultArraySupplier) {
         if (clazz == int[].class) {
             return node instanceof IntArray intArray ? intArray.value() : defaultArraySupplier.get();
         } else if (clazz == long[].class) {
@@ -389,7 +373,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                     } else if (componentType.isInstance(element.value())) {
                         array[i] = element.value();
                     } else {
-                        array[i] = deserializeNode(list.get(i), componentType, null);
+                        array[i] = deserializeNode(list.get(i), componentType, DefaultValueSupplier.nullSupplier());
                     }
                 }
                 return array;
@@ -521,6 +505,61 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                 this.deserializerRegistry.freeze();
                 return this.deserializerRegistry;
             }
+        }
+    }
+
+    private interface DefaultValueSupplier<T> {
+
+        @SuppressWarnings("rawtypes")
+        DefaultValueSupplier NULL = () -> null;
+
+        @SuppressWarnings("unchecked")
+        static <T> DefaultValueSupplier<T> nullSupplier() {
+            return (DefaultValueSupplier<T>) NULL;
+        }
+
+        @Nullable T get();
+
+        default <N> @NotNull DefaultValueSupplier<N> as(@NotNull Class<N> clazz) {
+            return () -> clazz.cast(this.get());
+        }
+
+        @SuppressWarnings("unchecked")
+        default <R extends Record> @NotNull DefaultRecordSupplier<R> asRecord() {
+            return new CachingDefaultRecordSupplier<>(() -> (R) this.get());
+        }
+    }
+
+    private interface DefaultRecordSupplier<R extends Record> extends DefaultValueSupplier<R> {
+
+        @SuppressWarnings("unchecked")
+        default <N> @NotNull DefaultValueSupplier<N> defaultValue(@NotNull RecordComponent component) {
+            return () -> (N) RecordUtils.getDefaultValue(component, this.get());
+        }
+
+        @SuppressWarnings("unchecked")
+        default <N extends Record> @NotNull DefaultRecordSupplier<N> defaultRecord(@NotNull RecordComponent component) {
+            return new CachingDefaultRecordSupplier<>(() -> (N) RecordUtils.getDefaultValue(component, this.get()));
+        }
+    }
+
+    private static class CachingDefaultRecordSupplier<R extends Record> implements DefaultRecordSupplier<R> {
+
+        private final DefaultRecordSupplier<R> supplier;
+        private boolean cached;
+        private R cache;
+
+        private CachingDefaultRecordSupplier(@NotNull DefaultRecordSupplier<R> supplier) {
+            this.supplier = supplier;
+        }
+
+        @Override
+        public @Nullable R get() {
+            if (!this.cached) {
+                this.cached = true;
+                this.cache = this.supplier.get();
+            }
+            return this.cache;
         }
     }
 }
