@@ -237,11 +237,11 @@ final class RecordUtils {
             Object arg;
 
             if (CollectionUtils.isSupportedCollectionType(type)) {
-                arg = CollectionUtils.emptyCollectionOrNull(type);
+                arg = component.isAnnotationPresent(DefaultNull.class) ? null : CollectionUtils.emptyCollectionOrNull(type);
             } else if (type == Map.class) {
                 arg = createDefaultMap(component);
             } else if (type.isArray()) {
-                arg = Array.newInstance(type.getComponentType(), 0);
+                arg = component.isAnnotationPresent(DefaultNull.class) ? null : Array.newInstance(type.getComponentType(), 0);
             } else if (type.isRecord()) {
                 arg = component.isAnnotationPresent(DefaultNull.class) ? null : createDefaultRecord(type);
             } else {
