@@ -183,6 +183,10 @@ final class RecordUtils {
     }
 
     static Object createDefaultMap(@NotNull RecordComponent component) {
+        if (component.isAnnotationPresent(DefaultNull.class)) {
+            return null;
+        }
+
         var mapType = component.getDeclaredAnnotation(MapType.class);
         var defaultMapKey = component.getDeclaredAnnotation(DefaultMapKey.class);
 
