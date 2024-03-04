@@ -19,6 +19,7 @@ package com.github.siroshun09.configapi.test.shared.util;
 import com.github.siroshun09.configapi.core.node.ListNode;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
+import com.github.siroshun09.configapi.core.node.NumberValue;
 import com.github.siroshun09.configapi.core.node.ValueNode;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AssertionFailureBuilder;
@@ -40,6 +41,10 @@ public final class NodeAssertion {
             assertEquals(listNodeA, listNodeB);
         } else if (a instanceof MapNode mapNodeA && b instanceof MapNode mapNodeB) {
             assertEquals(mapNodeA, mapNodeB);
+        } else if (a instanceof NumberValue numberA && b instanceof NumberValue numberB) {
+            if (numberA.compareTo(numberB) != 0) {
+                fail(a, b);
+            }
         } else if (a instanceof ValueNode<?> valueA && b instanceof ValueNode<?> valueB) {
             if (!a.value().equals(b.value())) {
                 fail(a, b);
