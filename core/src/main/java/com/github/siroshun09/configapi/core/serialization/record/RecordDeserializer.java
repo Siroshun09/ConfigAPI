@@ -163,8 +163,8 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         return deserializeToRecord(this.recordClass, input, this.defaultRecord);
     }
 
-    private <T extends Record> T deserializeToRecord(@NotNull Class<T> clazz, @NotNull MapNode input,
-                                                     @Nullable T defaultRecord) {
+    private <T extends Record> @NotNull T deserializeToRecord(@NotNull Class<T> clazz, @NotNull MapNode input,
+                                                              @Nullable T defaultRecord) {
         var components = clazz.getRecordComponents();
 
         var types = new Class<?>[components.length];
@@ -199,7 +199,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         return RecordUtils.createRecord(clazz, types, args);
     }
 
-    private Object processCollection(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultCollection) {
+    private @Nullable Object processCollection(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultCollection) {
         var annotation = component.getDeclaredAnnotation(CollectionType.class);
 
         if (annotation == null) {
@@ -215,7 +215,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         }
     }
 
-    private Object processMap(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultMap) {
+    private @Nullable Object processMap(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultMap) {
         var annotation = component.getDeclaredAnnotation(MapType.class);
 
         if (annotation == null) {
@@ -235,7 +235,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         }
     }
 
-    private @NotNull Object processArray(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultArray) {
+    private @Nullable Object processArray(@NotNull RecordComponent component, @NotNull Node<?> node, @Nullable Object defaultArray) {
         return this.deserializeToArray(
                 node,
                 component.getType(),
@@ -360,7 +360,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         return map.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(map);
     }
 
-    private @NotNull Object deserializeToArray(@NotNull Node<?> node, @NotNull Class<?> clazz, @NotNull Supplier<Object> defaultArraySupplier) {
+    private @Nullable Object deserializeToArray(@NotNull Node<?> node, @NotNull Class<?> clazz, @NotNull Supplier<@Nullable Object> defaultArraySupplier) {
         if (clazz == int[].class) {
             return node instanceof IntArray intArray ? intArray.value() : defaultArraySupplier.get();
         } else if (clazz == long[].class) {
