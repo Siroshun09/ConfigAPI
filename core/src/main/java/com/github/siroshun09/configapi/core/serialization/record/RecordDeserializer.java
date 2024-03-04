@@ -270,11 +270,11 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                     try {
                         return Enum.valueOf(subClass, stringValue.value().toUpperCase(Locale.ENGLISH));
                     } catch (IllegalArgumentException ignored2) {
-                        return null;
+                        return defaultObject;
                     }
                 }
             } else {
-                return null;
+                return defaultObject;
             }
         } else if (clazz == byte.class || clazz == Byte.class) {
             return node instanceof NumberValue value ? value.asByte() : defaultObject;
