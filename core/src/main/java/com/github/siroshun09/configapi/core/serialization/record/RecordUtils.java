@@ -108,6 +108,8 @@ final class RecordUtils {
         } else if (Enum.class.isAssignableFrom(clazz)) {
             var annotation = component.getDeclaredAnnotation(DefaultEnum.class);
             return annotation != null ? Enum.valueOf(clazz.asSubclass(Enum.class), annotation.value()) : null;
+        } else if (clazz == Map.class) {
+            return createDefaultMap(component);
         } else {
             return null;
         }

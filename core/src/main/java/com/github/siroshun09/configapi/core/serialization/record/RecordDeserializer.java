@@ -230,9 +230,6 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
             return this.deserializeToMap(mapNode, keyType, valueType, defaultMapKey);
         } else if (defaultMap != null) {
             return defaultMap;
-        } else if (keyType == String.class && defaultMapKey != null) {
-            var defaultValue = this.deserializeNode(MapNode.empty(), valueType, RecordUtils.createDefaultValue(valueType, false));
-            return defaultValue != null ? Map.of(defaultMapKey.value(), defaultValue) : null;
         } else {
             return component.isAnnotationPresent(DefaultNull.class) ? null : Collections.emptyMap();
         }
