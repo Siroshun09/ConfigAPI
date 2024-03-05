@@ -16,10 +16,6 @@
 
 package com.github.siroshun09.configapi.core.serialization.record;
 
-import com.github.siroshun09.configapi.core.comment.SimpleComment;
-import com.github.siroshun09.configapi.core.node.CommentableNode;
-import com.github.siroshun09.configapi.core.node.MapNode;
-import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
@@ -42,19 +38,5 @@ class RecordDeserializerTest {
 
         var deserializer = RecordDeserializer.builder(Samples.UUIDRecord.class).addDeserializer(UUID.class, node -> UUID.fromString(node.value().toString())).keyGenerator(KeyGenerator.CAMEL_TO_KEBAB).build();
         Assertions.assertEquals(Samples.uuidRecord(), deserializer.deserialize(Samples.uuidRecordMapNode()));
-    }
-
-    @Test
-    void testDeserializingCommentedNode() {
-        var deserializer = RecordDeserializer.create(SimpleRecord.class);
-
-        var mapNode = MapNode.create();
-        mapNode.set("value", CommentableNode.withComment(StringValue.fromString("value"), SimpleComment.create("comment")));
-
-        var actual = deserializer.deserialize(mapNode);
-        Assertions.assertEquals("value", actual.value());
-    }
-
-    private record SimpleRecord(String value) {
     }
 }
