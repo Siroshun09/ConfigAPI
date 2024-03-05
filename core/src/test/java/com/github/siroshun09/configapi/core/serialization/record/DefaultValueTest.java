@@ -38,6 +38,8 @@ import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,22 +48,147 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 class DefaultValueTest {
 
-    @Test
-    void testPrimitives() {
-        testDefaultRecord(
-                new DefaultPrimitiveValues(true, (byte) 10, 3.14, 3.14f, 10, 10L, (short) 10),
-                mapNode -> {
-                    mapNode.set("booleanValue", true);
-                    mapNode.set("byteValue", NumberValue.fromNumber((byte) 10));
-                    mapNode.set("doubleValue", 3.14);
-                    mapNode.set("floatValue", 3.14f);
-                    mapNode.set("intValue", 10);
-                    mapNode.set("longValue", 10L);
-                    mapNode.set("shortValue", 10);
-                }
+    @ParameterizedTest
+    @MethodSource("testCases")
+    <R extends Record> void testDefaultValues(@NotNull TestCase<R> testCase) {
+        var expectedRecord = testCase.expectedRecord();
+
+        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()).deserialize(MapNode.empty()));
+        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord).deserialize(MapNode.empty()));
+
+        var expectedMapNode = MapNode.create();
+        testCase.expectedMapNodeBuilder().accept(expectedMapNode);
+        NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serializeDefault(expectedRecord.getClass()));
+        NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(expectedRecord));
+    }
+
+    private record TestCase<R extends Record>(@NotNull R expectedRecord,
+                                              @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
+    }
+
+    private static <R extends Record> @NotNull TestCase<R> testCase(@NotNull R expectedRecord, @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
+        return new TestCase<>(expectedRecord, expectedMapNodeBuilder);
+    }
+
+    private static Stream<TestCase<?>> testCases() {
+        return Stream.of(
+                testCase(
+                        new DefaultPrimitiveValues(true, (byte) 10, 3.14, 3.14f, 10, 10L, (short) 10),
+                        mapNode -> {
+                            mapNode.set("booleanValue", true);
+                            mapNode.set("byteValue", NumberValue.fromNumber((byte) 10));
+                            mapNode.set("doubleValue", 3.14);
+                            mapNode.set("floatValue", 3.14f);
+                            mapNode.set("intValue", 10);
+                            mapNode.set("longValue", 10L);
+                            mapNode.set("shortValue", 10);
+                        }
+                ),
+                testCase(
+                        new DefaultStringValue("test"),
+                        mapNode -> mapNode.set("value", "test")
+                ),
+                testCase(
+                        new DefaultEnumValue(ExampleEnum.B),
+                        mapNode -> mapNode.set("enumValue", ExampleEnum.B)
+                ),
+                testCase(
+                        new MapWithDefaultKey(Map.of("default", new DefaultMapValue("test", 10))),
+                        mapNode -> {
+                            var mapValueNode = mapNode.createMap("map").createMap("default");
+                            mapValueNode.set("string", "test");
+                            mapValueNode.set("number", 10);
+                        }
+                ),
+                testCase(
+                        new ImplicitlyDefaultValues(
+                                false,
+                                (byte) 0,
+                                0.0,
+                                0.0f,
+                                0,
+                                0L,
+                                (short) 0,
+                                false,
+                                (byte) 0,
+                                0.0,
+                                0.0f,
+                                0,
+                                0L,
+                                (short) 0,
+                                "",
+                                null,
+                                Collections.emptyList(),
+                                Collections.emptyList(),
+                                Collections.emptySet(),
+                                Collections.emptyMap()
+                        ),
+                        mapNode -> {
+                            mapNode.set("booleanValue", false);
+                            mapNode.set("byteValue", 0);
+                            mapNode.set("doubleValue", 0);
+                            mapNode.set("floatValue", 0);
+                            mapNode.set("intValue", 0);
+                            mapNode.set("longValue", 0);
+                            mapNode.set("shortValue", 0);
+                            mapNode.set("wrappedBooleanValue", false);
+                            mapNode.set("wrappedByteValue", 0);
+                            mapNode.set("wrappedDoubleValue", 0);
+                            mapNode.set("wrappedFloatValue", 0);
+                            mapNode.set("wrappedIntValue", 0);
+                            mapNode.set("wrappedLongValue", 0);
+                            mapNode.set("wrappedShortValue", 0);
+                            mapNode.set("stringValue", "");
+                            // enumValue is null, so it is not stored to MapNode
+                            mapNode.createList("collection");
+                            mapNode.createList("list");
+                            mapNode.createList("set");
+                            mapNode.createMap("map");
+                        }
+                ),
+                testCase(
+                        new ImplicitlyDefaultArrays(
+                                new boolean[0],
+                                new byte[0],
+                                new double[0],
+                                new float[0],
+                                new int[0],
+                                new long[0],
+                                new short[0],
+                                new String[0]
+                        ),
+                        mapNode -> {
+                            mapNode.set("booleanArray", new boolean[0]);
+                            mapNode.set("byteArray", new byte[0]);
+                            mapNode.set("doubleArray", new double[0]);
+                            mapNode.set("floatArray", new float[0]);
+                            mapNode.set("intArray", new int[0]);
+                            mapNode.set("longArray", new long[0]);
+                            mapNode.set("shortArray", new short[0]);
+                            mapNode.set("stringArray", new String[0]);
+                        }
+                ),
+                testCase(
+                        new DefaultNullValues(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                        mapNode -> { // All values are null, so they are not stored to MapNode
+                        }
+                ),
+                testCase(
+                        new DefaultStringValueByFieldAndMethod("field", "method"),
+                        mapNode -> {
+                            mapNode.set("defaultByField", "field");
+                            mapNode.set("defaultByMethod", "method");
+                        }
+                ),
+                testCase(
+                        new DefaultNullStringValueByFieldAndMethod(null, null),
+                        mapNode -> { // All values are null, so they are not stored to MapNode
+                        }
+                )
         );
     }
 
@@ -76,23 +203,7 @@ class DefaultValueTest {
     ) {
     }
 
-    @Test
-    void testDefaultString() {
-        testDefaultRecord(
-                new DefaultStringValue("test"),
-                mapNode -> mapNode.set("value", "test")
-        );
-    }
-
     private record DefaultStringValue(@DefaultString("test") String value) {
-    }
-
-    @Test
-    void testDefaultEnum() {
-        testDefaultRecord(
-                new DefaultEnumValue(ExampleEnum.B),
-                mapNode -> mapNode.set("enumValue", ExampleEnum.B)
-        );
     }
 
     private enum ExampleEnum {
@@ -104,74 +215,12 @@ class DefaultValueTest {
     private record DefaultEnumValue(@DefaultEnum("B") ExampleEnum enumValue) {
     }
 
-    @Test
-    void testDefaultMapKey() {
-        testDefaultRecord(
-                new MapWithDefaultKey(Map.of("default", new DefaultMapValue("test", 10))),
-                mapNode -> {
-                    var mapValueNode = mapNode.createMap("map").createMap("default");
-                    mapValueNode.set("string", "test");
-                    mapValueNode.set("number", 10);
-                }
-        );
-    }
-
     private record DefaultMapValue(@DefaultString("test") String string, @DefaultInt(10) int number) {
     }
 
     private record MapWithDefaultKey(
             @DefaultMapKey("default") @MapType(key = String.class, value = DefaultMapValue.class) Map<String, DefaultMapValue> map
     ) {
-    }
-
-    @Test
-    void testImplicitlyDefaultValues() {
-        testDefaultRecord(
-                new ImplicitlyDefaultValues(
-                        false,
-                        (byte) 0,
-                        0.0,
-                        0.0f,
-                        0,
-                        0L,
-                        (short) 0,
-                        false,
-                        (byte) 0,
-                        0.0,
-                        0.0f,
-                        0,
-                        0L,
-                        (short) 0,
-                        "",
-                        null,
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        Collections.emptySet(),
-                        Collections.emptyMap()
-                ),
-                mapNode -> {
-                    mapNode.set("booleanValue", false);
-                    mapNode.set("byteValue", 0);
-                    mapNode.set("doubleValue", 0);
-                    mapNode.set("floatValue", 0);
-                    mapNode.set("intValue", 0);
-                    mapNode.set("longValue", 0);
-                    mapNode.set("shortValue", 0);
-                    mapNode.set("wrappedBooleanValue", false);
-                    mapNode.set("wrappedByteValue", 0);
-                    mapNode.set("wrappedDoubleValue", 0);
-                    mapNode.set("wrappedFloatValue", 0);
-                    mapNode.set("wrappedIntValue", 0);
-                    mapNode.set("wrappedLongValue", 0);
-                    mapNode.set("wrappedShortValue", 0);
-                    mapNode.set("stringValue", "");
-                    // enumValue is null, so it is not stored to MapNode
-                    mapNode.createList("collection");
-                    mapNode.createList("list");
-                    mapNode.createList("set");
-                    mapNode.createMap("map");
-                }
-        );
     }
 
     private record ImplicitlyDefaultValues(
@@ -196,32 +245,6 @@ class DefaultValueTest {
             @CollectionType(String.class) Set<String> set, // empty set
             @MapType(key = String.class, value = String.class) Map<String, String> map // empty map
     ) {
-    }
-
-    @Test
-    void testImplicitlyDefaultArrays() {
-        testDefaultRecord(
-                new ImplicitlyDefaultArrays(
-                        new boolean[0],
-                        new byte[0],
-                        new double[0],
-                        new float[0],
-                        new int[0],
-                        new long[0],
-                        new short[0],
-                        new String[0]
-                ),
-                mapNode -> {
-                    mapNode.set("booleanArray", new boolean[0]);
-                    mapNode.set("byteArray", new byte[0]);
-                    mapNode.set("doubleArray", new double[0]);
-                    mapNode.set("floatArray", new float[0]);
-                    mapNode.set("intArray", new int[0]);
-                    mapNode.set("longArray", new long[0]);
-                    mapNode.set("shortArray", new short[0]);
-                    mapNode.set("stringArray", new String[0]);
-                }
-        );
     }
 
     private record ImplicitlyDefaultArrays(
@@ -264,15 +287,6 @@ class DefaultValueTest {
         }
     }
 
-    @Test
-    void testDefaultNull() {
-        testDefaultRecord(
-                new DefaultNullValues(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
-                mapNode -> { // All values are null, so they are not stored to MapNode
-                }
-        );
-    }
-
     private record DefaultNullValues(
             @DefaultNull Boolean booleanValue,
             @DefaultNull Byte byteValue,
@@ -298,22 +312,6 @@ class DefaultValueTest {
     ) {
     }
 
-    @Test
-    void testDefaultObject() {
-        testDefaultRecord(
-                new DefaultStringValueByFieldAndMethod("field", "method"),
-                mapNode -> {
-                    mapNode.set("defaultByField", "field");
-                    mapNode.set("defaultByMethod", "method");
-                }
-        );
-        testDefaultRecord(
-                new DefaultNullStringValueByFieldAndMethod(null, null),
-                mapNode -> { // All values are null, so they are not stored to MapNode
-                }
-        );
-    }
-
     private record DefaultStringValueByFieldAndMethod(
             @DefaultField(clazz = DefaultStringValueByFieldAndMethod.class, name = "DEFAULT_VALUE") String defaultByField,
             @DefaultMethod(clazz = DefaultStringValueByFieldAndMethod.class, name = "defaultValue") String defaultByMethod
@@ -336,16 +334,6 @@ class DefaultValueTest {
         private static String defaultValue() {
             return null;
         }
-    }
-
-    private static <R extends Record> void testDefaultRecord(@NotNull R expectedRecord, @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
-        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()).deserialize(MapNode.empty()));
-        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord).deserialize(MapNode.empty()));
-
-        var expectedMapNode = MapNode.create();
-        expectedMapNodeBuilder.accept(expectedMapNode);
-        NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serializeDefault(expectedRecord.getClass()));
-        NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(expectedRecord));
     }
 
     @Test
