@@ -33,6 +33,7 @@ import com.github.siroshun09.configapi.core.serialization.annotation.DefaultMeth
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultNull;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultShort;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultString;
+import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
 import com.github.siroshun09.configapi.core.serialization.annotation.MapType;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
@@ -180,6 +181,20 @@ class DefaultValueTest {
                         new DefaultNullStringValueByFieldAndMethod(null, null),
                         mapNode -> { // All values are null, so they are not stored to MapNode
                         }
+                ),
+                create(
+                        new InlinedDefaultValueByField(new StringPair("key", "value")),
+                        mapNode -> {
+                            mapNode.set("left", "key");
+                            mapNode.set("right", "value");
+                        }
+                ),
+                create(
+                        new InlinedDefaultValueByMethod(new StringPair("key", "value")),
+                        mapNode -> {
+                            mapNode.set("left", "key");
+                            mapNode.set("right", "value");
+                        }
                 )
         );
     }
@@ -325,6 +340,23 @@ class DefaultValueTest {
 
         private static String defaultValue() {
             return null;
+        }
+    }
+
+    private record StringPair(String left, String right) {
+    }
+
+    private record InlinedDefaultValueByField(
+            @Inline @DefaultField(clazz = InlinedDefaultValueByField.class, name = "DEFAULT_PAIR") StringPair pair
+    ) {
+        private static final StringPair DEFAULT_PAIR = new StringPair("key", "value");
+    }
+
+    private record InlinedDefaultValueByMethod(
+            @Inline @DefaultMethod(clazz = InlinedDefaultValueByMethod.class, name = "defaultPair") StringPair pair
+    ) {
+        private static @NotNull StringPair defaultPair() {
+            return new StringPair("key", "value");
         }
     }
 
