@@ -248,24 +248,8 @@ final class RecordUtils {
 
         for (int i = 0; i < components.length; i++) {
             var component = components[i];
-            var type = component.getType();
-
-            Object arg;
-
-            if (CollectionUtils.isSupportedCollectionType(type)) {
-                arg = component.isAnnotationPresent(DefaultNull.class) ? null : CollectionUtils.emptyCollection(type);
-            } else if (type == Map.class) {
-                arg = createDefaultMap(component);
-            } else if (type.isArray()) {
-                arg = component.isAnnotationPresent(DefaultNull.class) ? null : Array.newInstance(type.getComponentType(), 0);
-            } else if (type.isRecord()) {
-                arg = component.isAnnotationPresent(DefaultNull.class) ? null : createDefaultRecord(type);
-            } else {
-                arg = getDefaultValue(component, null);
-            }
-
-            types[i] = type;
-            args[i] = arg;
+            types[i] = component.getType();
+            args[i] = getDefaultValue(component, null);
         }
 
         return createRecord(clazz.asSubclass(Record.class), types, args);
