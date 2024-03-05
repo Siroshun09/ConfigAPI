@@ -47,36 +47,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import static com.github.siroshun09.configapi.core.serialization.record.RecordTestCase.create;
 
 class DefaultValueTest {
 
     @ParameterizedTest
     @MethodSource("testCases")
-    <R extends Record> void testDefaultValues(@NotNull TestCase<R> testCase) {
+    <R extends Record> void testDefaultValues(@NotNull RecordTestCase<R> testCase) {
         var expectedRecord = testCase.expectedRecord();
 
         Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()).deserialize(MapNode.empty()));
         Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord).deserialize(MapNode.empty()));
 
-        var expectedMapNode = MapNode.create();
-        testCase.expectedMapNodeBuilder().accept(expectedMapNode);
+        var expectedMapNode = testCase.expectedMapNode();
         NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serializeDefault(expectedRecord.getClass()));
         NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(expectedRecord));
     }
 
-    private record TestCase<R extends Record>(@NotNull R expectedRecord,
-                                              @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
-    }
-
-    private static <R extends Record> @NotNull TestCase<R> testCase(@NotNull R expectedRecord, @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
-        return new TestCase<>(expectedRecord, expectedMapNodeBuilder);
-    }
-
-    private static Stream<TestCase<?>> testCases() {
+    private static Stream<RecordTestCase<?>> testCases() {
         return Stream.of(
-                testCase(
+                create(
                         new DefaultPrimitiveValues(true, (byte) 10, 3.14, 3.14f, 10, 10L, (short) 10),
                         mapNode -> {
                             mapNode.set("booleanValue", true);
@@ -88,15 +80,15 @@ class DefaultValueTest {
                             mapNode.set("shortValue", 10);
                         }
                 ),
-                testCase(
+                create(
                         new DefaultStringValue("test"),
                         mapNode -> mapNode.set("value", "test")
                 ),
-                testCase(
+                create(
                         new DefaultEnumValue(ExampleEnum.B),
                         mapNode -> mapNode.set("enumValue", ExampleEnum.B)
                 ),
-                testCase(
+                create(
                         new MapWithDefaultKey(Map.of("default", new DefaultMapValue("test", 10))),
                         mapNode -> {
                             var mapValueNode = mapNode.createMap("map").createMap("default");
@@ -104,7 +96,7 @@ class DefaultValueTest {
                             mapValueNode.set("number", 10);
                         }
                 ),
-                testCase(
+                create(
                         new ImplicitlyDefaultValues(
                                 false,
                                 (byte) 0,
@@ -150,7 +142,7 @@ class DefaultValueTest {
                             mapNode.createMap("map");
                         }
                 ),
-                testCase(
+                create(
                         new ImplicitlyDefaultArrays(
                                 new boolean[0],
                                 new byte[0],
@@ -172,19 +164,19 @@ class DefaultValueTest {
                             mapNode.set("stringArray", new String[0]);
                         }
                 ),
-                testCase(
+                create(
                         new DefaultNullValues(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                         mapNode -> { // All values are null, so they are not stored to MapNode
                         }
                 ),
-                testCase(
+                create(
                         new DefaultStringValueByFieldAndMethod("field", "method"),
                         mapNode -> {
                             mapNode.set("defaultByField", "field");
                             mapNode.set("defaultByMethod", "method");
                         }
                 ),
-                testCase(
+                create(
                         new DefaultNullStringValueByFieldAndMethod(null, null),
                         mapNode -> { // All values are null, so they are not stored to MapNode
                         }

@@ -19,66 +19,65 @@ package com.github.siroshun09.configapi.core.serialization.record;
 import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
-import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.annotation.Comment;
 import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.function.Consumer;
+import java.util.stream.Stream;
+
+import static com.github.siroshun09.configapi.core.serialization.record.RecordTestCase.create;
 
 class InlinedRecordTest {
 
-    @Test
-    void testInlinedSingleValue() {
-        testSerializeAndDeserialize(new InlinedSingleValue(new SingleValue("test")), mapNode -> mapNode.set("value", "test"));
-    }
-
-    @Test
-    void testInlinedCommentedSingleValue() {
-        testSerializeAndDeserialize(new InlinedCommentedSingleValue(new CommentedSingleValue("test")), mapNode -> mapNode.set("value", CommentableNode.withComment(new StringValue("test"), SimpleComment.create("test"))));
-    }
-
-    @Test
-    void testInlinedMultipleValues() {
-        testSerializeAndDeserialize(
-                new InlinedMultipleValues(new MultipleValues("test", 1, true)),
-                mapNode -> {
-                    mapNode.set("value", "test");
-                    mapNode.set("number", 1);
-                    mapNode.set("bool", CommentableNode.withComment(BooleanValue.TRUE, SimpleComment.create("magic boolean")));
-                }
-        );
-
-        testSerializeAndDeserialize(
-                new MultipleValuesInlinedTwice(new InlinedMultipleValues(new MultipleValues("test", 1, true))),
-                mapNode -> {
-                    mapNode.set("value", "test");
-                    mapNode.set("number", 1);
-                    mapNode.set("bool", CommentableNode.withComment(BooleanValue.TRUE, SimpleComment.create("magic boolean")));
-                }
-        );
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <R extends Record> void testSerializeAndDeserialize(@NotNull R expectedRecord, @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
-        var expectedMapNode = MapNode.create();
-        expectedMapNodeBuilder.accept(expectedMapNode);
+    @ParameterizedTest
+    @MethodSource("testCases")
+    <R extends Record> void testInlinedRecord(@NotNull RecordTestCase<R> testCase) {
+        var expectedRecord = testCase.expectedRecord();
+        var expectedMapNode = testCase.expectedMapNode();
 
         { // by using expectedRecord as default record
-            var serialization = RecordSerialization.create(expectedRecord);
-            NodeAssertion.assertEquals(expectedMapNode, serialization.serializer().serialize(expectedRecord));
-            Assertions.assertEquals(expectedRecord, serialization.deserializer().deserialize(expectedMapNode));
+            NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(expectedRecord));
+            Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord).deserialize(expectedMapNode));
         }
 
         { // by using expectedRecord's class
-            var serialization = RecordSerialization.create((Class<R>) expectedRecord.getClass());
-            NodeAssertion.assertEquals(expectedMapNode, serialization.serializer().serialize(expectedRecord));
-            Assertions.assertEquals(expectedRecord, serialization.deserializer().deserialize(expectedMapNode));
+            NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(expectedRecord));
+            Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()).deserialize(expectedMapNode));
         }
+    }
+
+    private static @NotNull Stream<RecordTestCase<?>> testCases() {
+        return Stream.of(
+                create(
+                        new InlinedSingleValue(new SingleValue("test")),
+                        mapNode -> mapNode.set("value", "test")
+                ),
+                create(
+                        new InlinedCommentedSingleValue(new CommentedSingleValue("test")),
+                        mapNode -> mapNode.set("value", CommentableNode.withComment(new StringValue("test"), SimpleComment.create("test")))
+                ),
+                create(
+                        new InlinedMultipleValues(new MultipleValues("test", 1, true)),
+                        mapNode -> {
+                            mapNode.set("value", "test");
+                            mapNode.set("number", 1);
+                            mapNode.set("bool", CommentableNode.withComment(BooleanValue.TRUE, SimpleComment.create("magic boolean")));
+                        }
+                ),
+                create(
+                        new MultipleValuesInlinedTwice(new InlinedMultipleValues(new MultipleValues("test", 1, true))),
+                        mapNode -> {
+                            mapNode.set("value", "test");
+                            mapNode.set("number", 1);
+                            mapNode.set("bool", CommentableNode.withComment(BooleanValue.TRUE, SimpleComment.create("magic boolean")));
+                        }
+                )
+        );
     }
 
     private record InlinedSingleValue(@Inline SingleValue record) {
