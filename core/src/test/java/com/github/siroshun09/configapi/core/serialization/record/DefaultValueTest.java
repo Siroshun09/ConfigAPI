@@ -59,12 +59,23 @@ class DefaultValueTest {
     <R extends Record> void testDefaultValues(@NotNull RecordTestCase<R> testCase) {
         var expectedRecord = testCase.expectedRecord();
 
-        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()).deserialize(MapNode.empty()));
-        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord).deserialize(MapNode.empty()));
+        testDeserializer(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()));
+        testDeserializer(expectedRecord, RecordDeserializer.builder(expectedRecord.getClass()).build());
+        testDeserializer(expectedRecord, RecordDeserializer.create(expectedRecord));
+        testDeserializer(expectedRecord, RecordDeserializer.builder(expectedRecord).build());
 
         var expectedMapNode = testCase.expectedMapNode();
         NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serializeDefault(expectedRecord.getClass()));
         NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(expectedRecord));
+
+        testDeserializer(expectedRecord, RecordSerialization.create(expectedRecord.getClass()).deserializer());
+        testDeserializer(expectedRecord, RecordSerialization.builder(expectedRecord.getClass()).build().deserializer());
+        testDeserializer(expectedRecord, RecordSerialization.create(expectedRecord).deserializer());
+        testDeserializer(expectedRecord, RecordSerialization.builder(expectedRecord).build().deserializer());
+    }
+
+    private static <R extends Record> void testDeserializer(@NotNull R expectedRecord, @NotNull RecordDeserializer<? extends R> deserializer) {
+        Assertions.assertEquals(expectedRecord, deserializer.deserialize(MapNode.empty()));
     }
 
     private static Stream<RecordTestCase<?>> testCases() {
