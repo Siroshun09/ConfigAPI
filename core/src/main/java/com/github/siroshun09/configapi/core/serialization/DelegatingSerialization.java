@@ -18,8 +18,8 @@ package com.github.siroshun09.configapi.core.serialization;
 
 import org.jetbrains.annotations.NotNull;
 
-record DelegatingSerialization<T, S>(Serializer<T, S> serializer,
-                                     Deserializer<S, T> deserializer) implements Serialization<T, S> {
+record DelegatingSerialization<T, S>(Serializer<? super T, ? extends S> serializer,
+                                     Deserializer<? super S, ? extends T> deserializer) implements Serialization<T, S> {
 
     @Override
     public boolean hasSerializer() {
@@ -27,7 +27,7 @@ record DelegatingSerialization<T, S>(Serializer<T, S> serializer,
     }
 
     @Override
-    public @NotNull Serializer<T, S> serializer() {
+    public @NotNull Serializer<? super T, ? extends S> serializer() {
         if (this.serializer == null) {
             throw new IllegalStateException("This serialization does not have a serializer.");
         }
@@ -41,7 +41,7 @@ record DelegatingSerialization<T, S>(Serializer<T, S> serializer,
     }
 
     @Override
-    public @NotNull Deserializer<S, T> deserializer() {
+    public @NotNull Deserializer<? super S, ? extends T> deserializer() {
         if (this.deserializer == null) {
             throw new IllegalStateException("This serialization does not have a deserializer.");
         }

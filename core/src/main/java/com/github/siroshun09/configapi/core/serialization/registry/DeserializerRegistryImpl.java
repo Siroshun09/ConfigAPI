@@ -48,6 +48,7 @@ final class DeserializerRegistryImpl<S> extends AbstractRegistry<Deserializer<S,
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public @NotNull DeserializerRegistry<S> registerAll(@NotNull DeserializerRegistry<S> registry) {
         Objects.requireNonNull(registry);
 
@@ -61,7 +62,7 @@ final class DeserializerRegistryImpl<S> extends AbstractRegistry<Deserializer<S,
 
             for (var entry : map.entrySet()) {
                 if (entry.getValue().hasDeserializer()) {
-                    newMap.put(entry.getKey(), entry.getValue().deserializer());
+                    newMap.put(entry.getKey(), (Deserializer<S, ?>) entry.getValue().deserializer());
                 }
             }
 

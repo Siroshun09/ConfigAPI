@@ -48,6 +48,7 @@ final class SerializerRegistryImpl<S> extends AbstractRegistry<Serializer<?, S>>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public @NotNull SerializerRegistry<S> registerAll(@NotNull SerializerRegistry<S> registry) {
         Objects.requireNonNull(registry);
 
@@ -61,7 +62,7 @@ final class SerializerRegistryImpl<S> extends AbstractRegistry<Serializer<?, S>>
 
             for (var entry : map.entrySet()) {
                 if (entry.getValue().hasSerializer()) {
-                    newMap.put(entry.getKey(), entry.getValue().serializer());
+                    newMap.put(entry.getKey(), (Serializer<?, S>) entry.getValue().serializer());
                 }
             }
 

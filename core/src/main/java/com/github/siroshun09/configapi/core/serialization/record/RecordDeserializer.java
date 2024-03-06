@@ -69,7 +69,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      * @return {@link RecordDeserializer} of the specified {@link Record} class
      */
     @Contract("_ -> new")
-    public static <R extends Record> @NotNull RecordDeserializer<R> create(@NotNull Class<R> recordClass) {
+    public static <R extends Record> @NotNull RecordDeserializer<R> create(@NotNull Class<? extends R> recordClass) {
         return create(recordClass, KeyGenerator.AS_IS);
     }
 
@@ -82,7 +82,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      * @return {@link RecordDeserializer} of the specified {@link Record} class
      */
     @Contract("_, _ -> new")
-    public static <R extends Record> @NotNull RecordDeserializer<R> create(@NotNull Class<R> recordClass, @NotNull KeyGenerator keyGenerator) {
+    public static <R extends Record> @NotNull RecordDeserializer<R> create(@NotNull Class<? extends R> recordClass, @NotNull KeyGenerator keyGenerator) {
         return new RecordDeserializer<>(recordClass, DeserializerRegistry.empty(), keyGenerator, null);
     }
 
@@ -109,7 +109,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
     @Contract("_, _ -> new")
     @SuppressWarnings("unchecked")
     public static <R extends Record> @NotNull RecordDeserializer<R> create(@NotNull R defaultRecord, @NotNull KeyGenerator keyGenerator) {
-        return new RecordDeserializer<>((Class<R>) defaultRecord.getClass(), DeserializerRegistry.empty(), keyGenerator, defaultRecord);
+        return new RecordDeserializer<>((Class<? extends R>) defaultRecord.getClass(), DeserializerRegistry.empty(), keyGenerator, defaultRecord);
     }
 
     /**
@@ -120,7 +120,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      * @return {@link Builder} of the specified {@link Record} class
      */
     @Contract("_ -> new")
-    public static <R extends Record> @NotNull Builder<R> builder(@NotNull Class<R> recordClass) {
+    public static <R extends Record> @NotNull Builder<R> builder(@NotNull Class<? extends R> recordClass) {
         return new Builder<>(recordClass);
     }
 
@@ -136,12 +136,12 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         return new Builder<>(defaultRecord);
     }
 
-    private final Class<R> recordClass;
+    private final Class<? extends R> recordClass;
     private final DeserializerRegistry<Node<?>> deserializerRegistry;
     private final KeyGenerator keyGenerator;
     private final @Nullable R defaultRecord;
 
-    RecordDeserializer(@NotNull Class<R> recordClass,
+    RecordDeserializer(@NotNull Class<? extends R> recordClass,
                        @NotNull DeserializerRegistry<Node<?>> deserializerRegistry,
                        @NotNull KeyGenerator keyGenerator,
                        @Nullable R defaultRecord) {
@@ -409,20 +409,20 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      */
     public static final class Builder<R extends Record> {
 
-        private final Class<R> recordClass;
+        private final Class<? extends R> recordClass;
         private final @Nullable R defaultRecord;
 
         private DeserializerRegistry<Node<?>> deserializerRegistry;
         private KeyGenerator keyGenerator = KeyGenerator.AS_IS;
 
-        private Builder(@NotNull Class<R> recordClass) {
+        private Builder(@NotNull Class<? extends R> recordClass) {
             this.recordClass = Objects.requireNonNull(recordClass);
             this.defaultRecord = null;
         }
 
         @SuppressWarnings("unchecked")
         private Builder(@NotNull R defaultRecord) {
-            this.recordClass = (Class<R>) defaultRecord.getClass();
+            this.recordClass = (Class<? extends R>) defaultRecord.getClass();
             this.defaultRecord = defaultRecord;
         }
 
@@ -473,22 +473,11 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         @Contract(value = "-> new", pure = true)
         public @NotNull RecordDeserializer<R> build() {
             return new RecordDeserializer<>(
-                    Objects.requireNonNull(this.getRecordClass(), "recordClass is not set"),
+                    this.recordClass,
                     this.getFrozenDeserializerRegistry(),
                     this.keyGenerator,
                     this.defaultRecord
             );
-        }
-
-        @SuppressWarnings("unchecked")
-        private @Nullable Class<R> getRecordClass() {
-            if (this.recordClass != null) {
-                return this.recordClass;
-            } else if (this.defaultRecord != null) {
-                return (Class<R>) this.defaultRecord.getClass();
-            } else {
-                return null;
-            }
         }
 
         private @NotNull DeserializerRegistry<Node<?>> getDeserializerRegistry() {

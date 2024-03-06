@@ -84,9 +84,10 @@ final class SerializationRegistryImpl<S> extends AbstractRegistry<Serialization<
     final class ReferenceSerializerRegistry implements SerializerRegistry<S> {
 
         @Override
+        @SuppressWarnings("unchecked")
         public @Nullable <T> Serializer<T, S> get(@NotNull Class<T> clazz) {
             var serialization = this.ref().get(clazz);
-            return serialization != null && serialization.hasSerializer() ? serialization.serializer() : null;
+            return serialization != null && serialization.hasSerializer() ? (Serializer<T, S>) serialization.serializer() : null;
         }
 
         @Override
@@ -163,9 +164,10 @@ final class SerializationRegistryImpl<S> extends AbstractRegistry<Serialization<
     final class ReferenceDeserializerRegistry implements DeserializerRegistry<S> {
 
         @Override
+        @SuppressWarnings("unchecked")
         public @Nullable <T> Deserializer<S, T> get(@NotNull Class<T> clazz) {
             var serialization = this.ref().get(clazz);
-            return serialization != null && serialization.hasDeserializer() ? serialization.deserializer() : null;
+            return serialization != null && serialization.hasDeserializer() ? (Deserializer<S, T>) serialization.deserializer() : null;
         }
 
         @Override

@@ -37,12 +37,11 @@ public interface Serialization<T, S> {
      * @param <S>          the type of serialized results
      * @return the {@link Serialization} that has {@link Serializer} and {@link Deserializer}
      */
-    @SuppressWarnings("unchecked")
     static <T, S> @NotNull Serialization<T, S> create(@NotNull Serializer<? super T, ? extends S> serializer,
                                                       @NotNull Deserializer<? super S, ? extends T> deserializer) {
         Objects.requireNonNull(serializer);
         Objects.requireNonNull(deserializer);
-        return new DelegatingSerialization<>((Serializer<T, S>) serializer, (Deserializer<S, T>) deserializer);
+        return new DelegatingSerialization<>(serializer, deserializer);
     }
 
     /**
@@ -53,10 +52,9 @@ public interface Serialization<T, S> {
      * @param <S>        the type of serialized results
      * @return the {@link Serialization} that has only {@link Serializer}
      */
-    @SuppressWarnings("unchecked")
     static <T, S> @NotNull Serialization<T, S> onlySerializer(@NotNull Serializer<? super T, ? extends S> serializer) {
         Objects.requireNonNull(serializer);
-        return new DelegatingSerialization<>((Serializer<T, S>) serializer, null);
+        return new DelegatingSerialization<>(serializer, null);
     }
 
     /**
@@ -67,10 +65,9 @@ public interface Serialization<T, S> {
      * @param <S>          the type of serialized results
      * @return the {@link Serialization} that has only {@link Deserializer}
      */
-    @SuppressWarnings("unchecked")
     static <T, S> @NotNull Serialization<T, S> onlyDeserializer(@NotNull Deserializer<? super S, ? extends T> deserializer) {
         Objects.requireNonNull(deserializer);
-        return new DelegatingSerialization<>(null, (Deserializer<S, T>) deserializer);
+        return new DelegatingSerialization<>(null, deserializer);
     }
 
     /**
@@ -85,7 +82,7 @@ public interface Serialization<T, S> {
      *
      * @return {@link Serializer} which this {@link Serialization} has
      */
-    @NotNull Serializer<T, S> serializer();
+    @NotNull Serializer<? super T, ? extends S> serializer();
 
     /**
      * Checks if this {@link Serialization} has {@link Deserializer}.
@@ -99,5 +96,5 @@ public interface Serialization<T, S> {
      *
      * @return {@link Deserializer} which this {@link Serialization} has
      */
-    @NotNull Deserializer<S, T> deserializer();
+    @NotNull Deserializer<? super S, ? extends T> deserializer();
 }

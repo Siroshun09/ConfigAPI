@@ -34,13 +34,20 @@ import java.util.Objects;
 /**
  * A {@link Serialization} implementation for {@link Record} class.
  *
- * @param serializer   the {@link RecordSerializer}
- * @param deserializer the {@link RecordDeserializer}
- * @param <R>          the type of the {@link Record}
+ * @param <R> the type of the {@link Record}
  */
 @ApiStatus.Experimental
-public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R> serializer,
-                                                    @NotNull RecordDeserializer<R> deserializer) implements Serialization<R, MapNode> {
+public final class RecordSerialization<R extends Record> implements Serialization<R, MapNode> {
+
+    private final RecordSerializer<R> serializer;
+    private final RecordDeserializer<R> deserializer;
+
+    @SuppressWarnings("unchecked")
+    private RecordSerialization(@NotNull RecordSerializer<? super R> serializer,
+                                @NotNull RecordDeserializer<? extends R> deserializer) {
+        this.serializer = (RecordSerializer<R>) serializer;
+        this.deserializer = (RecordDeserializer<R>) deserializer;
+    }
 
     /**
      * Creates a new {@link RecordSerialization} of the specified {@link Record} class.
@@ -50,7 +57,7 @@ public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R>
      * @return a new {@link RecordSerialization} of the specified {@link Record} class
      */
     @Contract("_ -> new")
-    public static <R extends Record> @NotNull RecordSerialization<R> create(@NotNull Class<R> recordClass) {
+    public static <R extends Record> @NotNull RecordSerialization<R> create(@NotNull Class<? extends R> recordClass) {
         return new RecordSerialization<>(
                 RecordSerializer.serializer(),
                 RecordDeserializer.create(recordClass)
@@ -66,7 +73,7 @@ public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R>
      * @return a new {@link RecordSerialization} of the specified {@link Record} class
      */
     @Contract("_, _ -> new")
-    public static <R extends Record> @NotNull RecordSerialization<R> create(@NotNull Class<R> recordClass, @NotNull KeyGenerator keyGenerator) {
+    public static <R extends Record> @NotNull RecordSerialization<R> create(@NotNull Class<? extends R> recordClass, @NotNull KeyGenerator keyGenerator) {
         return new RecordSerialization<>(
                 RecordSerializer.create(keyGenerator),
                 RecordDeserializer.create(recordClass, keyGenerator)
@@ -112,8 +119,8 @@ public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R>
      * @return a new {@link Builder} of {@link RecordSerialization} for the specified {@link Record} class
      */
     @Contract(value = "_ -> new", pure = true)
-    public static <R extends Record> @NotNull Builder<R> builder(@NotNull Class<R> recordClass) {
-        return new RecordSerialization.Builder<>(recordClass);
+    public static <R extends Record> @NotNull Builder<R> builder(@NotNull Class<? extends R> recordClass) {
+        return new Builder<>(recordClass);
     }
 
     /**
@@ -139,6 +146,16 @@ public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R>
         return true;
     }
 
+    @Override
+    public @NotNull RecordSerializer<R> serializer() {
+        return this.serializer;
+    }
+
+    @Override
+    public @NotNull RecordDeserializer<R> deserializer() {
+        return this.deserializer;
+    }
+
     /**
      * A {@link Builder} class for {@link RecordSerialization}.
      *
@@ -146,12 +163,12 @@ public record RecordSerialization<R extends Record>(@NotNull RecordSerializer<R>
      */
     public static final class Builder<R extends Record> {
 
-        private final Class<R> recordClass;
+        private final Class<? extends R> recordClass;
         private SerializationRegistry<Node<?>> serializationRegistry;
         private KeyGenerator keyGenerator = KeyGenerator.AS_IS;
         private R defaultRecord;
 
-        private Builder(Class<R> recordClass) {
+        private Builder(Class<? extends R> recordClass) {
             this.recordClass = recordClass;
         }
 
