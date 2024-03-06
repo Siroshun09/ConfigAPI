@@ -16,58 +16,42 @@
 
 package com.github.siroshun09.configapi.core.serialization.record;
 
-import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultString;
 import com.github.siroshun09.configapi.core.serialization.key.Key;
 import com.github.siroshun09.configapi.core.serialization.key.KeyGenerator;
-import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 class CustomKeyGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("testCases")
-    void test(@NotNull CustomKeyGeneratorTest.TestCase base) {
-        var expectedMapNode = MapNode.create();
-        base.expectedMapNodeBuilder().accept(expectedMapNode);
+    void test(@NotNull CustomKeyGeneratorTest.TestCase testCase) {
+        testCase.testCase().testSerialize(
+                RecordSerializer.create(testCase.keyGenerator()),
+                RecordSerializer.<SampleRecord>builder().keyGenerator(testCase.keyGenerator()).build()
+        );
 
-        testRecordSerializer(expectedMapNode, RecordSerializer.create(base.keyGenerator()));
-        testRecordSerializer(expectedMapNode, RecordSerializer.<SampleRecord>builder().keyGenerator(base.keyGenerator()).build());
+        testCase.testCase().testDeserialize(
+                RecordDeserializer.create(SampleRecord.class, testCase.keyGenerator()),
+                RecordDeserializer.create(EXPECTED_RECORD, testCase.keyGenerator()),
+                RecordDeserializer.builder(SampleRecord.class).keyGenerator(testCase.keyGenerator()).build(),
+                RecordDeserializer.builder(EXPECTED_RECORD).keyGenerator(testCase.keyGenerator()).build()
+        );
 
-        testRecordDeserializer(expectedMapNode, RecordDeserializer.create(SampleRecord.class, base.keyGenerator()));
-        testRecordDeserializer(expectedMapNode, RecordDeserializer.create(EXPECTED_RECORD, base.keyGenerator()));
-        testRecordDeserializer(expectedMapNode, RecordDeserializer.builder(SampleRecord.class).keyGenerator(base.keyGenerator()).build());
-        testRecordDeserializer(expectedMapNode, RecordDeserializer.builder(EXPECTED_RECORD).keyGenerator(base.keyGenerator()).build());
-
-        testSerialization(expectedMapNode, RecordSerialization.create(SampleRecord.class, base.keyGenerator()));
-        testSerialization(expectedMapNode, RecordSerialization.create(EXPECTED_RECORD, base.keyGenerator()));
-        testSerialization(expectedMapNode, RecordSerialization.builder(SampleRecord.class).keyGenerator(base.keyGenerator()).build());
-        testSerialization(expectedMapNode, RecordSerialization.builder(EXPECTED_RECORD).keyGenerator(base.keyGenerator()).build());
-    }
-
-    private static void testRecordSerializer(@NotNull MapNode mapNode, @NotNull RecordSerializer<SampleRecord> serializer) {
-        NodeAssertion.assertEquals(mapNode, serializer.serialize(EXPECTED_RECORD));
-        NodeAssertion.assertEquals(mapNode, serializer.serializeDefault(SampleRecord.class));
-    }
-
-    private static void testRecordDeserializer(@NotNull MapNode mapNode, @NotNull RecordDeserializer<SampleRecord> deserializer) {
-        Assertions.assertEquals(EXPECTED_RECORD, deserializer.deserialize(mapNode));
-        Assertions.assertEquals(EXPECTED_RECORD, deserializer.deserialize(MapNode.empty()));
-    }
-
-    private static void testSerialization(@NotNull MapNode mapNode, @NotNull RecordSerialization<SampleRecord> serialization) {
-        testRecordSerializer(mapNode, serialization.serializer());
-        testRecordDeserializer(mapNode, serialization.deserializer());
+        testCase.testCase().testSerialization(
+                RecordSerialization.create(SampleRecord.class, testCase.keyGenerator()),
+                RecordSerialization.create(EXPECTED_RECORD, testCase.keyGenerator()),
+                RecordSerialization.builder(SampleRecord.class).keyGenerator(testCase.keyGenerator()).build(),
+                RecordSerialization.builder(EXPECTED_RECORD).keyGenerator(testCase.keyGenerator()).build()
+        );
     }
 
     private record TestCase(@NotNull KeyGenerator keyGenerator,
-                            @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
+                            @NotNull RecordTestCase<SampleRecord> testCase) {
     }
 
     private record SampleRecord(@DefaultString("a") String thisIsString,
@@ -80,24 +64,33 @@ class CustomKeyGeneratorTest {
         return Stream.of(
                 new TestCase(
                         KeyGenerator.AS_IS,
-                        mapNode -> {
-                            mapNode.set("thisIsString", "a");
-                            mapNode.set("custom-key", "b");
-                        }
+                        RecordTestCase.create(
+                                EXPECTED_RECORD,
+                                mapNode -> {
+                                    mapNode.set("thisIsString", "a");
+                                    mapNode.set("custom-key", "b");
+                                }
+                        )
                 ),
                 new TestCase(
                         KeyGenerator.CAMEL_TO_KEBAB,
-                        mapNode -> {
-                            mapNode.set("this-is-string", "a");
-                            mapNode.set("custom-key", "b");
-                        }
+                        RecordTestCase.create(
+                                EXPECTED_RECORD,
+                                mapNode -> {
+                                    mapNode.set("this-is-string", "a");
+                                    mapNode.set("custom-key", "b");
+                                }
+                        )
                 ),
                 new TestCase(
                         KeyGenerator.CAMEL_TO_SNAKE,
-                        mapNode -> {
-                            mapNode.set("this_is_string", "a");
-                            mapNode.set("custom-key", "b");
-                        }
+                        RecordTestCase.create(
+                                EXPECTED_RECORD,
+                                mapNode -> {
+                                    mapNode.set("this_is_string", "a");
+                                    mapNode.set("custom-key", "b");
+                                }
+                        )
                 )
         );
     }

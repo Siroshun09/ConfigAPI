@@ -37,14 +37,8 @@ class CommentTest {
     @ParameterizedTest
     @MethodSource("commentedComponents")
     <R extends Record> void testCommentedComponents(@NotNull RecordTestCase<R> testCase) {
-        var expectedMapNode = testCase.expectedMapNode();
-
-        NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(testCase.expectedRecord()));
-
-        var expectedRecord = testCase.expectedRecord();
-
-        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()).deserialize(expectedMapNode));
-        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord).deserialize(expectedMapNode));
+        testCase.testDefaultSerializers();
+        testCase.testDefaultDeserializers();
     }
 
     private static @NotNull Stream<RecordTestCase<?>> commentedComponents() {
@@ -69,7 +63,7 @@ class CommentTest {
                         new Inlined(new StringPair("key", "value")),
                         mapNode -> {
                             mapNode.set("left", CommentableNode.withComment(StringValue.fromString("key"), SimpleComment.create("left")));
-                            mapNode.set("right",  CommentableNode.withComment(StringValue.fromString("value"), SimpleComment.create("right")));
+                            mapNode.set("right", CommentableNode.withComment(StringValue.fromString("value"), SimpleComment.create("right")));
                         }
                 )
         );
@@ -108,7 +102,7 @@ class CommentTest {
                         new Inlined(new StringPair("left", "right")),
                         mapNode -> {
                             mapNode.set("left", CommentableNode.withComment(StringValue.fromString("left"), SimpleComment.create("left")));
-                            mapNode.set("right",  CommentableNode.withComment(StringValue.fromString("right"), SimpleComment.create("right")));
+                            mapNode.set("right", CommentableNode.withComment(StringValue.fromString("right"), SimpleComment.create("right")));
                         }
                 )
         );
@@ -123,7 +117,8 @@ class CommentTest {
     private record Nested(@Comment(value = "nested", type = "block") Commented commented) {
     }
 
-    private record StringPair(@Comment("left") @DefaultString("left") String left, @Comment("right") @DefaultString("right") String right) {
+    private record StringPair(@Comment("left") @DefaultString("left") String left,
+                              @Comment("right") @DefaultString("right") String right) {
     }
 
     private record Inlined(@Inline StringPair pair) {

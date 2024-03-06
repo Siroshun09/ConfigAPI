@@ -17,19 +17,84 @@
 package com.github.siroshun09.configapi.core.serialization.record;
 
 import com.github.siroshun09.configapi.core.node.MapNode;
+import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.function.Consumer;
 
-record RecordTestCase<R extends Record>(@NotNull R expectedRecord, @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
+record RecordTestCase<R extends Record>(@NotNull R expectedRecord, @NotNull MapNode expectedMapNode,
+                                        @NotNull Class<R> recordClass) {
 
+    @SuppressWarnings("unchecked")
     static <R extends Record> @NotNull RecordTestCase<R> create(@NotNull R expectedRecord, @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
-        return new RecordTestCase<>(expectedRecord, expectedMapNodeBuilder);
+        var mapNode = MapNode.create();
+        expectedMapNodeBuilder.accept(mapNode);
+        return new RecordTestCase<>(expectedRecord, mapNode.asView(), (Class<R>) expectedRecord.getClass());
     }
 
-    @NotNull MapNode expectedMapNode() {
-        var mapNode = MapNode.create();
-        this.expectedMapNodeBuilder.accept(mapNode);
-        return mapNode;
+    void testDefaults() {
+        this.testDefaultSerializers();
+        this.testDefaultDeserializers();
+        this.testDefaultSerializations();
+    }
+
+    void testSerialize(@NotNull RecordSerializer<? super R> serializer) {
+        NodeAssertion.assertEquals(this.expectedMapNode, serializer.serialize(this.expectedRecord));
+    }
+
+    @SafeVarargs
+    final void testSerialize(@NotNull RecordSerializer<? super R> @NotNull ... serializers) {
+        for (var serializer : serializers) {
+            this.testSerialize(serializer);
+        }
+    }
+
+    void testDefaultSerializers() {
+        this.testSerialize(
+                RecordSerializer.serializer(),
+                RecordSerializer.<R>builder().build()
+        );
+    }
+
+    void testDeserialize(@NotNull RecordDeserializer<? extends R> deserializer) {
+        Assertions.assertEquals(this.expectedRecord, deserializer.deserialize(this.expectedMapNode));
+    }
+
+    @SafeVarargs
+    final void testDeserialize(@NotNull RecordDeserializer<? extends R> @NotNull ... deserializers) {
+        for (var deserializer : deserializers) {
+            this.testDeserialize(deserializer);
+        }
+    }
+
+    void testDefaultDeserializers() {
+        this.testDeserialize(
+                RecordDeserializer.create(this.recordClass),
+                RecordDeserializer.create(this.expectedRecord),
+                RecordDeserializer.builder(this.recordClass).build(),
+                RecordDeserializer.builder(this.expectedRecord).build()
+        );
+    }
+
+    void testSerialization(@NotNull RecordSerialization<R> serialization) {
+        this.testSerialize(serialization.serializer());
+        this.testDeserialize(serialization.deserializer());
+    }
+
+    @SafeVarargs
+    final void testSerialization(@NotNull RecordSerialization<R> @NotNull ... serializations) {
+        for (var serialization : serializations) {
+            this.testSerialization(serialization);
+        }
+    }
+
+    void testDefaultSerializations() {
+        this.testSerialization(
+                RecordSerialization.create(this.recordClass),
+                RecordSerialization.create(this.expectedRecord),
+                RecordSerialization.builder(this.recordClass).build(),
+                RecordSerialization.builder(this.expectedRecord).build()
+        );
     }
 }

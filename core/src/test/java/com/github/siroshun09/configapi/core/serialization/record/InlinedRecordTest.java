@@ -22,9 +22,7 @@ import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.annotation.Comment;
 import com.github.siroshun09.configapi.core.serialization.annotation.Inline;
-import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -37,18 +35,8 @@ class InlinedRecordTest {
     @ParameterizedTest
     @MethodSource("testCases")
     <R extends Record> void testInlinedRecord(@NotNull RecordTestCase<R> testCase) {
-        var expectedRecord = testCase.expectedRecord();
-        var expectedMapNode = testCase.expectedMapNode();
-
-        { // by using expectedRecord as default record
-            NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(expectedRecord));
-            Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord).deserialize(expectedMapNode));
-        }
-
-        { // by using expectedRecord's class
-            NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serialize(expectedRecord));
-            Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()).deserialize(expectedMapNode));
-        }
+        testCase.testDefaultSerializers();
+        testCase.testDefaultDeserializers();
     }
 
     private static @NotNull Stream<RecordTestCase<?>> testCases() {
