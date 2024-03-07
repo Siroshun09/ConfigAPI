@@ -24,13 +24,22 @@ import org.junit.jupiter.api.Assertions;
 import java.util.function.Consumer;
 
 record RecordTestCase<R extends Record>(@NotNull R expectedRecord, @NotNull MapNode expectedMapNode,
-                                        @NotNull Class<R> recordClass) {
+                                        @NotNull Class<R> recordClass, @NotNull MapNode deserializingMapNode) {
 
     @SuppressWarnings("unchecked")
     static <R extends Record> @NotNull RecordTestCase<R> create(@NotNull R expectedRecord, @NotNull Consumer<MapNode> expectedMapNodeBuilder) {
         var mapNode = MapNode.create();
         expectedMapNodeBuilder.accept(mapNode);
-        return new RecordTestCase<>(expectedRecord, mapNode.asView(), (Class<R>) expectedRecord.getClass());
+        return new RecordTestCase<>(expectedRecord, mapNode.asView(), (Class<R>) expectedRecord.getClass(), mapNode);
+    }
+
+    @SuppressWarnings("unchecked")
+    static <R extends Record> @NotNull RecordTestCase<R> create(@NotNull R expectedRecord, @NotNull Consumer<MapNode> expectedMapNodeBuilder, @NotNull Consumer<MapNode> deserializingMapNodeBuilder) {
+        var expectedMapNode = MapNode.create();
+        expectedMapNodeBuilder.accept(expectedMapNode);
+        var deserializingMapNode = MapNode.create();
+        deserializingMapNodeBuilder.accept(deserializingMapNode);
+        return new RecordTestCase<>(expectedRecord, expectedMapNode.asView(), (Class<R>) expectedRecord.getClass(), deserializingMapNode);
     }
 
     void testDefaults() {
@@ -58,7 +67,7 @@ record RecordTestCase<R extends Record>(@NotNull R expectedRecord, @NotNull MapN
     }
 
     void testDeserialize(@NotNull RecordDeserializer<? extends R> deserializer) {
-        Assertions.assertEquals(this.expectedRecord, deserializer.deserialize(this.expectedMapNode));
+        Assertions.assertEquals(this.expectedRecord, deserializer.deserialize(this.deserializingMapNode));
     }
 
     @SafeVarargs
