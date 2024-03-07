@@ -56,6 +56,10 @@ final class SerializerRegistryImpl<S> extends AbstractRegistry<Serializer<?, S>>
             this.throwISE();
         }
 
+        if (registry instanceof EmptySerializerRegistry) {
+            return this;
+        }
+
         if (registry instanceof SerializationRegistryImpl<S>.ReferenceSerializerRegistry other) {
             var map = other.ref().getMap();
             var newMap = new HashMap<Class<?>, Serializer<?, S>>(map.size(), 1.0f);

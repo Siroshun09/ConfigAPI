@@ -84,6 +84,8 @@ class DeserializerRegistryTest {
 
         Assertions.assertSame(INT_DESERIALIZER, registry.get(Integer.class));
         Assertions.assertSame(LONG_DESERIALIZER, registry.get(Long.class));
+
+        Assertions.assertDoesNotThrow(() -> registry.registerAll(DeserializerRegistry.empty()));
     }
 
     private static @NotNull Stream<DeserializerRegistry<String>> createRegistry() {

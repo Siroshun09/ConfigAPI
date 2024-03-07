@@ -61,6 +61,10 @@ final class SerializationRegistryImpl<S> extends AbstractRegistry<Serialization<
             this.throwISE();
         }
 
+        if (registry instanceof EmptySerializationRegistry) {
+            return this;
+        }
+
         this.registerAll(((SerializationRegistryImpl<S>) registry).getMap());
         return this;
     }
@@ -117,6 +121,10 @@ final class SerializationRegistryImpl<S> extends AbstractRegistry<Serialization<
 
             if (this.ref().isFrozen()) {
                 this.ref().throwISE();
+            }
+
+            if (registry instanceof SerializerRegistryImpl.EmptySerializerRegistry) {
+                return this;
             }
 
             if (registry instanceof ReferenceSerializerRegistry other) {
@@ -197,6 +205,10 @@ final class SerializationRegistryImpl<S> extends AbstractRegistry<Serialization<
 
             if (this.ref().isFrozen()) {
                 this.ref().throwISE();
+            }
+
+            if (registry instanceof DeserializerRegistryImpl.EmptyDeserializerRegistry) {
+                return this;
             }
 
             if (registry instanceof ReferenceDeserializerRegistry other) {

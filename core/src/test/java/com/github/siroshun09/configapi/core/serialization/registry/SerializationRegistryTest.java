@@ -89,6 +89,8 @@ class SerializationRegistryTest {
 
         Assertions.assertSame(INT_SERIALIZATION, registry.get(Integer.class));
         Assertions.assertSame(LONG_SERIALIZATION, registry.get(Long.class));
+
+        Assertions.assertDoesNotThrow(() -> registry.registerAll(SerializationRegistry.empty()));
     }
 
     @Test
