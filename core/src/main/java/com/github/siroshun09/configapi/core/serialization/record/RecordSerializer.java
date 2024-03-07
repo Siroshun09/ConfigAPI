@@ -81,7 +81,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
      */
     @SuppressWarnings("unchecked")
     public static <R extends Record> @NotNull RecordSerializer<R> create(@NotNull KeyGenerator keyGenerator) {
-        return keyGenerator == KeyGenerator.AS_IS ? DEFAULT : new RecordSerializer<>(SerializerRegistry.empty(), keyGenerator);
+        return keyGenerator == KeyGenerator.AS_IS ? DEFAULT : new RecordSerializer<>(SerializerRegistry.empty(), Objects.requireNonNull(keyGenerator));
     }
 
     /**
@@ -109,7 +109,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
      */
     @Override
     public @NotNull MapNode serialize(@NotNull R input) throws SerializationException {
-        return this.serialize0(input);
+        return this.serialize0(Objects.requireNonNull(input));
     }
 
     /**
@@ -120,7 +120,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
      * @throws SerializationException if {@link Serializer} for the custom objects is not found, etc
      */
     public @NotNull MapNode serializeDefault(@NotNull Class<? extends R> clazz) throws SerializationException {
-        return this.serialize0(RecordUtils.createDefaultRecord(clazz));
+        return this.serialize0(RecordUtils.createDefaultRecord(Objects.requireNonNull(clazz)));
     }
 
     private @NotNull MapNode serialize0(@NotNull Record input) throws SerializationException {
@@ -329,12 +329,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
          * @see #create(KeyGenerator)
          */
         public @NotNull RecordSerializer<R> build() {
-            if (this.serializerRegistry == null) {
-                return RecordSerializer.create(this.keyGenerator);
-            } else {
-                this.serializerRegistry.freeze();
-                return new RecordSerializer<>(this.serializerRegistry, this.keyGenerator);
-            }
+            return new RecordSerializer<>(this.getFrozenSerializerRegistry(), this.keyGenerator);
         }
 
         private @NotNull SerializerRegistry<Node<?>> getSerializerRegistry() {

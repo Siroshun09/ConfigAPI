@@ -83,7 +83,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      */
     @Contract("_, _ -> new")
     public static <R extends Record> @NotNull RecordDeserializer<R> create(@NotNull Class<? extends R> recordClass, @NotNull KeyGenerator keyGenerator) {
-        return new RecordDeserializer<>(recordClass, DeserializerRegistry.empty(), keyGenerator, null);
+        return new RecordDeserializer<>(Objects.requireNonNull(recordClass), DeserializerRegistry.empty(), Objects.requireNonNull(keyGenerator), null);
     }
 
     /**
@@ -109,7 +109,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
     @Contract("_, _ -> new")
     @SuppressWarnings("unchecked")
     public static <R extends Record> @NotNull RecordDeserializer<R> create(@NotNull R defaultRecord, @NotNull KeyGenerator keyGenerator) {
-        return new RecordDeserializer<>((Class<? extends R>) defaultRecord.getClass(), DeserializerRegistry.empty(), keyGenerator, defaultRecord);
+        return new RecordDeserializer<>((Class<? extends R>) defaultRecord.getClass(), DeserializerRegistry.empty(), Objects.requireNonNull(keyGenerator), defaultRecord);
     }
 
     /**
@@ -121,7 +121,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      */
     @Contract("_ -> new")
     public static <R extends Record> @NotNull Builder<R> builder(@NotNull Class<? extends R> recordClass) {
-        return new Builder<>(recordClass);
+        return new Builder<>(Objects.requireNonNull(recordClass));
     }
 
     /**
@@ -133,7 +133,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      */
     @Contract("_ -> new")
     public static <R extends Record> @NotNull Builder<R> builder(@NotNull R defaultRecord) {
-        return new Builder<>(defaultRecord);
+        return new Builder<>(Objects.requireNonNull(defaultRecord));
     }
 
     private final Class<? extends R> recordClass;
@@ -158,7 +158,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
      */
     @Override
     public @NotNull R deserialize(@NotNull MapNode input) throws SerializationException {
-        return this.deserializeToRecord(this.recordClass, input, () -> this.defaultRecord);
+        return this.deserializeToRecord(this.recordClass, Objects.requireNonNull(input), () -> this.defaultRecord);
     }
 
     private <T extends Record> @NotNull T deserializeToRecord(@NotNull Class<T> clazz, @NotNull MapNode input,
@@ -416,7 +416,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         private KeyGenerator keyGenerator = KeyGenerator.AS_IS;
 
         private Builder(@NotNull Class<? extends R> recordClass) {
-            this.recordClass = Objects.requireNonNull(recordClass);
+            this.recordClass = recordClass;
             this.defaultRecord = null;
         }
 

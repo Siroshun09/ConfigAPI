@@ -120,7 +120,7 @@ public final class RecordSerialization<R extends Record> implements Serializatio
      */
     @Contract(value = "_ -> new", pure = true)
     public static <R extends Record> @NotNull Builder<R> builder(@NotNull Class<? extends R> recordClass) {
-        return new Builder<>(recordClass);
+        return new Builder<>(Objects.requireNonNull(recordClass));
     }
 
     /**
