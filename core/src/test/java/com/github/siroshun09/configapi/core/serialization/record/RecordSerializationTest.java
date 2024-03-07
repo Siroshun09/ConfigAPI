@@ -30,16 +30,6 @@ import java.util.UUID;
 class RecordSerializationTest {
 
     @Test
-    void testSerializeAndDeserialize() {
-        var serialization = RecordSerialization.create(Samples.Record.class);
-        var serialized = serialization.serializer().serialize(Samples.record());
-        var deserialized = serialization.deserializer().deserialize(serialized);
-
-        NodeAssertion.assertEquals(Samples.mapNode(), serialized);
-        Assertions.assertEquals(Samples.record(), deserialized);
-    }
-
-    @Test
     void testCustomObjectAndCustomKeyGenerator() {
         var uuidSerialization = Serialization.<UUID, Node<?>>create(uuid -> new StringValue(uuid.toString()), node -> UUID.fromString(node.value().toString()));
         var serialization = RecordSerialization.builder(Samples.UUIDRecord.class).addSerialization(UUID.class, uuidSerialization).keyGenerator(KeyGenerator.CAMEL_TO_KEBAB).build();

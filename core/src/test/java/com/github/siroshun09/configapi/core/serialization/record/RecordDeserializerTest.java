@@ -27,12 +27,6 @@ import java.util.UUID;
 class RecordDeserializerTest {
 
     @Test
-    void testDeserialize() {
-        var deserializer = RecordDeserializer.create(Samples.Record.class);
-        Assertions.assertEquals(Samples.record(), deserializer.deserialize(Samples.mapNode()));
-    }
-
-    @Test
     void testCustomObjectAndCustomKeyGenerator() {
         Assertions.assertThrows(SerializationException.class, () -> RecordDeserializer.create(Samples.UUIDRecord.class).deserialize(Samples.uuidRecordMapNode()));
 

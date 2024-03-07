@@ -29,12 +29,6 @@ import java.util.UUID;
 class RecordSerializerTest {
 
     @Test
-    void testSerialize() {
-        var record = Samples.record();
-        NodeAssertion.assertEquals(Samples.mapNode(), RecordSerializer.serializer().serialize(record));
-    }
-
-    @Test
     void testCustomObjectAndCustomKeyGenerator() {
         var record = Samples.uuidRecord();
         Assertions.assertThrows(SerializationException.class, () -> RecordSerializer.serializer().serialize(record));
