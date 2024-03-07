@@ -22,13 +22,13 @@ package com.github.siroshun09.configapi.core.serialization;
 public class SerializationException extends RuntimeException {
 
     /**
-     * Creates {@link Serialization} with no message and no cause.
+     * Creates {@link SerializationException} with no message and no cause.
      */
     public SerializationException() {
     }
 
     /**
-     * Creates {@link Serialization} with the message.
+     * Creates {@link SerializationException} with the message.
      *
      * @param message the detail message
      * @see RuntimeException#RuntimeException(String)
@@ -38,7 +38,7 @@ public class SerializationException extends RuntimeException {
     }
 
     /**
-     * Creates {@link Serialization} with the message and other {@link Throwable}.
+     * Creates {@link SerializationException} with the message and other {@link Throwable}.
      *
      * @param message the detail message
      * @param cause   the caused {@link Throwable}
@@ -49,7 +49,7 @@ public class SerializationException extends RuntimeException {
     }
 
     /**
-     * Creates {@link Serialization} with other {@link Throwable}.
+     * Creates {@link SerializationException} with other {@link Throwable}.
      *
      * @param cause the caused {@link Throwable}
      * @see RuntimeException#RuntimeException(Throwable)
