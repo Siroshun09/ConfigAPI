@@ -17,14 +17,21 @@
 package com.github.siroshun09.configapi.core.serialization.record;
 
 import com.github.siroshun09.configapi.core.comment.SimpleComment;
+import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
+import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
+import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.EnumValue;
+import com.github.siroshun09.configapi.core.node.FloatArray;
+import com.github.siroshun09.configapi.core.node.IntArray;
 import com.github.siroshun09.configapi.core.node.ListNode;
+import com.github.siroshun09.configapi.core.node.LongArray;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.core.node.NumberValue;
+import com.github.siroshun09.configapi.core.node.ShortArray;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.Serializer;
@@ -184,7 +191,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
         } else if (Map.class.isAssignableFrom(obj.getClass())) {
             return serializeMap((Map<?, ?>) obj);
         } else if (obj.getClass().isArray()) {
-            return Node.fromObject(obj);
+            return this.serializeArray(obj);
         } else {
             throw new SerializationException("No serializer found for " + obj.getClass());
         }
@@ -227,6 +234,41 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
         }
 
         return mapNode;
+    }
+
+    private @NotNull Node<?> serializeArray(@NotNull Object object) {
+        var clazz = object.getClass();
+        if (clazz == int[].class) {
+            return new IntArray((int[]) object);
+        } else if (clazz == long[].class) {
+            return new LongArray((long[]) object);
+        } else if (clazz == float[].class) {
+            return new FloatArray((float[]) object);
+        } else if (clazz == double[].class) {
+            return new DoubleArray((double[]) object);
+        } else if (clazz == byte[].class) {
+            return new ByteArray((byte[]) object);
+        } else if (clazz == short[].class) {
+            return new ShortArray((short[]) object);
+        } else if (clazz == boolean[].class) {
+            return new BooleanArray((boolean[]) object);
+        } else if (!clazz.getComponentType().isPrimitive()) {
+            var array = (Object[]) object;
+
+            if (array.length == 0) {
+                return ListNode.empty();
+            } else {
+                var listNode = ListNode.create(array.length);
+
+                for (var element : array) {
+                    listNode.add(this.serializeValue(element));
+                }
+
+                return listNode;
+            }
+        } else {
+            throw new SerializationException("Unsupported array type: " + object.getClass());
+        }
     }
 
     /**
