@@ -274,7 +274,11 @@ public final class StringNodeVisitor implements NodeVisitor {
         if (num != 0) {
             this.builder.append(',');
         }
-        this.keyAppender.append(key, this.builder);
+        if (key instanceof Node<?> keyNode) {
+            keyNode.accept(this);
+        } else {
+            this.keyAppender.append(key, this.builder);
+        }
         this.builder.append('=');
         return VisitResult.CONTINUE;
     }
