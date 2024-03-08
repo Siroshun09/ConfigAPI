@@ -49,10 +49,7 @@ import org.jetbrains.annotations.NotNull;
 public final class StringNodeVisitor implements NodeVisitor {
 
     private static final Appender<String> DEFAULT_ESCAPING_STRING_APPENDER = StringNodeVisitor::appendQuoteAndEscapedString;
-
-    private static final Appender<Object> DEFAULT_KEY_APPENDER = (obj, builder) -> DEFAULT_ESCAPING_STRING_APPENDER.append(String.valueOf(obj), builder);
-
-    private static final Appender<Object> DEFAULT_OBJECT_APPENDER = (obj, builder) -> builder.append(obj);
+    private static final Appender<Object> DEFAULT_OBJECT_APPENDER = (obj, builder) -> appendQuoteAndEscapedString(String.valueOf(obj), builder);
 
     /**
      * Appends the quoted/escaped {@link String} to {@link StringBuilder}.
@@ -97,7 +94,7 @@ public final class StringNodeVisitor implements NodeVisitor {
      */
     @Contract(" -> new")
     public static @NotNull StringNodeVisitor create() {
-        return new StringNodeVisitor(new StringBuilder(), DEFAULT_ESCAPING_STRING_APPENDER, DEFAULT_KEY_APPENDER, DEFAULT_OBJECT_APPENDER);
+        return new StringNodeVisitor(new StringBuilder(), DEFAULT_ESCAPING_STRING_APPENDER, DEFAULT_OBJECT_APPENDER);
     }
 
     /**
@@ -112,14 +109,11 @@ public final class StringNodeVisitor implements NodeVisitor {
 
     private final StringBuilder builder;
     private final Appender<String> stringAppender;
-    private final Appender<Object> keyAppender;
     private final Appender<Object> objecctAppender;
 
-    private StringNodeVisitor(StringBuilder builder, Appender<String> stringAppender,
-                              Appender<Object> keyAppender, Appender<Object> objecctAppender) {
+    private StringNodeVisitor(StringBuilder builder, Appender<String> stringAppender, Appender<Object> objecctAppender) {
         this.builder = builder;
         this.stringAppender = stringAppender;
-        this.keyAppender = keyAppender;
         this.objecctAppender = objecctAppender;
     }
 
@@ -277,7 +271,7 @@ public final class StringNodeVisitor implements NodeVisitor {
         if (key instanceof Node<?> keyNode) {
             keyNode.accept(this);
         } else {
-            this.keyAppender.append(key, this.builder);
+            this.objecctAppender.append(key, this.builder);
         }
         this.builder.append('=');
         return VisitResult.CONTINUE;
@@ -354,7 +348,6 @@ public final class StringNodeVisitor implements NodeVisitor {
 
         private StringBuilder builder;
         private Appender<String> stringAppender;
-        private Appender<Object> keyAppender;
         private Appender<Object> objectAppender;
 
         private Builder() {
@@ -387,20 +380,6 @@ public final class StringNodeVisitor implements NodeVisitor {
         }
 
         /**
-         * Sets a {@link Appender} for {@link MapNode}'s keys.
-         * <p>
-         * This {@link Appender} will be used in {@link StringNodeVisitor#visitEntry(int, Object, Node)}.
-         *
-         * @param keyAppender a {@link Appender} for {@link MapNode}'s keys
-         * @return this {@link Builder} instance
-         */
-        @Contract("_ -> this")
-        public @NotNull Builder setKeyAppender(Appender<Object> keyAppender) {
-            this.keyAppender = keyAppender;
-            return this;
-        }
-
-        /**
          * Sets a {@link Appender} for {@link ObjectNode}s.
          * <p>
          * This {@link Appender} will be used in {@link StringNodeVisitor#visit(ObjectNode)}.
@@ -424,7 +403,6 @@ public final class StringNodeVisitor implements NodeVisitor {
             return new StringNodeVisitor(
                     this.builder != null ? this.builder : new StringBuilder(),
                     this.stringAppender != null ? this.stringAppender : DEFAULT_ESCAPING_STRING_APPENDER,
-                    this.keyAppender != null ? this.keyAppender : DEFAULT_KEY_APPENDER,
                     this.objectAppender != null ? this.objectAppender : DEFAULT_OBJECT_APPENDER
             );
         }
