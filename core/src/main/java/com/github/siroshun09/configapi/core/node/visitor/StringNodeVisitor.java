@@ -341,7 +341,7 @@ public final class StringNodeVisitor implements NodeVisitor {
 
                 for (int i = 0; i < this.size; i++) {
                     if (i != 0) {
-                        builder.append(", ");
+                        builder.append(',');
                     }
                     this.elementAppender.append(i, builder);
                 }
