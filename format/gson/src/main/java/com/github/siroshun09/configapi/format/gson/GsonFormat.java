@@ -40,8 +40,9 @@ import java.io.Writer;
  * <ul>
  *     <li>{@link com.github.siroshun09.configapi.core.node.ValueNode}s
  *     <ul>
+ *         <li>{@link com.github.siroshun09.configapi.core.node.CharValue} and {@link com.github.siroshun09.configapi.core.node.CharArray} is written as {@link String}</li>
  *         <li>{@link EnumValue} will be written as {@link String} using {@link Enum#name()}</li>
- *         <li>Loading {@link EnumValue} is not supported</li>
+ *         <li>Loading {@link com.github.siroshun09.configapi.core.node.CharValue}, {@link com.github.siroshun09.configapi.core.node.CharArray}, and {@link EnumValue} is not supported</li>
  *     </ul>
  *     </li>
  *     <li>{@link MapNode} and {@link ListNode}</li>

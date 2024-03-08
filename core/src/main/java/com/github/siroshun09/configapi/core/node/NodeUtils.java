@@ -55,6 +55,8 @@ final class NodeUtils {
             return NumberValue.fromNumber(number);
         } else if (value instanceof Boolean bool) {
             return BooleanValue.fromBoolean(bool);
+        } else if (value instanceof Character charValue) {
+            return new CharValue(charValue);
         } else if (value instanceof Enum enumValue) {
             return new EnumValue<>(enumValue);
         } else if (value instanceof Collection<?> collection) {
@@ -81,6 +83,8 @@ final class NodeUtils {
             return new ShortArray(array);
         } else if (value instanceof boolean[] array) {
             return new BooleanArray(array);
+        } else if (value instanceof char[] array) {
+            return new CharArray(array);
         } else if (value instanceof Object[] array) {
             return ListNode.create(Arrays.asList(array));
         } else {

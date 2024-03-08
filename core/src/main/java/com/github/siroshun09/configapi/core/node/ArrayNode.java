@@ -23,5 +23,5 @@ package com.github.siroshun09.configapi.core.node;
  *
  * @param <T> the type of the array
  */
-public sealed interface ArrayNode<T> extends Node<T> permits BooleanArray, ByteArray, DoubleArray, FloatArray, IntArray, LongArray, ShortArray {
+public sealed interface ArrayNode<T> extends Node<T> permits BooleanArray, ByteArray, CharArray, DoubleArray, FloatArray, IntArray, LongArray, ShortArray {
 }

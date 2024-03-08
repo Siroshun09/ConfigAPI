@@ -22,6 +22,8 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
@@ -109,6 +111,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         LongValue    - 0x06
         ShortValue   - 0x07
         StringValue  - 0x08
+        CharValue    - 0x09
 
       If the most significant bit is 1, it means that the data is a structure.
       The mapping to the node classes that are structures, is as follows:
@@ -122,6 +125,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         LongArray              - 0x16
         ShortArray             - 0x17
         ListNode (Only String) - 0x18
+        CharArray              - 0x19
         MapNode                - 0x1f
 
       In the case of a structure, length information is given in the "Length info" field (high 3 bits) of the header.
@@ -161,6 +165,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
     private static final byte LONG = 0x06;
     private static final byte SHORT = 0x07;
     private static final byte STRING = 0x08;
+    private static final byte CHAR = 0x09;
 
     // 0x0f cannot be used as a value type because there is no difference between Array + 0x0f and Map
     @Deprecated
@@ -269,6 +274,9 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         } else if (clazz == ByteValue.class) {
             out.writeByte(BYTE);
             out.writeByte(((ByteValue) node).asByte());
+        } else if (clazz == CharValue.class) {
+            out.writeByte(CHAR);
+            out.writeChar(((CharValue) node).asChar());
         } else if (clazz == DoubleValue.class) {
             out.writeByte(DOUBLE);
             out.writeDouble(((DoubleValue) node).asDouble());
@@ -296,6 +304,10 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
                 byte[] array = ((ByteArray) node).value();
                 writeArrayHeader(out, BYTE, array.length);
                 for (byte val : array) out.writeByte(val);
+            } else if (clazz == CharArray.class) {
+                char[] array = ((CharArray) node).value();
+                writeArrayHeader(out, CHAR, array.length);
+                for (char val : array) out.writeChar(val);
             } else if (clazz == DoubleArray.class) {
                 double[] array = ((DoubleArray) node).value();
                 writeArrayHeader(out, DOUBLE, array.length);
@@ -406,6 +418,11 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
                     for (int i = 0; i < length; i++) array[i] = in.readByte();
                     yield new ByteArray(array);
                 }
+                case CHAR -> {
+                    char[] array = new char[length];
+                    for (int i = 0; i < length; i++) array[i] = in.readChar();
+                    yield new CharArray(array);
+                }
                 case DOUBLE -> {
                     double[] array = new double[length];
                     for (int i = 0; i < length; i++) array[i] = in.readDouble();
@@ -444,6 +461,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
             case NULL -> NullNode.NULL;
             case BOOLEAN -> BooleanValue.fromBoolean(in.readBoolean());
             case BYTE -> new ByteValue(in.readByte());
+            case CHAR -> new CharValue(in.readChar());
             case DOUBLE -> new DoubleValue(in.readDouble());
             case FLOAT -> new FloatValue(in.readFloat());
             case INT -> new IntValue(in.readInt());

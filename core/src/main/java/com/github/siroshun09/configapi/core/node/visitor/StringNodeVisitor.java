@@ -20,6 +20,8 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
@@ -149,6 +151,19 @@ public final class StringNodeVisitor implements NodeVisitor {
 
     @Override
     public @NotNull VisitResult visit(@NotNull ByteValue value) {
+        this.builder.append(value.value());
+        return VisitResult.CONTINUE;
+    }
+
+    @Override
+    public @NotNull VisitResult visit(@NotNull CharArray array) {
+        char[] arr = array.value();
+        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        return VisitResult.CONTINUE;
+    }
+
+    @Override
+    public @NotNull VisitResult visit(@NotNull CharValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }

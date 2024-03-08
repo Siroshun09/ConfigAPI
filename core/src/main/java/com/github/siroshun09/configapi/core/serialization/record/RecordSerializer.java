@@ -20,6 +20,8 @@ import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
+import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.EnumValue;
@@ -167,6 +169,8 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
 
         if (clazz == Boolean.class) {
             return BooleanValue.fromBoolean((Boolean) obj);
+        } else if (clazz == Character.class) {
+            return new CharValue((Character) obj);
         } else if (clazz == String.class) {
             return StringValue.fromString((String) obj);
         } else if (Number.class.isAssignableFrom(clazz)) {
@@ -252,6 +256,8 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
             return new ShortArray((short[]) object);
         } else if (clazz == boolean[].class) {
             return new BooleanArray((boolean[]) object);
+        } else if (clazz == char[].class) {
+            return new CharArray((char[]) object);
         } else if (!clazz.getComponentType().isPrimitive()) {
             var array = (Object[]) object;
 

@@ -21,6 +21,8 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
@@ -146,6 +148,8 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
             }
         } else if (value instanceof BooleanValue booleanValue) {
             out.value(booleanValue.value());
+        } else if (value instanceof CharValue charValue) {
+            out.value(charValue.asString());
         } else if (value instanceof NullNode || value == null) {
             out.nullValue();
         } else if (value instanceof ListNode listNode) {
@@ -195,6 +199,10 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
             } else if (value instanceof BooleanArray booleanArray) {
                 for (boolean val : booleanArray.value()) {
                     out.value(val);
+                }
+            } else if (value instanceof CharArray charArray) {
+                for (char val : charArray.value()) {
+                    out.value(String.valueOf(val));
                 }
             }
 

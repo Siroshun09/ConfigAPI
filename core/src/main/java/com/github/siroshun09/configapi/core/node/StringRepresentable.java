@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * An interface that indicates the {@link Node} can be represented as a {@link String}.
  */
-public sealed interface StringRepresentable permits BooleanValue, ByteValue, DoubleValue, EnumValue, FloatValue, IntValue, LongValue, ShortValue, StringValue {
+public sealed interface StringRepresentable permits BooleanValue, ByteValue, CharValue, DoubleValue, EnumValue, FloatValue, IntValue, LongValue, ShortValue, StringValue {
 
     /**
      * Represents as a {@link String}.

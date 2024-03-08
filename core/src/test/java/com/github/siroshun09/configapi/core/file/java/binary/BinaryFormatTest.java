@@ -20,6 +20,8 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
@@ -138,6 +140,7 @@ class BinaryFormatTest {
                             Stream.of(NullNode.NULL),
                             Stream.of(BooleanValue.TRUE, BooleanValue.FALSE),
                             IntStream.of(Byte.MIN_VALUE, 0, Byte.MAX_VALUE).mapToObj(value -> new ByteValue((byte) value)),
+                            IntStream.of(Character.MIN_VALUE, 'a', Character.MAX_VALUE).mapToObj(value -> new CharValue((char) value)),
                             DoubleStream.of(Double.MIN_VALUE, 0, Double.MAX_VALUE).mapToObj(DoubleValue::new),
                             DoubleStream.of(Float.MIN_VALUE, 0, Float.MAX_VALUE).mapToObj(value -> new FloatValue((float) value)),
                             IntStream.of(Integer.MIN_VALUE, 0, Integer.MAX_VALUE).mapToObj(IntValue::new),
@@ -187,6 +190,7 @@ class BinaryFormatTest {
                     }),
                     new TestCaseBase<>("BooleanArray", length -> new BooleanArray(new boolean[length])),
                     new TestCaseBase<>("ByteArray", length -> new ByteArray(new byte[length])),
+                    new TestCaseBase<>("CharArray", length -> new CharArray(new char[length])),
                     new TestCaseBase<>("DoubleArray", length -> new DoubleArray(new double[length])),
                     new TestCaseBase<>("FloatArray", length -> new FloatArray(new float[length])),
                     new TestCaseBase<>("IntArray", length -> new IntArray(new int[length])),

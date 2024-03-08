@@ -19,6 +19,7 @@ package com.github.siroshun09.configapi.core.file.java.properties;
 import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.ByteArray;
+import com.github.siroshun09.configapi.core.node.CharArray;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.FloatArray;
@@ -115,7 +116,7 @@ class PropertiesFormatTest extends BasicFileFormatTest<MapNode, PropertiesFormat
     private @NotNull Stream<Node<?>> nonStringRepresentableNodes() {
         return Stream.of(
                 ListNode.create(), MapNode.create(), new ObjectNode<>(new Object()),
-                new BooleanArray(new boolean[0]), new ByteArray(new byte[0]), new DoubleArray(new double[0]),
+                new BooleanArray(new boolean[0]), new ByteArray(new byte[0]), new CharArray(new char[0]), new DoubleArray(new double[0]),
                 new FloatArray(new float[0]), new IntArray(new int[0]), new LongArray(new long[0]), new ShortArray(new short[0])
         );
     }

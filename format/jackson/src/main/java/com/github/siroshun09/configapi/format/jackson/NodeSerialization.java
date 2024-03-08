@@ -29,6 +29,8 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
@@ -116,6 +118,8 @@ public final class NodeSerialization {
                 }
             } else if (value instanceof BooleanValue booleanValue) {
                 gen.writeBoolean(booleanValue.asBoolean());
+            } else if (value instanceof CharValue charValue) {
+                gen.writeString(charValue.asString());
             } else if (value instanceof NullNode || value == null) {
                 gen.writeNull();
             } else if (value instanceof ListNode listNode) {
@@ -165,6 +169,10 @@ public final class NodeSerialization {
                 } else if (value instanceof BooleanArray booleanArray) {
                     for (boolean val : booleanArray.value()) {
                         gen.writeBoolean(val);
+                    }
+                } else if (value instanceof CharArray charArray) {
+                    for (char val : charArray.value()) {
+                        gen.writeString(String.valueOf(val));
                     }
                 }
 

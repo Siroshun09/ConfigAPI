@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> a type of value
  */
 // immutable and non-null
-public sealed interface ValueNode<T> extends Node<T> permits BooleanValue, EnumValue, NumberValue, StringValue {
+public sealed interface ValueNode<T> extends Node<T> permits BooleanValue, CharValue, EnumValue, NumberValue, StringValue {
 
     @Override
     @NotNull T value();

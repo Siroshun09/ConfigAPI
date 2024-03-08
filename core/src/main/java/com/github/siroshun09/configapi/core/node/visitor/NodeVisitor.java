@@ -20,6 +20,8 @@ import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
 import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
@@ -86,6 +88,22 @@ public interface NodeVisitor {
      * @return a {@link VisitResult}
      */
     @NotNull VisitResult visit(@NotNull ByteValue value);
+
+    /**
+     * Visits a {@link CharArray}.
+     *
+     * @param array a {@link CharArray} being visited
+     * @return a {@link VisitResult}
+     */
+    @NotNull VisitResult visit(@NotNull CharArray array);
+
+    /**
+     * Visits a {@link CharValue}.
+     *
+     * @param value a {@link CharValue} being visited
+     * @return a {@link VisitResult}
+     */
+    @NotNull VisitResult visit(@NotNull CharValue value);
 
     /**
      * Visits a {@link DoubleArray}.
@@ -242,7 +260,7 @@ public interface NodeVisitor {
      * </ul>
      *
      * @param num  the number of the entry in the map
-     * @param key the key of the entry
+     * @param key  the key of the entry
      * @param node the value of the entry
      * @return a {@link VisitResult}
      */

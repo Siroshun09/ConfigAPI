@@ -19,6 +19,8 @@ package com.github.siroshun09.configapi.core.serialization.record;
 import com.github.siroshun09.configapi.core.node.BooleanArray;
 import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
+import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.EnumValue;
@@ -238,6 +240,8 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
             return this.deserializeNode(commentedNode.node(), clazz, defaultValueSupplier);
         } else if (clazz == boolean.class || clazz == Boolean.class) {
             return node instanceof BooleanValue booleanValue ? booleanValue.value() : defaultValueSupplier.get();
+        } else if (clazz == char.class || clazz == Character.class) {
+            return node instanceof CharValue charValue ? charValue.value() : defaultValueSupplier.get();
         } else if (clazz == String.class) {
             return node instanceof StringValue stringValue ? stringValue.asString() : defaultValueSupplier.get();
         } else if (Enum.class.isAssignableFrom(clazz)) {
@@ -359,6 +363,8 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
             return node instanceof ShortArray shortArray ? shortArray.value() : defaultArraySupplier.get();
         } else if (clazz == boolean[].class) {
             return node instanceof BooleanArray booleanArray ? booleanArray.value() : defaultArraySupplier.get();
+        } else if (clazz == char[].class) {
+            return node instanceof CharArray charArray ? charArray.value() : defaultArraySupplier.get();
         } else if (node instanceof ListNode listNode) {
             var list = listNode.value();
             var componentType = clazz.getComponentType();
