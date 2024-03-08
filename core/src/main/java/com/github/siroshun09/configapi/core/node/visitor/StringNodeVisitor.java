@@ -337,6 +337,7 @@ public final class StringNodeVisitor implements NodeVisitor {
 
     }
 
+    @FunctionalInterface
     private interface ElementAppender {
         void append(int index, @NotNull StringBuilder builder);
     }
