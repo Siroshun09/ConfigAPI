@@ -19,6 +19,7 @@ package com.github.siroshun09.configapi.core.serialization.record;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultBoolean;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultByte;
+import com.github.siroshun09.configapi.core.serialization.annotation.DefaultChar;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultDouble;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultEnum;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultField;
@@ -153,6 +154,9 @@ final class RecordUtils {
         } else if (clazz == boolean.class || clazz == Boolean.class) {
             var annotation = component.getDeclaredAnnotation(DefaultBoolean.class);
             return annotation != null ? annotation.value() : null;
+        } else if (clazz == char.class || clazz == Character.class) {
+            var annotation = component.getDeclaredAnnotation(DefaultChar.class);
+            return annotation != null ? annotation.value() : null;
         } else if (clazz == byte.class || clazz == Byte.class) {
             var annotation = component.getDeclaredAnnotation(DefaultByte.class);
             return annotation != null ? annotation.value() : null;
@@ -192,6 +196,10 @@ final class RecordUtils {
             return (byte) 0;
         } else if (clazz == Byte.class) {
             return defaultNull ? null : (byte) 0;
+        } else if (clazz == char.class) {
+            return Character.MIN_VALUE;
+        } else if (clazz == Character.class) {
+            return defaultNull ? null : Character.MIN_VALUE;
         } else if (clazz == double.class) {
             return 0.0;
         } else if (clazz == Double.class) {
@@ -212,13 +220,13 @@ final class RecordUtils {
             return (short) 0;
         } else if (clazz == Short.class) {
             return defaultNull ? null : (short) 0;
-        }  else if (CollectionUtils.isSupportedCollectionType(clazz)) {
+        } else if (CollectionUtils.isSupportedCollectionType(clazz)) {
             return defaultNull ? null : CollectionUtils.emptyCollection(clazz);
         } else if (clazz == Map.class) {
             return defaultNull ? null : Collections.emptyMap();
         } else if (clazz.isArray()) {
             return defaultNull ? null : Array.newInstance(clazz.getComponentType(), 0);
-        }else if (clazz.isRecord()) {
+        } else if (clazz.isRecord()) {
             return defaultNull ? null : createDefaultRecord(clazz);
         } else {
             return null;

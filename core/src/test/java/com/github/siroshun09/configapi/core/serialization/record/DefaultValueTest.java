@@ -16,12 +16,14 @@
 
 package com.github.siroshun09.configapi.core.serialization.record;
 
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.NumberValue;
 import com.github.siroshun09.configapi.core.serialization.SerializationException;
 import com.github.siroshun09.configapi.core.serialization.annotation.CollectionType;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultBoolean;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultByte;
+import com.github.siroshun09.configapi.core.serialization.annotation.DefaultChar;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultDouble;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultEnum;
 import com.github.siroshun09.configapi.core.serialization.annotation.DefaultField;
@@ -70,10 +72,11 @@ class DefaultValueTest {
     private static Stream<RecordTestCase<?>> testCases() {
         return Stream.of(
                 create(
-                        new DefaultPrimitiveValues(true, (byte) 10, 3.14, 3.14f, 10, 10L, (short) 10),
+                        new DefaultPrimitiveValues(true, (byte) 10, 'a', 3.14, 3.14f, 10, 10L, (short) 10),
                         mapNode -> {
                             mapNode.set("booleanValue", true);
                             mapNode.set("byteValue", NumberValue.fromNumber((byte) 10));
+                            mapNode.set("charValue", new CharValue('a'));
                             mapNode.set("doubleValue", 3.14);
                             mapNode.set("floatValue", 3.14f);
                             mapNode.set("intValue", 10);
@@ -101,6 +104,7 @@ class DefaultValueTest {
                         new ImplicitlyDefaultValues(
                                 false,
                                 (byte) 0,
+                                Character.MIN_VALUE,
                                 0.0,
                                 0.0f,
                                 0,
@@ -108,6 +112,7 @@ class DefaultValueTest {
                                 (short) 0,
                                 false,
                                 (byte) 0,
+                                Character.MIN_VALUE,
                                 0.0,
                                 0.0f,
                                 0,
@@ -123,6 +128,7 @@ class DefaultValueTest {
                         mapNode -> {
                             mapNode.set("booleanValue", false);
                             mapNode.set("byteValue", 0);
+                            mapNode.set("charValue", Character.MIN_VALUE);
                             mapNode.set("doubleValue", 0);
                             mapNode.set("floatValue", 0);
                             mapNode.set("intValue", 0);
@@ -130,6 +136,7 @@ class DefaultValueTest {
                             mapNode.set("shortValue", 0);
                             mapNode.set("wrappedBooleanValue", false);
                             mapNode.set("wrappedByteValue", 0);
+                            mapNode.set("wrappedCharValue",  Character.MIN_VALUE);
                             mapNode.set("wrappedDoubleValue", 0);
                             mapNode.set("wrappedFloatValue", 0);
                             mapNode.set("wrappedIntValue", 0);
@@ -147,6 +154,7 @@ class DefaultValueTest {
                         new ImplicitlyDefaultArrays(
                                 new boolean[0],
                                 new byte[0],
+                                new char[0],
                                 new double[0],
                                 new float[0],
                                 new int[0],
@@ -157,6 +165,7 @@ class DefaultValueTest {
                         mapNode -> {
                             mapNode.set("booleanArray", new boolean[0]);
                             mapNode.set("byteArray", new byte[0]);
+                            mapNode.set("charArray", new char[0]);
                             mapNode.set("doubleArray", new double[0]);
                             mapNode.set("floatArray", new float[0]);
                             mapNode.set("intArray", new int[0]);
@@ -166,7 +175,7 @@ class DefaultValueTest {
                         }
                 ),
                 create(
-                        new DefaultNullValues(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                        new DefaultNullValues(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                         mapNode -> { // All values are null, so they are not stored to MapNode
                         }
                 ),
@@ -202,6 +211,7 @@ class DefaultValueTest {
     private record DefaultPrimitiveValues(
             @DefaultBoolean(true) boolean booleanValue,
             @DefaultByte(10) byte byteValue,
+            @DefaultChar('a') char charValue,
             @DefaultDouble(3.14) double doubleValue,
             @DefaultFloat(3.14f) float floatValue,
             @DefaultInt(10) int intValue,
@@ -233,6 +243,7 @@ class DefaultValueTest {
     private record ImplicitlyDefaultValues(
             boolean booleanValue, // false
             byte byteValue, // 0
+            char charValue, // Character.MIN_VALUE
             double doubleValue, // 0.0
             float floatValue, // 0.0f
             int intValue, // 0
@@ -240,6 +251,7 @@ class DefaultValueTest {
             short shortValue, // 0
             Boolean wrappedBooleanValue, // false (Boolean.FALSE)
             Byte wrappedByteValue, // 0
+            Character wrappedCharValue, // Character.MIN_VALUE
             Double wrappedDoubleValue, // 0.0
             Float wrappedFloatValue, // 0.0f
             Integer wrappedIntValue, // 0
@@ -257,6 +269,7 @@ class DefaultValueTest {
     private record ImplicitlyDefaultArrays(
             boolean[] booleanArray,
             byte[] byteArray,
+            char[] charArray,
             double[] doubleArray,
             float[] floatArray,
             int[] intArray,
@@ -269,6 +282,7 @@ class DefaultValueTest {
             if (o instanceof ImplicitlyDefaultArrays that) {
                 return Arrays.equals(this.booleanArray, that.booleanArray) &&
                         Arrays.equals(this.byteArray, that.byteArray) &&
+                        Arrays.equals(this.charArray, that.charArray) &&
                         Arrays.equals(this.doubleArray, that.doubleArray) &&
                         Arrays.equals(this.floatArray, that.floatArray) &&
                         Arrays.equals(this.intArray, that.intArray) &&
@@ -284,6 +298,7 @@ class DefaultValueTest {
         public int hashCode() {
             int result = Arrays.hashCode(this.booleanArray);
             result = 31 * result + Arrays.hashCode(this.byteArray);
+            result = 31 * result + Arrays.hashCode(this.charArray);
             result = 31 * result + Arrays.hashCode(this.doubleArray);
             result = 31 * result + Arrays.hashCode(this.floatArray);
             result = 31 * result + Arrays.hashCode(this.intArray);
@@ -297,6 +312,7 @@ class DefaultValueTest {
     private record DefaultNullValues(
             @DefaultNull Boolean booleanValue,
             @DefaultNull Byte byteValue,
+            @DefaultNull Character charValue,
             @DefaultNull Double doubleValue,
             @DefaultNull Float floatValue,
             @DefaultNull Integer intValue,
@@ -310,6 +326,7 @@ class DefaultValueTest {
             @DefaultNull @MapType(key = String.class, value = String.class) Map<String, String> map,
             @DefaultNull boolean[] booleanArray,
             @DefaultNull byte[] byteArray,
+            @DefaultNull char[] charArray,
             @DefaultNull double[] doubleArray,
             @DefaultNull float[] floatArray,
             @DefaultNull int[] intArray,

@@ -45,12 +45,13 @@ class RecordSerializeTest {
         return Stream.of(
                 create(
                         new BasicValues(
-                                true, (byte) 10, 3.14, 6.28f, 20, 30L, (short) 40,
-                                Boolean.TRUE, (byte) 50, 0.33, 0.66f, 60, 70L, (short) 80,
+                                true, (byte) 10, 'a', 3.14, 6.28f, 20, 30L, (short) 40,
+                                Boolean.TRUE, (byte) 50, 'b', 0.33, 0.66f, 60, 70L, (short) 80,
                                 "test", ExampleEnum.B
                         ), mapNode -> {
                             mapNode.set("booleanValue", true);
                             mapNode.set("byteValue", (byte) 10);
+                            mapNode.set("charValue", 'a');
                             mapNode.set("doubleValue", 3.14);
                             mapNode.set("floatValue", 6.28f);
                             mapNode.set("intValue", 20);
@@ -58,6 +59,7 @@ class RecordSerializeTest {
                             mapNode.set("shortValue", (short) 40);
                             mapNode.set("wrappedBooleanValue", Boolean.TRUE);
                             mapNode.set("wrappedByteValue", (byte) 50);
+                            mapNode.set("wrappedCharValue", 'b');
                             mapNode.set("wrappedDoubleValue", 0.33);
                             mapNode.set("wrappedFloatValue", 0.66f);
                             mapNode.set("wrappedIntValue", 60);
@@ -85,6 +87,7 @@ class RecordSerializeTest {
                         new ArrayRecord(
                                 new boolean[]{true, false, true},
                                 new byte[]{(byte) 1, (byte) 2, (byte) 3},
+                                new char[]{'a', 'b', 'c'},
                                 new double[]{0.1, 0.2, 0.3},
                                 new float[]{0.4f, 0.5f, 0.6f},
                                 new int[]{4, 5, 6},
@@ -96,6 +99,7 @@ class RecordSerializeTest {
                         mapNode -> {
                             mapNode.set("booleanArray", new boolean[]{true, false, true});
                             mapNode.set("byteArray", new byte[]{(byte) 1, (byte) 2, (byte) 3});
+                            mapNode.set("charArray", new char[]{'a', 'b', 'c'});
                             mapNode.set("doubleArray", new double[]{0.1, 0.2, 0.3});
                             mapNode.set("floatArray", new float[]{0.4f, 0.5f, 0.6f});
                             mapNode.set("intArray", new int[]{4, 5, 6});
@@ -132,6 +136,7 @@ class RecordSerializeTest {
     private record BasicValues(
             boolean booleanValue,
             byte byteValue,
+            char charValue,
             double doubleValue,
             float floatValue,
             int intValue,
@@ -139,6 +144,7 @@ class RecordSerializeTest {
             short shortValue,
             Boolean wrappedBooleanValue,
             Byte wrappedByteValue,
+            Character wrappedCharValue,
             Double wrappedDoubleValue,
             Float wrappedFloatValue,
             Integer wrappedIntValue,
@@ -177,6 +183,7 @@ class RecordSerializeTest {
     private record ArrayRecord(
             boolean[] booleanArray,
             byte[] byteArray,
+            char[] charArray,
             double[] doubleArray,
             float[] floatArray,
             int[] intArray,
@@ -190,6 +197,7 @@ class RecordSerializeTest {
             if (o instanceof ArrayRecord that) {
                 return Arrays.equals(this.booleanArray, that.booleanArray) &&
                         Arrays.equals(this.byteArray, that.byteArray) &&
+                        Arrays.equals(this.charArray, that.charArray) &&
                         Arrays.equals(this.doubleArray, that.doubleArray) &&
                         Arrays.equals(this.floatArray, that.floatArray) &&
                         Arrays.equals(this.intArray, that.intArray) &&
@@ -206,6 +214,7 @@ class RecordSerializeTest {
         public int hashCode() {
             int result = Arrays.hashCode(this.booleanArray);
             result = 31 * result + Arrays.hashCode(this.byteArray);
+            result = 31 * result + Arrays.hashCode(this.charArray);
             result = 31 * result + Arrays.hashCode(this.doubleArray);
             result = 31 * result + Arrays.hashCode(this.floatArray);
             result = 31 * result + Arrays.hashCode(this.intArray);
