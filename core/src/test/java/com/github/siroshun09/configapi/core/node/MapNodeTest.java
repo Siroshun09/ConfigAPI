@@ -16,8 +16,9 @@
 
 package com.github.siroshun09.configapi.core.node;
 
-import com.github.siroshun09.configapi.test.shared.data.Samples;
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,28 @@ import java.util.Map;
 
 class MapNodeTest {
 
+    private static final SimpleComment COMMENT = SimpleComment.create("test");
+
+    private static @NotNull MapNode createSharedMapNode() {
+        var mapNode = MapNode.create();
+
+        mapNode.set("string", "value");
+        mapNode.set("integer", 100);
+        mapNode.set("double", 3.14);
+        mapNode.set("bool", true);
+        mapNode.set("list", List.of("A", "B", "C"));
+        mapNode.set("map", Map.of("key", "value"));
+        mapNode.set("nested", Map.of("map", Map.of("key", "value")));
+
+        return mapNode;
+    }
+
+    private enum ExampleEnum {
+        A,
+        B,
+        C
+    }
+
     @Test
     void testCreate() {
         var mapNode = MapNode.create();
@@ -34,7 +57,7 @@ class MapNodeTest {
 
         // checks if the list is modifiable
         Assertions.assertDoesNotThrow(() -> mapNode.set(1, 1));
-        Assertions.assertDoesNotThrow(() -> mapNode.setComment(Samples.comment()));
+        Assertions.assertDoesNotThrow(() -> mapNode.setComment(COMMENT));
     }
 
     @Test
@@ -50,7 +73,7 @@ class MapNodeTest {
 
         // checks if the list is modifiable
         Assertions.assertDoesNotThrow(() -> mapNode.set("e", "f"));
-        Assertions.assertDoesNotThrow(() -> mapNode.setComment(Samples.comment()));
+        Assertions.assertDoesNotThrow(() -> mapNode.setComment(COMMENT));
         Assertions.assertDoesNotThrow(() -> MapNode.create(Map.of(1, 2)).set(3, 4));
     }
 
@@ -58,7 +81,7 @@ class MapNodeTest {
     void testEmpty() {
         Assertions.assertTrue(MapNode.empty().value().isEmpty());
         Assertions.assertThrows(UnsupportedOperationException.class, () -> MapNode.empty().set(1, 2));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> MapNode.empty().setComment(Samples.comment()));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> MapNode.empty().setComment(COMMENT));
     }
 
     @Test
@@ -106,11 +129,11 @@ class MapNodeTest {
         Assertions.assertEquals(Map.of("a", new StringValue("c")), mapNode.value());
 
         var commented = MapNode.create(Map.of("x", "y"));
-        commented.setComment(Samples.comment());
+        commented.setComment(COMMENT);
         mapNode.set("commented", commented);
         NodeAssertion.assertEquals(commented, mapNode.get("commented"));
         mapNode.set("commented", "new");
-        NodeAssertion.assertEquals(new CommentedNode<>(new StringValue("new"), Samples.comment()), mapNode.get("commented"));
+        NodeAssertion.assertEquals(new CommentedNode<>(new StringValue("new"), COMMENT), mapNode.get("commented"));
     }
 
     @Test
@@ -127,20 +150,20 @@ class MapNodeTest {
     @Test
     void testClear() {
         var mapNode = MapNode.create(Map.of("a", "b", 1, 2));
-        mapNode.setComment(Samples.comment());
+        mapNode.setComment(COMMENT);
 
         mapNode.clear();
 
         Assertions.assertTrue(mapNode.value().isEmpty());
         Assertions.assertSame(NullNode.NULL, mapNode.get("a"));
         Assertions.assertSame(NullNode.NULL, mapNode.get(1));
-        Assertions.assertEquals(Samples.comment(), mapNode.getCommentOrNull()); // comment should not be cleared
+        Assertions.assertEquals(COMMENT, mapNode.getCommentOrNull()); // comment should not be cleared
     }
 
     @Test
     void testCopy() {
         var mapNode = MapNode.create(Map.of("a", "b"));
-        mapNode.setComment(Samples.comment());
+        mapNode.setComment(COMMENT);
         var copied = mapNode.copy();
 
         mapNode.set("c", 3);
@@ -164,7 +187,7 @@ class MapNodeTest {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("e", "f"));
         Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("c", "f"));
         Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("a", null));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> view.setComment(Samples.comment()));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> view.setComment(COMMENT));
 
         Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new StringValue("d")), mapNode.value());
         Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new StringValue("d")), view.value());
@@ -172,13 +195,13 @@ class MapNodeTest {
 
     @Test
     void testList() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         NodeAssertion.assertEquals(ListNode.create(List.of("A", "B", "C")), mapNode.getList("list"));
         Assertions.assertSame(ListNode.empty(), mapNode.getList("string"));
 
         Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getList("list").add("D"));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getList("list").setComment(Samples.comment()));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getList("list").setComment(COMMENT));
 
         NodeAssertion.assertEquals(ListNode.create(List.of("A", "B", "C")), mapNode.getOrCreateList("list"));
 
@@ -194,13 +217,13 @@ class MapNodeTest {
 
     @Test
     void testMap() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         NodeAssertion.assertEquals(MapNode.create(Map.of("key", "value")), mapNode.getMap("map"));
         Assertions.assertSame(MapNode.empty(), mapNode.getMap("string"));
 
         Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getMap("map").set("a", "b"));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getMap("map").setComment(Samples.comment()));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getMap("map").setComment(COMMENT));
 
         NodeAssertion.assertEquals(MapNode.create(Map.of("key", "value")), mapNode.getOrCreateMap("map"));
 
@@ -216,7 +239,7 @@ class MapNodeTest {
 
     @Test
     void testString() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         Assertions.assertEquals("value", mapNode.getString("string"));
         Assertions.assertEquals("", mapNode.getString("integer"));
@@ -230,28 +253,28 @@ class MapNodeTest {
 
     @Test
     void testEnum() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
-        mapNode.set("enum", Samples.Enum.A);
+        mapNode.set("enum", ExampleEnum.A);
         mapNode.set("enum-name", "B");
         mapNode.set("enum-lower-name", "b");
 
-        Assertions.assertEquals(Samples.Enum.A, mapNode.getEnum("enum", Samples.Enum.class));
-        Assertions.assertEquals(Samples.Enum.B, mapNode.getEnum("enum-name", Samples.Enum.class));
-        Assertions.assertNull(mapNode.getEnum("string", Samples.Enum.class));
-        Assertions.assertNull(mapNode.getEnum("integer", Samples.Enum.class));
+        Assertions.assertEquals(ExampleEnum.A, mapNode.getEnum("enum", ExampleEnum.class));
+        Assertions.assertEquals(ExampleEnum.B, mapNode.getEnum("enum-name", ExampleEnum.class));
+        Assertions.assertNull(mapNode.getEnum("string", ExampleEnum.class));
+        Assertions.assertNull(mapNode.getEnum("integer", ExampleEnum.class));
 
-        Assertions.assertEquals(Samples.Enum.A, mapNode.getEnum("enum", Samples.Enum.C));
-        Assertions.assertEquals(Samples.Enum.B, mapNode.getEnum("enum-name", Samples.Enum.C));
-        Assertions.assertEquals(Samples.Enum.C, mapNode.getEnum("string", Samples.Enum.C));
-        Assertions.assertEquals(Samples.Enum.C, mapNode.getEnum("integer", Samples.Enum.C));
+        Assertions.assertEquals(ExampleEnum.A, mapNode.getEnum("enum", ExampleEnum.C));
+        Assertions.assertEquals(ExampleEnum.B, mapNode.getEnum("enum-name", ExampleEnum.C));
+        Assertions.assertEquals(ExampleEnum.C, mapNode.getEnum("string", ExampleEnum.C));
+        Assertions.assertEquals(ExampleEnum.C, mapNode.getEnum("integer", ExampleEnum.C));
 
-        Assertions.assertEquals(Samples.Enum.B, mapNode.getEnum("enum-lower-name", Samples.Enum.C));
+        Assertions.assertEquals(ExampleEnum.B, mapNode.getEnum("enum-lower-name", ExampleEnum.C));
     }
 
     @Test
     void testBoolean() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         Assertions.assertTrue(mapNode.getBoolean("bool"));
         Assertions.assertFalse(mapNode.getBoolean("string"));
@@ -262,7 +285,7 @@ class MapNodeTest {
 
     @Test
     void testInteger() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         Assertions.assertEquals(100, mapNode.getInteger("integer"));
         Assertions.assertEquals(3, mapNode.getInteger("double"));
@@ -272,7 +295,7 @@ class MapNodeTest {
 
     @Test
     void testLong() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         Assertions.assertEquals(100, mapNode.getLong("integer"));
         Assertions.assertEquals(3, mapNode.getLong("double"));
@@ -282,7 +305,7 @@ class MapNodeTest {
 
     @Test
     void testFloat() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         Assertions.assertEquals(100f, mapNode.getFloat("integer"));
         Assertions.assertEquals(3.14f, mapNode.getFloat("double"));
@@ -292,7 +315,7 @@ class MapNodeTest {
 
     @Test
     void testDouble() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         Assertions.assertEquals(100, mapNode.getDouble("integer"));
         Assertions.assertEquals(3.14, mapNode.getDouble("double"));
@@ -302,7 +325,7 @@ class MapNodeTest {
 
     @Test
     void testByte() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         Assertions.assertEquals(100, mapNode.getByte("integer"));
         Assertions.assertEquals(3, mapNode.getByte("double"));
@@ -312,7 +335,7 @@ class MapNodeTest {
 
     @Test
     void testShort() {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         Assertions.assertEquals(100, mapNode.getShort("integer"));
         Assertions.assertEquals(3, mapNode.getShort("double"));

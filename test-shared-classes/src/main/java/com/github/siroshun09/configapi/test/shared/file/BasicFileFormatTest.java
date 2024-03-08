@@ -17,6 +17,7 @@
 package com.github.siroshun09.configapi.test.shared.file;
 
 import com.github.siroshun09.configapi.core.file.FileFormat;
+import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import com.github.siroshun09.configapi.test.shared.util.Replacer;
@@ -35,6 +36,8 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -45,6 +48,43 @@ import java.util.stream.Stream;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileFormat<N>> {
+
+    /**
+     * Creates a sample {@link MapNode}.
+     *
+     * @return a sample {@link MapNode}
+     */
+    public static @NotNull MapNode createSharedMapNode() {
+        var mapNode = MapNode.create();
+
+        mapNode.set("string", "value");
+        mapNode.set("integer", 100);
+        mapNode.set("double", 3.14);
+        mapNode.set("bool", true);
+        mapNode.set("list", List.of("A", "B", "C"));
+        mapNode.set("map", Map.of("key", "value"));
+        mapNode.set("nested", Map.of("map", Map.of("key", "value")));
+
+        return mapNode;
+    }
+
+    /**
+     * An enum that can be used for testing.
+     */
+    public enum SharedEnum {
+        /**
+         * Sample enum value: A
+         */
+        A,
+        /**
+         * Sample enum value: B
+         */
+        B,
+        /**
+         * Sample enum value: C
+         */
+        C
+    }
 
     @ParameterizedTest
     @MethodSource("samples")

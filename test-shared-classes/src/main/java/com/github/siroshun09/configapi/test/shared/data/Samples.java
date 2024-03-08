@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.configapi.test.shared.data;
 
-import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,35 +44,6 @@ public final class Samples {
         mapNode.set("nested", Map.of("map", Map.of("key", "value")));
 
         return mapNode;
-    }
-
-    /**
-     * An enum that is used for {@link #mapNode()} and {@link Record}.
-     */
-    public enum Enum {
-        /**
-         * Sample enum value: A
-         */
-        A,
-        /**
-         * Sample enum value: B
-         */
-        B,
-        /**
-         * Sample enum value: C
-         */
-        C
-    }
-
-    private static final SimpleComment COMMENT = SimpleComment.create("sample comment");
-
-    /**
-     * Gets a {@link SimpleComment} ("sample comment").
-     *
-     * @return {@link SimpleComment} ("sample comment")
-     */
-    public static @NotNull SimpleComment comment() {
-        return COMMENT;
     }
 
     private Samples() {

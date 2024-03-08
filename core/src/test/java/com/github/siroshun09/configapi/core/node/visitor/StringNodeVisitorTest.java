@@ -16,6 +16,7 @@
 
 package com.github.siroshun09.configapi.core.node.visitor;
 
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
 import com.github.siroshun09.configapi.test.shared.data.Samples;
@@ -44,7 +45,7 @@ class StringNodeVisitorTest {
         var node = Samples.mapNode();
 
         node.set("array", new int[]{1, 2, 3});
-        node.set("commented", CommentableNode.withComment(StringValue.fromString("commented"), Samples.comment()));
+        node.set("commented", CommentableNode.withComment(StringValue.fromString("commented"), SimpleComment.create("test")));
         node.set("test's \"key\"", "test's \"value\"");
 
         node.accept(visitor);

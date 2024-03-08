@@ -39,7 +39,6 @@ import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.core.node.ShortArray;
 import com.github.siroshun09.configapi.core.node.ShortValue;
 import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -58,6 +57,8 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
+
+import static com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest.createSharedMapNode;
 
 class BinaryFormatTest {
 
@@ -107,7 +108,7 @@ class BinaryFormatTest {
 
     private static @NotNull Stream<Node<?>> samples() {
         return Stream.of(
-                Samples.mapNode()
+                createSharedMapNode()
         );
     }
 

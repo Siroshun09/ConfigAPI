@@ -16,33 +16,35 @@
 
 package com.github.siroshun09.configapi.core.node;
 
-import com.github.siroshun09.configapi.test.shared.data.Samples;
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CommentableNodeTest {
 
+    private static final SimpleComment COMMENT = SimpleComment.create("test");
+
     @Test
     void testWithComment() {
-        var commentedNode = Assertions.assertInstanceOf(CommentedNode.class, CommentableNode.withComment(new StringValue("test"), Samples.comment()));
+        var commentedNode = Assertions.assertInstanceOf(CommentedNode.class, CommentableNode.withComment(new StringValue("test"), COMMENT));
 
         Assertions.assertEquals(new StringValue("test"), commentedNode.node());
         Assertions.assertEquals("test", commentedNode.value());
         Assertions.assertTrue(commentedNode.hasValue());
         Assertions.assertTrue(commentedNode.hasComment());
-        Assertions.assertEquals(Samples.comment(), commentedNode.getComment());
-        Assertions.assertEquals(Samples.comment(), commentedNode.getCommentOrNull());
+        Assertions.assertEquals(COMMENT, commentedNode.getComment());
+        Assertions.assertEquals(COMMENT, commentedNode.getCommentOrNull());
 
-        var listNode = Assertions.assertInstanceOf(ListNode.class, CommentableNode.withComment(ListNode.create(), Samples.comment()));
+        var listNode = Assertions.assertInstanceOf(ListNode.class, CommentableNode.withComment(ListNode.create(), COMMENT));
 
         Assertions.assertTrue(listNode.hasComment());
-        Assertions.assertEquals(Samples.comment(), listNode.getComment());
-        Assertions.assertEquals(Samples.comment(), listNode.getCommentOrNull());
+        Assertions.assertEquals(COMMENT, listNode.getComment());
+        Assertions.assertEquals(COMMENT, listNode.getCommentOrNull());
 
-        var mapNode = Assertions.assertInstanceOf(MapNode.class, CommentableNode.withComment(MapNode.create(), Samples.comment()));
+        var mapNode = Assertions.assertInstanceOf(MapNode.class, CommentableNode.withComment(MapNode.create(), COMMENT));
 
         Assertions.assertTrue(mapNode.hasComment());
-        Assertions.assertEquals(Samples.comment(), mapNode.getComment());
-        Assertions.assertEquals(Samples.comment(), mapNode.getCommentOrNull());
+        Assertions.assertEquals(COMMENT, mapNode.getComment());
+        Assertions.assertEquals(COMMENT, mapNode.getCommentOrNull());
     }
 }

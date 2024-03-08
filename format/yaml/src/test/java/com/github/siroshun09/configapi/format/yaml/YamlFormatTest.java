@@ -18,7 +18,6 @@ package com.github.siroshun09.configapi.format.yaml;
 
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
@@ -50,8 +49,8 @@ class YamlFormatTest extends BasicFileFormatTest<MapNode, YamlFormat> {
     @Override
     protected @NotNull Stream<Sample<MapNode, YamlFormat>> samples() {
         return Stream.of(
-                new Sample<>(YamlFormat.DEFAULT, Samples.mapNode(), SAMPLE_MAP_NODE_YAML),
-                new Sample<>(YamlFormat.COMMENT_PROCESSING, Samples.mapNode(), SAMPLE_MAP_NODE_YAML)
+                new Sample<>(YamlFormat.DEFAULT, createSharedMapNode(), SAMPLE_MAP_NODE_YAML),
+                new Sample<>(YamlFormat.COMMENT_PROCESSING, createSharedMapNode(), SAMPLE_MAP_NODE_YAML)
         );
     }
 
@@ -76,7 +75,7 @@ class YamlFormatTest extends BasicFileFormatTest<MapNode, YamlFormat> {
 
         try (var writer = new StringWriter()) {
             var mapNode = MapNode.create();
-            mapNode.set("enum", Samples.Enum.A);
+            mapNode.set("enum", SharedEnum.A);
             YamlFormat.DEFAULT.save(mapNode, writer);
 
             try (var reader = new StringReader(writer.toString())) {

@@ -18,7 +18,6 @@ package com.github.siroshun09.configapi.format.gson;
 
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.test.shared.data.Samples;
 import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
@@ -57,8 +56,8 @@ class GsonFormatTest extends BasicFileFormatTest<MapNode, GsonFormat> {
     @Override
     protected @NotNull Stream<Sample<MapNode, GsonFormat>> samples() {
         return Stream.of(
-                new Sample<>(GsonFormat.DEFAULT, Samples.mapNode(), JSON_EXAMPLE),
-                new Sample<>(GsonFormat.PRETTY_PRINTING, Samples.mapNode(), PRETTY_PRINTING_EXAMPLE)
+                new Sample<>(GsonFormat.DEFAULT, createSharedMapNode(), JSON_EXAMPLE),
+                new Sample<>(GsonFormat.PRETTY_PRINTING, createSharedMapNode(), PRETTY_PRINTING_EXAMPLE)
         );
     }
 
@@ -83,7 +82,7 @@ class GsonFormatTest extends BasicFileFormatTest<MapNode, GsonFormat> {
 
         try (var writer = new StringWriter()) {
             var mapNode = MapNode.create();
-            mapNode.set("enum", Samples.Enum.A);
+            mapNode.set("enum", SharedEnum.A);
             GsonFormat.DEFAULT.save(mapNode, writer);
 
             try (var reader = new StringReader(writer.toString())) {
@@ -96,7 +95,7 @@ class GsonFormatTest extends BasicFileFormatTest<MapNode, GsonFormat> {
 
     @Test
     void testDefaultAndPrettyPrinting() throws IOException {
-        var mapNode = Samples.mapNode();
+        var mapNode = createSharedMapNode();
 
         try (var writer = new StringWriter()) {
             GsonFormat.DEFAULT.save(mapNode, writer);
