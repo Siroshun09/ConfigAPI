@@ -17,7 +17,6 @@
 package com.github.siroshun09.configapi.format.yaml;
 
 import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.constructor.BaseConstructor;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
