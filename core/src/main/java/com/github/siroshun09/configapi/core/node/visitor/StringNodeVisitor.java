@@ -132,7 +132,7 @@ public final class StringNodeVisitor implements NodeVisitor {
     @Override
     public @NotNull VisitResult visit(@NotNull BooleanArray array) {
         boolean[] arr = array.value();
-        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
@@ -145,7 +145,7 @@ public final class StringNodeVisitor implements NodeVisitor {
     @Override
     public @NotNull VisitResult visit(@NotNull ByteArray array) {
         byte[] arr = array.value();
-        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
@@ -158,7 +158,7 @@ public final class StringNodeVisitor implements NodeVisitor {
     @Override
     public @NotNull VisitResult visit(@NotNull CharArray array) {
         char[] arr = array.value();
-        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
@@ -171,7 +171,7 @@ public final class StringNodeVisitor implements NodeVisitor {
     @Override
     public @NotNull VisitResult visit(@NotNull DoubleArray array) {
         double[] arr = array.value();
-        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
@@ -184,7 +184,7 @@ public final class StringNodeVisitor implements NodeVisitor {
     @Override
     public @NotNull VisitResult visit(@NotNull FloatArray array) {
         float[] arr = array.value();
-        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
@@ -197,7 +197,7 @@ public final class StringNodeVisitor implements NodeVisitor {
     @Override
     public @NotNull VisitResult visit(@NotNull IntArray array) {
         int[] arr = array.value();
-        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
@@ -210,7 +210,7 @@ public final class StringNodeVisitor implements NodeVisitor {
     @Override
     public @NotNull VisitResult visit(@NotNull LongArray array) {
         long[] arr = array.value();
-        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
@@ -223,7 +223,7 @@ public final class StringNodeVisitor implements NodeVisitor {
     @Override
     public @NotNull VisitResult visit(@NotNull ShortArray array) {
         short[] arr = array.value();
-        new ArrayAppender((i, builder) -> builder.append(arr[i]), arr.length).append(this.builder);
+        this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
@@ -311,6 +311,21 @@ public final class StringNodeVisitor implements NodeVisitor {
         return this.builder.toString();
     }
 
+    private void appendArray(int size, ElementAppender appender) {
+        if (size == 0) {
+            this.builder.append("[]");
+        } else {
+            this.builder.append('[');
+
+            for (int i = 0; i < size; i++) {
+                if (i != 0) this.builder.append(',');
+                appender.append(i, this.builder);
+            }
+
+            this.builder.append(']');
+        }
+    }
+
     /**
      * An interface to appends an object to {@link StringBuilder}.
      *
@@ -330,25 +345,6 @@ public final class StringNodeVisitor implements NodeVisitor {
 
     private interface ElementAppender {
         void append(int index, @NotNull StringBuilder builder);
-    }
-
-    private record ArrayAppender(ElementAppender elementAppender, int size) {
-        public void append(@NotNull StringBuilder builder) {
-            if (this.size == 0) {
-                builder.append("[]");
-            } else {
-                builder.append('[');
-
-                for (int i = 0; i < this.size; i++) {
-                    if (i != 0) {
-                        builder.append(',');
-                    }
-                    this.elementAppender.append(i, builder);
-                }
-
-                builder.append(']');
-            }
-        }
     }
 
     /**
