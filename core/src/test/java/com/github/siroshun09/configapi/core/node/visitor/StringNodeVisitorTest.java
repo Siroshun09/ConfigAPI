@@ -46,8 +46,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class StringNodeVisitorTest {
@@ -106,7 +108,10 @@ class StringNodeVisitorTest {
                 testCase(new ShortValue((short) 0), "0"),
                 testCase(new ShortValue((short) 1), "1"),
                 testCase(new EnumValue<>(ExampleEnum.B), "B"),
-                testCase(NullNode.NULL, "null")
+                testCase(NullNode.NULL, "null"),
+                testCase(ListNode.create(List.of("a", "b", "c")), "[a,b,c]"),
+                // Create a LinkedHashMap to avoid order issue
+                testCase(MapNode.create(Stream.of(1, 2).collect(Collectors.toMap(num -> "key_" + num, num -> "value_" + num, (key1, key2) -> key2, LinkedHashMap::new))), "{key_1=value_1,key_2=value_2}")
         ).flatMap(testCase -> Stream.of(
                 testCase,
                 // The node is in List, and Map (as both key and value)
