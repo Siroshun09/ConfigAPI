@@ -34,6 +34,7 @@ class MapNodeTest {
         var mapNode = MapNode.create();
 
         mapNode.set("string", "value");
+        mapNode.set("char", 'a');
         mapNode.set("integer", 100);
         mapNode.set("double", 3.14);
         mapNode.set("bool", true);
@@ -341,5 +342,14 @@ class MapNodeTest {
         Assertions.assertEquals(3, mapNode.getShort("double"));
         Assertions.assertEquals(0, mapNode.getShort("string"));
         Assertions.assertEquals(10, mapNode.getShort("string", (short) 10));
+    }
+
+    @Test
+    void testChar() {
+        var mapNode = MapNode.create(Map.of("char", 'a', "integer", 100));
+
+        Assertions.assertEquals('a', mapNode.getChar("char"));
+        Assertions.assertEquals(Character.MIN_VALUE, mapNode.getChar("integer"));
+        Assertions.assertEquals('b', mapNode.getChar("integer", 'b'));
     }
 }

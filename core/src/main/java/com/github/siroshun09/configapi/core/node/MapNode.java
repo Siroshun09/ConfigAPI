@@ -461,6 +461,27 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
         return this.raw(key) instanceof NumberValue value ? value.asShort() : def;
     }
 
+    /**
+     * Gets the char value to which the specified key is mapped, or {@code false}.
+     *
+     * @param key the key to get
+     * @return the char value to which the specified key is mapped, or {@link Character#MIN_VALUE} if the key is not mapped to {@link CharValue}
+     */
+    default char getChar(@NotNull Object key) {
+        return this.getChar(key, Character.MIN_VALUE);
+    }
+
+    /**
+     * Gets the char value to which the specified key is mapped, or the specified char value.
+     *
+     * @param key the key to get
+     * @param def the default value
+     * @return the char value to which the specified key is mapped, or the specified value if the key is not mapped to {@link CharValue}
+     */
+    default char getChar(@NotNull Object key, char def) {
+        return this.raw(key) instanceof CharValue charValue ? charValue.asChar() : def;
+    }
+
     private @NotNull Node<?> raw(@NotNull Object key) {
         var node = this.get(key);
         return node instanceof CommentedNode<?> commentedNode ? commentedNode.node() : node;
