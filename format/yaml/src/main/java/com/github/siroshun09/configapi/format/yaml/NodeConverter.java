@@ -18,6 +18,7 @@ package com.github.siroshun09.configapi.format.yaml;
 
 import com.github.siroshun09.configapi.core.comment.Comment;
 import com.github.siroshun09.configapi.core.comment.SimpleComment;
+import com.github.siroshun09.configapi.core.node.ArrayNode;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.EnumValue;
@@ -244,7 +245,11 @@ class NodeConverter {
         } else if (node instanceof NullNode) {
             return representer.represent(null);
         } else {
-            return representer.represent(node.value());
+            var represented = representer.represent(node.value());
+            if (node instanceof ArrayNode<?> && represented instanceof SequenceNode sequenceNode) {
+                sequenceNode.setFlowStyle(DumperOptions.FlowStyle.FLOW);
+            }
+            return represented;
         }
     }
 
