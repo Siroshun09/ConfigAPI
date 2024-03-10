@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -85,6 +86,13 @@ final class ListNodeImpl implements ListNode {
     @Override
     public void add(@NotNull Object value) {
         this.backing.add(Node.fromObject(value));
+    }
+
+    @Override
+    public void addAll(@NotNull Collection<?> collection) {
+        for (var element : collection) {
+            this.backing.add(Node.fromObject(element));
+        }
     }
 
     @Override

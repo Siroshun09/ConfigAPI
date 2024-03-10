@@ -99,6 +99,20 @@ class ListNodeTest {
     }
 
     @Test
+    void testAddAll() {
+        var listNode1 = ListNode.create();
+        listNode1.addAll(List.of("a", "b", "c"));
+        Assertions.assertEquals(3, listNode1.value().size());
+        Assertions.assertEquals(List.of("a", "b", "c"), listNode1.asList(String.class));
+
+        var listNode2 = ListNode.create(List.of("a", "b", "c"));
+        Assertions.assertEquals(3, listNode2.value().size());
+        listNode2.addAll(List.of("d", "e", "f"));
+        Assertions.assertEquals(6, listNode2.value().size());
+        Assertions.assertEquals(List.of("a", "b", "c", "d", "e", "f"), listNode2.asList(String.class));
+    }
+
+    @Test
     void testRemove() {
         var listNode = ListNode.create(List.of("a", "b", "c"));
         Assertions.assertEquals(3, listNode.value().size());
