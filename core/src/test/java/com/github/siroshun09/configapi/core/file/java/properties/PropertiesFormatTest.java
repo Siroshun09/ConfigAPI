@@ -18,56 +18,46 @@ package com.github.siroshun09.configapi.core.file.java.properties;
 
 import com.github.siroshun09.configapi.core.comment.SimpleComment;
 import com.github.siroshun09.configapi.core.node.BooleanArray;
+import com.github.siroshun09.configapi.core.node.BooleanValue;
 import com.github.siroshun09.configapi.core.node.ByteArray;
+import com.github.siroshun09.configapi.core.node.ByteValue;
 import com.github.siroshun09.configapi.core.node.CharArray;
+import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentableNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
+import com.github.siroshun09.configapi.core.node.DoubleValue;
+import com.github.siroshun09.configapi.core.node.EnumValue;
 import com.github.siroshun09.configapi.core.node.FloatArray;
+import com.github.siroshun09.configapi.core.node.FloatValue;
 import com.github.siroshun09.configapi.core.node.IntArray;
+import com.github.siroshun09.configapi.core.node.IntValue;
 import com.github.siroshun09.configapi.core.node.ListNode;
 import com.github.siroshun09.configapi.core.node.LongArray;
+import com.github.siroshun09.configapi.core.node.LongValue;
 import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.core.node.ObjectNode;
 import com.github.siroshun09.configapi.core.node.ShortArray;
-import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
-import com.github.siroshun09.configapi.test.shared.util.Replacer;
+import com.github.siroshun09.configapi.core.node.ShortValue;
+import com.github.siroshun09.configapi.core.node.StringRepresentable;
+import com.github.siroshun09.configapi.core.node.StringValue;
+import com.github.siroshun09.configapi.test.shared.file.TextFileFormatTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
-class PropertiesFormatTest extends BasicFileFormatTest<MapNode, PropertiesFormat> {
+import static com.github.siroshun09.configapi.test.shared.util.NodeFactory.mapNode;
 
-    private static final String SAMPLE_PROPERTIES = Replacer.lines("""
-            a=b
-            1=2\\=3
-            1\\=2=3
-            empty=
-            =empty
-            """);
-
-    private static @NotNull MapNode sampleMapNode() {
-        var mapNode = MapNode.create();
-        mapNode.set("a", "b");
-        mapNode.set("1", "2=3");
-        mapNode.set("1=2", "3");
-        mapNode.set("empty", "");
-        mapNode.set("", "empty");
-        return mapNode;
-    }
+class PropertiesFormatTest extends TextFileFormatTest<MapNode, PropertiesFormat> {
 
     @Override
-    protected @NotNull Stream<Sample<MapNode, PropertiesFormat>> samples() {
-        return Stream.of(
-                new Sample<>(PropertiesFormat.DEFAULT, sampleMapNode(), SAMPLE_PROPERTIES)
-        );
+    protected Stream<PropertiesFormat> fileFormats() {
+        return Stream.of(PropertiesFormat.DEFAULT);
     }
 
     @Override
@@ -85,20 +75,62 @@ class PropertiesFormatTest extends BasicFileFormatTest<MapNode, PropertiesFormat
         return true;
     }
 
-    @Test
-    void testNonStringKeyAndValue() throws IOException {
-        var mapNode = MapNode.create();
+    @Override
+    protected Stream<TestCase<MapNode, PropertiesFormat>> testCases() {
+        return Stream.of(
+                testCase(
+                        """
+                                a=b
+                                1=2\\=3
+                                1\\=2=3
+                                empty=
+                                =empty
+                                """,
+                        mapNode(mapNode -> {
+                            mapNode.set("a", "b");
+                            mapNode.set("1", "2=3");
+                            mapNode.set("1=2", "3");
+                            mapNode.set("empty", "");
+                            mapNode.set("", "empty");
+                        })
+                ).saveAndLoadTest(PropertiesFormat.DEFAULT),
+                stringRepresentableNodes()
+                        .flatMap(PropertiesFormatTest::asKeyOrValueOrBoth)
+                        .flatMap(testCase -> testCase.saveAndLoadTest(PropertiesFormat.DEFAULT))
+        ).flatMap(Function.identity());
+    }
 
-        mapNode.set("a", "b");
-        mapNode.set(1, "2=3");
-        mapNode.set("1=2", 3);
-        mapNode.set("empty", "");
-        mapNode.set("", "empty");
+    private static Stream<Node<?>> stringRepresentableNodes() {
+        return Stream.of(
+                BooleanValue.TRUE,
+                BooleanValue.FALSE,
+                new ByteValue((byte) 1),
+                new CharValue('a'),
+                new DoubleValue(3.14),
+                new EnumValue<>(SharedEnum.B),
+                new FloatValue(3.14f),
+                new IntValue(1),
+                new LongValue(1L),
+                new ShortValue((short) 1),
+                StringValue.fromString("a")
+        );
+    }
 
-        try (var writer = new StringWriter()) {
-            PropertiesFormat.DEFAULT.save(mapNode, writer);
-            Assertions.assertEquals(SAMPLE_PROPERTIES, Replacer.lines(writer.toString()));
+    private static Stream<TestCaseBase<MapNode>> asKeyOrValueOrBoth(Node<?> node) {
+        String name = node.getClass().getSimpleName();
+        String string;
+
+        if (node instanceof StringRepresentable stringRepresentable) {
+            string = stringRepresentable.asString();
+        } else {
+            throw new IllegalArgumentException(name + " is not StringRepresentable");
         }
+
+        return Stream.of(
+                testCase(string + "=" + name + "\n", mapNode(mapNode -> mapNode.set(string, name))), // String represented node is used as key
+                testCase(name + "=" + string + "\n", mapNode(mapNode -> mapNode.set(name, string))), // String represented node is used as value
+                testCase(string + "=" + string + "\n", mapNode(mapNode -> mapNode.set(string, string))) // String represented node is used as both key and value
+        );
     }
 
     @ParameterizedTest
@@ -113,11 +145,19 @@ class PropertiesFormatTest extends BasicFileFormatTest<MapNode, PropertiesFormat
         Assertions.assertThrows(IllegalArgumentException.class, () -> PropertiesFormat.DEFAULT.save(mapNode, Writer.nullWriter()));
     }
 
-    private @NotNull Stream<Node<?>> nonStringRepresentableNodes() {
+    private static @NotNull Stream<Node<?>> nonStringRepresentableNodes() {
         return Stream.of(
-                ListNode.create(), MapNode.create(), new ObjectNode<>(new Object()),
-                new BooleanArray(new boolean[0]), new ByteArray(new byte[0]), new CharArray(new char[0]), new DoubleArray(new double[0]),
-                new FloatArray(new float[0]), new IntArray(new int[0]), new LongArray(new long[0]), new ShortArray(new short[0])
+                ListNode.create(),
+                MapNode.create(),
+                new ObjectNode<>(new Object()),
+                new BooleanArray(new boolean[0]),
+                new ByteArray(new byte[0]),
+                new CharArray(new char[0]),
+                new DoubleArray(new double[0]),
+                new FloatArray(new float[0]),
+                new IntArray(new int[0]),
+                new LongArray(new long[0]),
+                new ShortArray(new short[0])
         );
     }
 }

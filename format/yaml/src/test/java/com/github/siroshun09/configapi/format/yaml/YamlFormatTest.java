@@ -16,42 +16,45 @@
 
 package com.github.siroshun09.configapi.format.yaml;
 
+import com.github.siroshun09.configapi.core.comment.SimpleComment;
+import com.github.siroshun09.configapi.core.node.BooleanValue;
+import com.github.siroshun09.configapi.core.node.ByteValue;
+import com.github.siroshun09.configapi.core.node.CharValue;
+import com.github.siroshun09.configapi.core.node.CommentableNode;
+import com.github.siroshun09.configapi.core.node.DoubleValue;
+import com.github.siroshun09.configapi.core.node.EnumValue;
+import com.github.siroshun09.configapi.core.node.FloatValue;
+import com.github.siroshun09.configapi.core.node.IntValue;
+import com.github.siroshun09.configapi.core.node.LongValue;
 import com.github.siroshun09.configapi.core.node.MapNode;
+import com.github.siroshun09.configapi.core.node.ShortValue;
 import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
+import com.github.siroshun09.configapi.format.yaml.comment.YamlBlockComment;
+import com.github.siroshun09.configapi.format.yaml.comment.YamlInlineComment;
+import com.github.siroshun09.configapi.format.yaml.comment.YamlNodeComment;
+import com.github.siroshun09.configapi.format.yaml.comment.YamlRootComment;
+import com.github.siroshun09.configapi.test.shared.file.TextFileFormatTest;
+import com.github.siroshun09.configapi.test.shared.util.Replacer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.yaml.snakeyaml.DumperOptions;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
-class YamlFormatTest extends BasicFileFormatTest<MapNode, YamlFormat> {
+import static com.github.siroshun09.configapi.test.shared.util.NodeFactory.mapNode;
 
-    private static final String SAMPLE_MAP_NODE_YAML = """
-            string: value
-            integer: 100
-            double: 3.14
-            bool: true
-            list:
-            - A
-            - B
-            - C
-            map:
-              key: value
-            nested:
-              map:
-                key: value
-            """;
+class YamlFormatTest extends TextFileFormatTest<MapNode, YamlFormat> {
 
     @Override
-    protected @NotNull Stream<Sample<MapNode, YamlFormat>> samples() {
-        return Stream.of(
-                new Sample<>(YamlFormat.DEFAULT, createSharedMapNode(), SAMPLE_MAP_NODE_YAML),
-                new Sample<>(YamlFormat.COMMENT_PROCESSING, createSharedMapNode(), SAMPLE_MAP_NODE_YAML)
-        );
+    protected Stream<YamlFormat> fileFormats() {
+        return Stream.of(YamlFormat.DEFAULT, YamlFormat.COMMENT_PROCESSING);
     }
 
     @Override
@@ -69,21 +72,188 @@ class YamlFormatTest extends BasicFileFormatTest<MapNode, YamlFormat> {
         return true;
     }
 
-    @Test
-    void testEnumValue() throws IOException {
-        MapNode loaded;
+    private static final String VALUE_TEST_YAML =
+            """
+                    boolean: true
+                    byte: 1
+                    char: a
+                    double: 3.14
+                    enum: B
+                    float: 3.14
+                    int: 1
+                    long: 1
+                    short: 1
+                    string: test
+                    """;
 
-        try (var writer = new StringWriter()) {
-            var mapNode = MapNode.create();
-            mapNode.set("enum", SharedEnum.A);
-            YamlFormat.DEFAULT.save(mapNode, writer);
+    private static final String LIST_TEST_YAML =
+            """
+                    list:
+                    - a
+                    - true
+                    - 1
+                    - 3.14
+                    - - a
+                      - b
+                      - c
+                    - key: value
+                    """;
 
-            try (var reader = new StringReader(writer.toString())) {
-                loaded = YamlFormat.DEFAULT.load(reader);
-            }
-        }
+    private static final String MAP_TEST_YAML =
+            """
+                    map:
+                      key: value
+                      nested:
+                        key: value
+                    """;
 
-        Assertions.assertEquals(StringValue.fromString("A"), loaded.get("enum"));
+    private static final String ARRAY_TEST_YAML =
+            """
+                    boolean-array: [true, false, true]
+                    char-array: [a, b, c]
+                    double-array: [-1.5, 0.0, 1.5]
+                    float-array: [-1.5, 0.0, 1.5]
+                    int-array: [-1, 0, 1]
+                    long-array: [-1, 0, 1]
+                    short-array: [-1, 0, 1]
+                    """;
+
+    private static final String COMMENT_TEST_YAML =
+            """
+                    # header
+                                
+                    # key
+                    # block
+                    # comment
+                    test: true # inline
+                    # footer
+                    """;
+
+    @Override
+    protected Stream<TestCase<MapNode, YamlFormat>> testCases() {
+        return Stream.of(
+                testCase(
+                        VALUE_TEST_YAML,
+                        mapNode(mapNode -> {
+                            mapNode.set("boolean", BooleanValue.TRUE);
+                            mapNode.set("byte", new ByteValue((byte) 1));
+                            mapNode.set("char", new CharValue('a'));
+                            mapNode.set("double", new DoubleValue(3.14));
+                            mapNode.set("enum", new EnumValue<>(SharedEnum.B));
+                            mapNode.set("float", new FloatValue(3.14f));
+                            mapNode.set("int", new IntValue(1));
+                            mapNode.set("long", new LongValue(1L));
+                            mapNode.set("short", new ShortValue((short) 1));
+                            mapNode.set("string", StringValue.fromString("test"));
+                        })
+                ).saveTest(YamlFormat.DEFAULT, YamlFormat.COMMENT_PROCESSING),
+                testCase(
+                        VALUE_TEST_YAML,
+                        mapNode(mapNode -> {
+                            mapNode.set("boolean", BooleanValue.TRUE);
+                            mapNode.set("byte", new ByteValue((byte) 1));
+                            mapNode.set("char", new StringValue("a")); // char will be string
+                            mapNode.set("double", new DoubleValue(3.14));
+                            mapNode.set("enum", StringValue.fromString("B")); // enum will be saved as Enum#name
+                            mapNode.set("float", new FloatValue(3.14f));
+                            mapNode.set("int", new IntValue(1));
+                            mapNode.set("long", new LongValue(1L));
+                            mapNode.set("short", new ShortValue((short) 1));
+                            mapNode.set("string", StringValue.fromString("test"));
+                        })
+                ).loadTest(YamlFormat.DEFAULT, YamlFormat.COMMENT_PROCESSING),
+                testCase(
+                        LIST_TEST_YAML,
+                        mapNode(mapNode -> mapNode.createList("list").addAll(List.of(
+                                "a",
+                                true,
+                                1,
+                                3.14,
+                                List.of("a", "b", "c"),
+                                Map.of("key", "value")
+                        )))
+                ).saveAndLoadTest(YamlFormat.DEFAULT, YamlFormat.COMMENT_PROCESSING),
+                testCase(
+                        MAP_TEST_YAML,
+                        mapNode(mapNode -> {
+                            mapNode.createMap("map").set("key", "value");
+                            mapNode.getOrCreateMap("map").set("nested", mapNode(nested -> nested.set("key", "value")));
+                        })
+                ).saveAndLoadTest(YamlFormat.DEFAULT, YamlFormat.COMMENT_PROCESSING),
+                testCase(
+                        ARRAY_TEST_YAML,
+                        mapNode(mapNode -> {
+                            mapNode.set("boolean-array", new boolean[]{true, false, true});
+                            // byte array is handled as binary in Yaml
+                            mapNode.set("char-array", new char[]{'a', 'b', 'c'});
+                            mapNode.set("double-array", new double[]{-1.5, 0.0, 1.5});
+                            mapNode.set("float-array", new float[]{-1.5f, 0.0f, 1.5f});
+                            mapNode.set("int-array", new int[]{-1, 0, 1});
+                            mapNode.set("long-array", new long[]{-1, 0, 1});
+                            mapNode.set("short-array", new short[]{-1, 0, 1});
+                        })
+                ).saveTest(YamlFormat.DEFAULT, YamlFormat.COMMENT_PROCESSING),
+                testCase(
+                        ARRAY_TEST_YAML,
+                        mapNode(mapNode -> {
+                            mapNode.createList("boolean-array").addAll(List.of(true, false, true));
+                            // byte array is handled as binary in Yaml
+                            mapNode.createList("char-array").addAll(List.of("a", "b", "c")); // char array will be string list
+                            mapNode.createList("double-array").addAll(List.of(-1.5, 0.0, 1.5));
+                            mapNode.createList("float-array").addAll(List.of(-1.5f, 0.0f, 1.5f));
+                            mapNode.createList("int-array").addAll(List.of(-1, 0, 1));
+                            mapNode.createList("long-array").addAll(List.of(-1, 0, 1));
+                            mapNode.createList("short-array").addAll(List.of(-1, 0, 1));
+                        })
+                ).loadTest(YamlFormat.DEFAULT, YamlFormat.COMMENT_PROCESSING),
+                testCase(
+                        COMMENT_TEST_YAML,
+                        mapNode(mapNode -> {
+                            mapNode.setComment(new YamlRootComment(new YamlBlockComment(" header", 0), new YamlBlockComment(" footer", 0)));
+                            mapNode.set("test", CommentableNode.withComment(BooleanValue.TRUE, new YamlNodeComment(new YamlBlockComment(Replacer.lines(" key\n block\n comment"), 0), new YamlInlineComment(" inline"))));
+                        })
+                ).saveAndLoadTest(YamlFormat.COMMENT_PROCESSING),
+                testCase(
+                        COMMENT_TEST_YAML,
+                        mapNode(mapNode -> mapNode.set("test", BooleanValue.TRUE))
+                ).loadTest(YamlFormat.DEFAULT),
+                testCase(
+                        """
+                                key: value # test
+                                """,
+                        mapNode(mapNode -> mapNode.set("key", CommentableNode.withComment(new StringValue("value"), SimpleComment.create("test", "inline"))))
+                ).saveTest(YamlFormat.COMMENT_PROCESSING),
+                testCase(
+                        """
+                                map:
+                                    key: value
+                                    nested:
+                                        key: value
+                                """,
+                        mapNode(mapNode -> {
+                            mapNode.createMap("map").set("key", "value");
+                            mapNode.getOrCreateMap("map").createMap("nested").set("key", "value");
+                        })
+                ).saveAndLoadTest(new YamlFormat.Builder().indent(4).build()),
+                testCase(
+                        """
+                                list: [a, b, c]
+                                """,
+                        mapNode(mapNode -> mapNode.createList("list").addAll(List.of("a", "b", "c")))
+                ).saveAndLoadTest(new YamlFormat.Builder().flowStyle(DumperOptions.FlowStyle.FLOW).build()),
+                testCase(
+                        """
+                                "string": "3.14"
+                                """,
+                        mapNode(mapNode -> mapNode.set("string", "3.14"))
+                ).saveAndLoadTest(new YamlFormat.Builder().scalarStyle(DumperOptions.ScalarStyle.DOUBLE_QUOTED).build()),
+                testCase(
+                        """
+                                'string': '3.14'
+                                """,
+                        mapNode(mapNode -> mapNode.set("string", "3.14"))
+                ).saveAndLoadTest(new YamlFormat.Builder().scalarStyle(DumperOptions.ScalarStyle.SINGLE_QUOTED).build())
+        ).flatMap(Function.identity());
     }
 
     @Test

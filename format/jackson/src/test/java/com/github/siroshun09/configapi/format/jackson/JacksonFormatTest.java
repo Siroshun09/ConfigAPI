@@ -17,48 +17,20 @@
 package com.github.siroshun09.configapi.format.jackson;
 
 import com.github.siroshun09.configapi.core.node.MapNode;
-import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
-import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
+import com.github.siroshun09.configapi.test.shared.file.JsonFileFormatTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.stream.Stream;
 
-class JacksonFormatTest extends BasicFileFormatTest<MapNode, JacksonFormat> {
-
-    private static final String JSON_EXAMPLE = "{\"string\":\"value\",\"integer\":100,\"double\":3.14,\"bool\":true,\"list\":[\"A\",\"B\",\"C\"],\"map\":{\"key\":\"value\"},\"nested\":{\"map\":{\"key\":\"value\"}}}";
-    private static final String PRETTY_PRINTING_EXAMPLE = """
-            {
-              "string": "value",
-              "integer": 100,
-              "double": 3.14,
-              "bool": true,
-              "list": [
-                "A",
-                "B",
-                "C"
-              ],
-              "map": {
-                "key": "value"
-              },
-              "nested": {
-                "map": {
-                  "key": "value"
-                }
-              }
-            }""";
+class JacksonFormatTest extends JsonFileFormatTest<JacksonFormat> {
 
     @Override
-    protected @NotNull Stream<Sample<MapNode, JacksonFormat>> samples() {
-        return Stream.of(
-                new Sample<>(JacksonFormat.DEFAULT, createSharedMapNode(), JSON_EXAMPLE),
-                new Sample<>(JacksonFormat.PRETTY_PRINTING, createSharedMapNode(), PRETTY_PRINTING_EXAMPLE)
-        );
+    protected Stream<JacksonFormat> fileFormats() {
+        return Stream.of(JacksonFormat.DEFAULT, JacksonFormat.PRETTY_PRINTING);
     }
 
     @Override
@@ -76,42 +48,14 @@ class JacksonFormatTest extends BasicFileFormatTest<MapNode, JacksonFormat> {
         return false;
     }
 
-    @Test
-    void testEnumValue() throws IOException {
-        MapNode loaded;
-
-        try (var writer = new StringWriter()) {
-            var mapNode = MapNode.create();
-            mapNode.set("enum", SharedEnum.A);
-            JacksonFormat.DEFAULT.save(mapNode, writer);
-
-            try (var reader = new StringReader(writer.toString())) {
-                loaded = JacksonFormat.DEFAULT.load(reader);
-            }
-        }
-
-        Assertions.assertEquals(StringValue.fromString("A"), loaded.get("enum"));
+    @Override
+    protected JacksonFormat defaultPrinting() {
+        return JacksonFormat.DEFAULT;
     }
 
-    @Test
-    void testDefaultAndPrettyPrinting() throws IOException {
-        var mapNode = createSharedMapNode();
-
-        try (var writer = new StringWriter()) {
-            JacksonFormat.DEFAULT.save(mapNode, writer);
-
-            try (var reader = new StringReader(writer.toString())) {
-                NodeAssertion.assertEquals(mapNode, JacksonFormat.PRETTY_PRINTING.load(reader));
-            }
-        }
-
-        try (var writer = new StringWriter()) {
-            JacksonFormat.PRETTY_PRINTING.save(mapNode, writer);
-
-            try (var reader = new StringReader(writer.toString())) {
-                NodeAssertion.assertEquals(mapNode, JacksonFormat.DEFAULT.load(reader));
-            }
-        }
+    @Override
+    protected JacksonFormat prettyPrinting() {
+        return JacksonFormat.PRETTY_PRINTING;
     }
 
     @Test

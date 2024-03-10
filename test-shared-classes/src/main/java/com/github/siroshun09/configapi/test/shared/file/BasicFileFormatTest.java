@@ -17,10 +17,8 @@
 package com.github.siroshun09.configapi.test.shared.file;
 
 import com.github.siroshun09.configapi.core.file.FileFormat;
-import com.github.siroshun09.configapi.core.node.MapNode;
 import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
-import com.github.siroshun09.configapi.test.shared.util.Replacer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
@@ -28,16 +26,14 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -49,151 +45,138 @@ import java.util.stream.Stream;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileFormat<N>> {
 
-    /**
-     * Creates a sample {@link MapNode}.
-     *
-     * @return a sample {@link MapNode}
-     */
-    public static @NotNull MapNode createSharedMapNode() {
-        var mapNode = MapNode.create();
-
-        mapNode.set("string", "value");
-        mapNode.set("integer", 100);
-        mapNode.set("double", 3.14);
-        mapNode.set("bool", true);
-        mapNode.set("list", List.of("A", "B", "C"));
-        mapNode.set("map", Map.of("key", "value"));
-        mapNode.set("nested", Map.of("map", Map.of("key", "value")));
-
-        return mapNode;
-    }
-
-    /**
-     * An enum that can be used for testing.
-     */
-    public enum SharedEnum {
-        /**
-         * Sample enum value: A
-         */
-        A,
-        /**
-         * Sample enum value: B
-         */
-        B,
-        /**
-         * Sample enum value: C
-         */
-        C
-    }
-
     @ParameterizedTest
-    @MethodSource("samples")
-    void testLoadFromFilepath(@NotNull Sample<N, F> sample, @TempDir Path directory) throws IOException {
-        var filepath = directory.resolve("load-from-filepath" + this.extension());
-        Files.createFile(filepath);
-        Files.writeString(filepath, sample.text(), StandardCharsets.UTF_8);
-        this.checkFileLoading(sample, filepath);
-    }
-
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testLoadFromInputStream(@NotNull Sample<N, F> sample) throws IOException {
-        try (var input = new ByteArrayInputStream(sample.text().getBytes(StandardCharsets.UTF_8))) {
-            NodeAssertion.assertEquals(sample.node(), sample.fileFormat().load(input));
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testLoadFromReader(@NotNull Sample<N, F> sample) throws IOException {
-        try (var reader = new StringReader(sample.text())) {
-            NodeAssertion.assertEquals(sample.node(), sample.fileFormat().load(reader));
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testSaveToFilepath(@NotNull Sample<N, F> sample, @TempDir Path directory) throws IOException {
-        var filepath = directory.resolve("save-to-filepath" + this.extension());
-        Files.createFile(filepath);
-
-        sample.fileFormat().save(sample.node(), filepath);
-        this.checkText(sample.text(), Files.readString(filepath));
-        this.checkFileLoading(sample, filepath);
-    }
-
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testSaveToOutputStream(@NotNull Sample<N, F> sample) throws IOException {
-        try (var output = new ByteArrayOutputStream()) {
-            sample.fileFormat().save(sample.node(), output);
-            this.checkText(sample.text(), output.toString(StandardCharsets.UTF_8));
-
-            try (var input = new ByteArrayInputStream(output.toByteArray())) {
-                NodeAssertion.assertEquals(sample.node(), sample.fileFormat().load(input));
-            }
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testSaveToWriter(@NotNull Sample<N, F> sample) throws IOException {
-        try (var writer = new StringWriter()) {
-            sample.fileFormat().save(sample.node(), writer);
-            this.checkText(sample.text(), writer.toString());
-
-            try (var reader = new StringReader(writer.toString())) {
-                NodeAssertion.assertEquals(sample.node(), sample.fileFormat().load(reader));
-            }
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testNonExistentFile(@NotNull Sample<N, F> sample, @TempDir Path directory) throws IOException {
+    @MethodSource("fileFormats")
+    void testNonExistentFile(F fileFormat, @TempDir Path directory) throws IOException {
         var filename = "non-existent-file" + this.extension();
-        NodeAssertion.assertEquals(this.emptyNode(), sample.fileFormat().load(directory.resolve(filename)));
-        NodeAssertion.assertEquals(this.emptyNode(), sample.fileFormat().load(directory.resolve("non-existent-directory").resolve(filename)));
+
+        if (this.isSupportedIOType(Path.class)) {
+            NodeAssertion.assertEquals(this.emptyNode(), fileFormat.load(directory.resolve(filename)));
+            NodeAssertion.assertEquals(this.emptyNode(), fileFormat.load(directory.resolve("non-existent-directory").resolve(filename)));
+        }
     }
 
     @ParameterizedTest
-    @MethodSource("samples")
-    void testSaveInNonExistentDirectory(@NotNull Sample<N, F> sample, @TempDir Path directory) throws IOException {
-        var filepath = directory.resolve("new-directory").resolve("new-file" + this.extension());
-        sample.fileFormat().save(sample.node(), filepath);
-        this.checkText(sample.text(), Files.readString(filepath));
-        this.checkFileLoading(sample, filepath);
+    @MethodSource("fileFormats")
+    void testSaveInNonExistentDirectory(F fileFormat, @TempDir Path directory) throws IOException {
+        if (!this.isSupportedIOType(Path.class)) {
+            return;
+        }
+
+        var newDirectory = directory.resolve("new-directory");
+        var filepath = newDirectory.resolve("new-file" + this.extension());
+
+        fileFormat.save(this.emptyNode(), filepath);
+
+        Assertions.assertTrue(Files.isDirectory(newDirectory));
+        Assertions.assertTrue(Files.isRegularFile(filepath));
+
+        this.checkLoadingEmptyNodeFromFile(fileFormat, filepath);
     }
 
     @ParameterizedTest
-    @MethodSource("samples")
-    void testEmptyFile(@NotNull Sample<N, F> sample, @TempDir Path directory) throws IOException {
+    @MethodSource("fileFormats")
+    void testEmptyFileLoading(F fileFormat, @TempDir Path directory) throws IOException {
         var filepath = directory.resolve("empty" + this.extension());
         Files.createFile(filepath);
 
         if (this.supportEmptyFile()) {
-            this.checkFileLoading(new Sample<>(sample.fileFormat(), this.emptyNode(), ""), filepath);
+            this.checkLoadingEmptyNodeFromFile(fileFormat, filepath);
         } else {
-            Assertions.assertThrows(IOException.class, () -> sample.fileFormat().load(filepath));
-            Assertions.assertThrows(IOException.class, () -> {
-                try (var in = Files.newInputStream(filepath)) {
-                    sample.fileFormat().load(in);
+            if (this.isSupportedIOType(Path.class)) {
+                Assertions.assertThrows(IOException.class, () -> fileFormat.load(filepath));
+            }
+
+            if (this.isSupportedIOType(InputStream.class)) {
+                Assertions.assertThrows(IOException.class, () -> {
+                    try (var in = Files.newInputStream(filepath)) {
+                        fileFormat.load(in);
+                    }
+                });
+            }
+
+            if (this.isSupportedIOType(Reader.class)) {
+                Assertions.assertThrows(IOException.class, () -> {
+                    try (var reader = Files.newBufferedReader(filepath)) {
+                        fileFormat.load(reader);
+                    }
+                });
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("fileFormats")
+    void testUnsupportedIOTypes(F fileFormat, @TempDir Path directory) throws IOException {
+        var filepath = directory.resolve("unsupported" + this.extension());
+        Files.createFile(filepath);
+
+        if (!this.isSupportedIOType(Path.class)) {
+            Assertions.assertThrows(UnsupportedOperationException.class, () -> fileFormat.save(this.emptyNode(), filepath));
+            Assertions.assertThrows(UnsupportedOperationException.class, () -> fileFormat.load(filepath));
+        }
+
+        if (!this.isSupportedIOType(OutputStream.class)) {
+            Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+                try (var output = Files.newOutputStream(filepath)) {
+                    fileFormat.save(this.emptyNode(), output);
                 }
             });
-            Assertions.assertThrows(IOException.class, () -> {
+        }
+
+        if (!this.isSupportedIOType(InputStream.class)) {
+            Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+                try (var input = Files.newInputStream(filepath)) {
+                    fileFormat.load(input);
+                }
+            });
+        }
+
+        if (!this.isSupportedIOType(Writer.class)) {
+            Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+                try (var writer = Files.newBufferedWriter(filepath)) {
+                    fileFormat.save(this.emptyNode(), writer);
+                }
+            });
+        }
+
+        if (!this.isSupportedIOType(Reader.class)) {
+            Assertions.assertThrows(UnsupportedOperationException.class, () -> {
                 try (var reader = Files.newBufferedReader(filepath)) {
-                    sample.fileFormat().load(reader);
+                    fileFormat.load(reader);
                 }
             });
         }
     }
 
+    private void checkLoadingEmptyNodeFromFile(F fileFormat, Path filepath) throws IOException {
+        if (this.isSupportedIOType(Path.class)) {
+            try {
+                NodeAssertion.assertEquals(this.emptyNode(), fileFormat.load(filepath));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+
+        if (this.isSupportedIOType(InputStream.class)) {
+            try (var in = Files.newInputStream(filepath)) {
+                NodeAssertion.assertEquals(this.emptyNode(), fileFormat.load(in));
+            }
+        }
+
+        if (this.isSupportedIOType(Reader.class)) {
+            try (var reader = Files.newBufferedReader(filepath)) {
+                NodeAssertion.assertEquals(this.emptyNode(), fileFormat.load(reader));
+            }
+        }
+    }
+
     /**
-     * Gets the sample {@link Node}s that are used for testing.
+     * Gets the {@link FileFormat}s to test.
      *
-     * @return the sample {@link Node}s that are used for testing
+     * @return the {@link FileFormat}s
      */
-    protected abstract @NotNull Stream<Sample<N, F>> samples();
+    protected abstract Stream<F> fileFormats();
 
     /**
      * Gets the extension of files.
@@ -217,38 +200,32 @@ public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileForma
     protected abstract boolean supportEmptyFile();
 
     /**
-     * Checks the file content.
+     * Checks if the given in/out type is supported.
+     * <p>
+     * Current io types: {@link Path}, {@link InputStream}, {@link OutputStream}, {@link Reader}, and {@link Writer}
      *
-     * @param sample the expected {@link Node} as a result of loading file
-     * @param filepath the filepath
-     * @throws IOException if I/O error occurred
+     * @param ioType a {@link Class} to check
+     * @return {@code true} if the {@link FileFormat} supports the given in/out type, otherwise {@code false}
      */
-    protected void checkFileLoading(@NotNull Sample<N, F> sample, @NotNull Path filepath) throws IOException {
-        NodeAssertion.assertEquals(sample.node(), sample.fileFormat().load(filepath));
-
-        try (var in = Files.newInputStream(filepath)) {
-            NodeAssertion.assertEquals(sample.node(), sample.fileFormat().load(in));
-        }
-
-        try (var reader = Files.newBufferedReader(filepath)) {
-            NodeAssertion.assertEquals(sample.node(), sample.fileFormat().load(reader));
-        }
-    }
-
-    private void checkText(@NotNull String expected, @NotNull String actual) {
-        Assertions.assertEquals(Replacer.lines(expected), Replacer.lines(actual));
+    protected boolean isSupportedIOType(Class<?> ioType) {
+        return true;
     }
 
     /**
-     * A record to define sample data.
-     *
-     * @param fileFormat the {@link FileFormat}
-     * @param node the sample {@link Node}
-     * @param text the expected output text
-     * @param <N> the {@link Node} type
-     * @param <F> the {@link FileFormat} type
+     * A shared enum to use for testing {@link com.github.siroshun09.configapi.core.node.EnumValue}.
      */
-    public record Sample<N extends Node<?>, F extends FileFormat<N>>(@NotNull F fileFormat, @NotNull N node,
-                                                                     @NotNull String text) {
+    protected enum SharedEnum {
+        /**
+         * A
+         */
+        A,
+        /**
+         * B
+         */
+        B,
+        /**
+         * C
+         */
+        C
     }
 }

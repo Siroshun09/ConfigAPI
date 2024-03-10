@@ -17,48 +17,20 @@
 package com.github.siroshun09.configapi.format.gson;
 
 import com.github.siroshun09.configapi.core.node.MapNode;
-import com.github.siroshun09.configapi.core.node.StringValue;
-import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
-import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
+import com.github.siroshun09.configapi.test.shared.file.JsonFileFormatTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.stream.Stream;
 
-class GsonFormatTest extends BasicFileFormatTest<MapNode, GsonFormat> {
-
-    private static final String JSON_EXAMPLE = "{\"string\":\"value\",\"integer\":100,\"double\":3.14,\"bool\":true,\"list\":[\"A\",\"B\",\"C\"],\"map\":{\"key\":\"value\"},\"nested\":{\"map\":{\"key\":\"value\"}}}";
-    private static final String PRETTY_PRINTING_EXAMPLE = """
-            {
-              "string": "value",
-              "integer": 100,
-              "double": 3.14,
-              "bool": true,
-              "list": [
-                "A",
-                "B",
-                "C"
-              ],
-              "map": {
-                "key": "value"
-              },
-              "nested": {
-                "map": {
-                  "key": "value"
-                }
-              }
-            }""";
+class GsonFormatTest extends JsonFileFormatTest<GsonFormat> {
 
     @Override
-    protected @NotNull Stream<Sample<MapNode, GsonFormat>> samples() {
-        return Stream.of(
-                new Sample<>(GsonFormat.DEFAULT, createSharedMapNode(), JSON_EXAMPLE),
-                new Sample<>(GsonFormat.PRETTY_PRINTING, createSharedMapNode(), PRETTY_PRINTING_EXAMPLE)
-        );
+    protected Stream<GsonFormat> fileFormats() {
+        return Stream.of(GsonFormat.DEFAULT, GsonFormat.PRETTY_PRINTING);
     }
 
     @Override
@@ -76,42 +48,14 @@ class GsonFormatTest extends BasicFileFormatTest<MapNode, GsonFormat> {
         return true;
     }
 
-    @Test
-    void testEnumValue() throws IOException {
-        MapNode loaded;
-
-        try (var writer = new StringWriter()) {
-            var mapNode = MapNode.create();
-            mapNode.set("enum", SharedEnum.A);
-            GsonFormat.DEFAULT.save(mapNode, writer);
-
-            try (var reader = new StringReader(writer.toString())) {
-                loaded = GsonFormat.DEFAULT.load(reader);
-            }
-        }
-
-        Assertions.assertEquals(StringValue.fromString("A"), loaded.get("enum"));
+    @Override
+    protected GsonFormat defaultPrinting() {
+        return GsonFormat.DEFAULT;
     }
 
-    @Test
-    void testDefaultAndPrettyPrinting() throws IOException {
-        var mapNode = createSharedMapNode();
-
-        try (var writer = new StringWriter()) {
-            GsonFormat.DEFAULT.save(mapNode, writer);
-
-            try (var reader = new StringReader(writer.toString())) {
-                NodeAssertion.assertEquals(mapNode, GsonFormat.PRETTY_PRINTING.load(reader));
-            }
-        }
-
-        try (var writer = new StringWriter()) {
-            GsonFormat.PRETTY_PRINTING.save(mapNode, writer);
-
-            try (var reader = new StringReader(writer.toString())) {
-                NodeAssertion.assertEquals(mapNode, GsonFormat.DEFAULT.load(reader));
-            }
-        }
+    @Override
+    protected GsonFormat prettyPrinting() {
+        return GsonFormat.PRETTY_PRINTING;
     }
 
     @Test

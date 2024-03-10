@@ -39,18 +39,17 @@ import com.github.siroshun09.configapi.core.node.NullNode;
 import com.github.siroshun09.configapi.core.node.ShortArray;
 import com.github.siroshun09.configapi.core.node.ShortValue;
 import com.github.siroshun09.configapi.core.node.StringValue;
+import com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.DoubleStream;
@@ -58,66 +57,31 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static com.github.siroshun09.configapi.test.shared.file.BasicFileFormatTest.createSharedMapNode;
+class BinaryFormatTest extends BasicFileFormatTest<Node<?>, BinaryFormat> {
 
-class BinaryFormatTest {
-
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testLoadingAndSavingFile(@NotNull Node<?> sample, @TempDir Path directory) throws IOException {
-        var filepath = directory.resolve("loading-and-saving-filepath.dat");
-        Files.createFile(filepath);
-
-        BinaryFormat.DEFAULT.save(sample, filepath);
-        this.checkFileLoading(sample, filepath);
+    @Override
+    protected Stream<BinaryFormat> fileFormats() {
+        return Stream.of(BinaryFormat.DEFAULT);
     }
 
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testLoadingAndSavingStream(@NotNull Node<?> sample) throws IOException {
-        byte[] bytes;
-
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            BinaryFormat.DEFAULT.save(sample, out);
-            bytes = out.toByteArray();
-        }
-
-        Node<?> loaded;
-
-        try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
-            loaded = BinaryFormat.DEFAULT.load(in);
-        }
-
-        NodeAssertion.assertEquals(sample, loaded);
+    @Override
+    protected @NotNull String extension() {
+        return ".dat";
     }
 
-    @Test
-    void testNonExistentFile(@TempDir Path directory) throws IOException {
-        var filename = "non-existent-file.dat";
-        NodeAssertion.assertEquals(NullNode.NULL, BinaryFormat.DEFAULT.load(directory.resolve(filename)));
-        NodeAssertion.assertEquals(NullNode.NULL, BinaryFormat.DEFAULT.load(directory.resolve("non-existent-directory").resolve(filename)));
+    @Override
+    protected @NotNull Node<?> emptyNode() {
+        return NullNode.NULL;
     }
 
-    @ParameterizedTest
-    @MethodSource("samples")
-    void testSaveInNonExistentDirectory(@NotNull Node<?> sample, @TempDir Path directory) throws IOException {
-        var filepath = directory.resolve("new-directory").resolve("new-file.dat");
-        BinaryFormat.DEFAULT.save(sample, filepath);
-        this.checkFileLoading(sample, filepath);
+    @Override
+    protected boolean supportEmptyFile() {
+        return false;
     }
 
-    private static @NotNull Stream<Node<?>> samples() {
-        return Stream.of(
-                createSharedMapNode()
-        );
-    }
-
-    private void checkFileLoading(@NotNull Node<?> sample, @NotNull Path filepath) throws IOException {
-        NodeAssertion.assertEquals(sample, BinaryFormat.DEFAULT.load(filepath));
-
-        try (var in = Files.newInputStream(filepath)) {
-            NodeAssertion.assertEquals(sample, BinaryFormat.DEFAULT.load(in));
-        }
+    @Override
+    protected boolean isSupportedIOType(Class<?> ioType) {
+        return ioType != Reader.class && ioType != Writer.class;
     }
 
     static class ValueNodeTest {
