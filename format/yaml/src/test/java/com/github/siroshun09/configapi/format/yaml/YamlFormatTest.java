@@ -237,9 +237,38 @@ class YamlFormatTest extends TextFileFormatTest<MapNode, YamlFormat> {
                 ).saveAndLoadTest(new YamlFormat.Builder().indent(4).build()),
                 testCase(
                         """
+                                array:
+                                - a
+                                - b
+                                - c
+                                """,
+                        mapNode(mapNode -> mapNode.set("array", new char[]{'a', 'b', 'c'}))
+                ).saveTest(new YamlFormat.Builder().arrayFlowStyle(DumperOptions.FlowStyle.BLOCK).build()),
+                testCase(
+                        """
                                 list: [a, b, c]
                                 """,
                         mapNode(mapNode -> mapNode.createList("list").addAll(List.of("a", "b", "c")))
+                ).saveAndLoadTest(new YamlFormat.Builder().sequenceFlowStyle(DumperOptions.FlowStyle.FLOW).build()),
+                testCase(
+                        """
+                                map-1: {key: value}
+                                map-2: {nested: {key: value}}
+                                """,
+                        mapNode(mapNode -> {
+                            mapNode.createMap("map-1").set("key", "value");
+                            mapNode.getOrCreateMap("map-2").createMap("nested").set("key", "value");
+                        })
+                ).saveAndLoadTest(new YamlFormat.Builder().mapFlowStyle(DumperOptions.FlowStyle.FLOW).build()),
+                testCase(
+                        """
+                                {string: test, list: [a, b, c], map: {key: value}}
+                                """,
+                        mapNode(mapNode -> {
+                            mapNode.set("string", "test");
+                            mapNode.set("list", List.of("a", "b", "c"));
+                            mapNode.set("map", Map.of("key", "value"));
+                        })
                 ).saveAndLoadTest(new YamlFormat.Builder().flowStyle(DumperOptions.FlowStyle.FLOW).build()),
                 testCase(
                         """

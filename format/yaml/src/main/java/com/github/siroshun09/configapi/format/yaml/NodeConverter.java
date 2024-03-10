@@ -32,7 +32,6 @@ import com.github.siroshun09.configapi.format.yaml.comment.YamlNodeComment;
 import com.github.siroshun09.configapi.format.yaml.comment.YamlRootComment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.comments.CommentLine;
 import org.yaml.snakeyaml.comments.CommentType;
 import org.yaml.snakeyaml.nodes.AnchorNode;
@@ -41,7 +40,6 @@ import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
 import org.yaml.snakeyaml.nodes.SequenceNode;
 import org.yaml.snakeyaml.nodes.Tag;
-import org.yaml.snakeyaml.representer.BaseRepresenter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,34 +47,38 @@ import java.util.List;
 
 class NodeConverter {
 
-    static @NotNull MapNode toMapNode(org.yaml.snakeyaml.nodes.Node root, ObjectConstructor constructor) throws IOException {
+    static @NotNull MapNode toMapNode(@Nullable org.yaml.snakeyaml.nodes.Node root, @NotNull YamlHolder yamlHolder) throws IOException {
         if (root instanceof MappingNode mappingNode) {
             if (mappingNode.getValue().isEmpty()) {
                 return MapNode.create();
             }
 
-            var first = mappingNode.getValue().get(0).getKeyNode();
-            var blockComments = first.getBlockComments();
+            if (yamlHolder.parameter().processComment()) {
+                var first = mappingNode.getValue().get(0).getKeyNode();
+                var blockComments = first.getBlockComments();
 
-            if (blockComments != null) {
-                int lastBlank = -1;
+                if (blockComments != null) {
+                    int lastBlank = -1;
 
-                for (int i = blockComments.size() - 1; 0 <= i; i--) {
-                    if (blockComments.get(i).getCommentType() == CommentType.BLANK_LINE) {
-                        lastBlank = i;
-                        break;
+                    for (int i = blockComments.size() - 1; 0 <= i; i--) {
+                        if (blockComments.get(i).getCommentType() == CommentType.BLANK_LINE) {
+                            lastBlank = i;
+                            break;
+                        }
                     }
-                }
 
-                if (lastBlank != -1) {
-                    mappingNode.setBlockComments(blockComments.subList(0, lastBlank));
-                    first.setBlockComments(blockComments.subList(lastBlank + 1, blockComments.size()));
+                    if (lastBlank != -1) {
+                        mappingNode.setBlockComments(blockComments.subList(0, lastBlank));
+                        first.setBlockComments(blockComments.subList(lastBlank + 1, blockComments.size()));
+                    }
                 }
             }
 
-            var mapNode = (MapNode) toNode(mappingNode, constructor, true);
+            var mapNode = (MapNode) toNode(mappingNode, yamlHolder);
 
-            mapNode.setComment(processRootComment(mappingNode));
+            if (yamlHolder.parameter().processComment()) {
+                mapNode.setComment(processRootComment(mappingNode));
+            }
 
             return mapNode;
         } else if (root == null) {
@@ -86,7 +88,9 @@ class NodeConverter {
         }
     }
 
-    private static @NotNull Node<?> toNode(@NotNull org.yaml.snakeyaml.nodes.Node node, ObjectConstructor constructor, boolean processComments) throws IOException {
+    private static @NotNull Node<?> toNode(@NotNull org.yaml.snakeyaml.nodes.Node node, @NotNull YamlHolder yamlHolder) throws IOException {
+        var constructor = yamlHolder.constructor();
+
         if (node instanceof MappingNode mappingNode) {
             var mapNode = MapNode.create();
 
@@ -94,9 +98,9 @@ class NodeConverter {
 
             for (var tuple : mappingNode.getValue()) {
                 var key = constructor.constructObject(tuple.getKeyNode());
-                var value = toNode(tuple.getValueNode(), constructor, true);
+                var value = toNode(tuple.getValueNode(), yamlHolder);
 
-                if (processComments) {
+                if (yamlHolder.parameter().processComment()) {
                     if (value instanceof ListNode || value instanceof MapNode) {
                         ((CommentableNode<?>) value).setComment(processComment(tuple.getKeyNode(), tuple.getKeyNode()));
                         mapNode.set(key, value);
@@ -115,9 +119,9 @@ class NodeConverter {
             var listNode = ListNode.create(nodes.size());
 
             for (var element : nodes) {
-                var converted = toNode(element, constructor, processComments);
+                var converted = toNode(element, yamlHolder);
 
-                if (processComments) {
+                if (yamlHolder.parameter().processComment()) {
                     var commented = CommentableNode.withComment(converted, processComment(element));
                     listNode.add(commented.hasComment() ? commented : converted);
                 } else {
@@ -129,7 +133,7 @@ class NodeConverter {
         } else if (node instanceof ScalarNode) {
             return Node.fromObject(constructor.constructObject(node));
         } else if (node instanceof AnchorNode anchorNode) {
-            return toNode(anchorNode.getRealNode(), constructor, false);
+            return toNode(anchorNode.getRealNode(), yamlHolder);
         } else {
             throw new IOException("Unsupported node: " + node);
         }
@@ -198,8 +202,8 @@ class NodeConverter {
         return builder != null ? new YamlBlockComment(builder.toString(), prependBlankLines) : null;
     }
 
-    static @NotNull org.yaml.snakeyaml.nodes.Node toYamlNode(@NotNull MapNode mapNode, @NotNull BaseRepresenter representer) {
-        var mappingNode = toNode(mapNode, representer);
+    static @NotNull org.yaml.snakeyaml.nodes.Node toYamlNode(@NotNull MapNode mapNode, @NotNull YamlHolder yamlHolder) {
+        var mappingNode = (MappingNode) toNode(mapNode, yamlHolder);
 
         applyComments(mapNode, mappingNode, mappingNode);
 
@@ -208,10 +212,12 @@ class NodeConverter {
             mappingNode.setEndComments(toCommentLines(rootComment.footer()));
         }
 
+        mappingNode.setFlowStyle(yamlHolder.parameter().defaultFlowStyle());
+
         return mappingNode;
     }
 
-    private static @NotNull org.yaml.snakeyaml.nodes.Node toNode(@NotNull Node<?> node, @NotNull BaseRepresenter representer) {
+    private static @NotNull org.yaml.snakeyaml.nodes.Node toNode(@NotNull Node<?> node, @NotNull YamlHolder yamlHolder) {
         if (node instanceof MapNode mapNode) {
             var entries = mapNode.value().entrySet();
             var nodes = new ArrayList<NodeTuple>(entries.size());
@@ -219,35 +225,35 @@ class NodeConverter {
             for (var entry : entries) {
                 var key = entry.getKey();
                 var value = entry.getValue();
-                var yKey = representer.represent(key);
-                var yValue = toNode(value, representer);
+                var yKey = yamlHolder.representer().represent(key);
+                var yValue = toNode(value, yamlHolder);
 
                 applyComments(value, yKey, (value instanceof ListNode || value instanceof MapNode) ? yKey : yValue);
                 nodes.add(new NodeTuple(yKey, yValue));
             }
 
-            return new MappingNode(Tag.MAP, nodes, DumperOptions.FlowStyle.BLOCK);
+            return new MappingNode(Tag.MAP, nodes, yamlHolder.parameter().mapFlowStyle());
         } else if (node instanceof ListNode listNode) {
             var list = listNode.value();
             var nodes = new ArrayList<org.yaml.snakeyaml.nodes.Node>();
 
             for (var element : list) {
-                var yNode = toNode(element, representer);
+                var yNode = toNode(element, yamlHolder);
                 applyComments(element, yNode, yNode);
                 nodes.add(yNode);
             }
 
-            return new SequenceNode(Tag.SEQ, nodes, representer.getDefaultFlowStyle());
+            return new SequenceNode(Tag.SEQ, nodes, yamlHolder.parameter().sequenceFlowStyle());
         } else if (node instanceof CommentedNode<?> commentedNode) {
-            return toNode(commentedNode.node(), representer);
+            return toNode(commentedNode.node(), yamlHolder);
         } else if (node instanceof EnumValue<?> enumValue) {
-            return representer.represent(enumValue.value().name());
+            return yamlHolder.representer().represent(enumValue.value().name());
         } else if (node instanceof NullNode) {
-            return representer.represent(null);
+            return yamlHolder.representer().represent(null);
         } else {
-            var represented = representer.represent(node.value());
+            var represented = yamlHolder.representer().represent(node.value());
             if (node instanceof ArrayNode<?> && represented instanceof SequenceNode sequenceNode) {
-                sequenceNode.setFlowStyle(DumperOptions.FlowStyle.FLOW);
+                sequenceNode.setFlowStyle(yamlHolder.parameter().arrayFlowStyle());
             }
             return represented;
         }

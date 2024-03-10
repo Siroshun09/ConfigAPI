@@ -26,15 +26,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
-import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.function.Supplier;
 
 /**
  * A {@link FileFormat} implementation that loading/saving {@link MapNode} from/to yaml files.
@@ -72,20 +68,17 @@ public final class YamlFormat implements FileFormat<MapNode> {
      */
     public static final YamlFormat COMMENT_PROCESSING = new YamlFormat.Builder().processComment(true).build();
 
-    private final ThreadLocal<Yaml> yaml;
-    private final Supplier<ObjectConstructor> objectConstructorSupplier;
-    private final Supplier<Representer> representerSupplier;
+    private final ThreadLocal<YamlHolder> yamlHolder;
 
-    private YamlFormat(@NotNull YamlFactory yamlFactory) {
-        this.yaml = ThreadLocal.withInitial(yamlFactory);
-        this.objectConstructorSupplier = yamlFactory::objectConstructor;
-        this.representerSupplier = yamlFactory::representer;
+    private YamlFormat(@NotNull YamlParameter yamlParameter) {
+        this.yamlHolder = ThreadLocal.withInitial(yamlParameter::createYamlHolder);
     }
 
     @Override
     public @NotNull MapNode load(@NotNull Reader reader) throws IOException {
         try {
-            return NodeConverter.toMapNode(this.yaml.get().compose(reader), this.objectConstructorSupplier.get());
+            var yamlHolder = this.yamlHolder.get();
+            return NodeConverter.toMapNode(yamlHolder.yaml().compose(reader), yamlHolder);
         } catch (YAMLException e) {
             throw new IOException(e);
         }
@@ -94,7 +87,8 @@ public final class YamlFormat implements FileFormat<MapNode> {
     @Override
     public void save(@NotNull MapNode node, @NotNull Writer writer) throws IOException {
         try {
-            this.yaml.get().serialize(NodeConverter.toYamlNode(node, this.representerSupplier.get()), writer);
+            var yamlHolder = this.yamlHolder.get();
+            yamlHolder.yaml().serialize(NodeConverter.toYamlNode(node, yamlHolder), writer);
         } catch (YAMLException e) {
             throw new IOException(e);
         }
@@ -106,6 +100,9 @@ public final class YamlFormat implements FileFormat<MapNode> {
     public static class Builder {
 
         private DumperOptions.FlowStyle flowStyle = DumperOptions.FlowStyle.BLOCK;
+        private DumperOptions.FlowStyle arrayFlowStyle = DumperOptions.FlowStyle.FLOW;
+        private DumperOptions.FlowStyle sequenceFlowStyle = DumperOptions.FlowStyle.BLOCK;
+        private DumperOptions.FlowStyle mapFlowStyle = DumperOptions.FlowStyle.BLOCK;
         private DumperOptions.ScalarStyle scalarStyle = DumperOptions.ScalarStyle.PLAIN;
         private int indent = 2;
         private boolean processComment;
@@ -121,6 +118,54 @@ public final class YamlFormat implements FileFormat<MapNode> {
         @Contract("_ -> this")
         public @NotNull Builder flowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
             this.flowStyle = flowStyle != null ? flowStyle : DumperOptions.FlowStyle.BLOCK;
+            return this;
+        }
+
+        /**
+         * Sets {@link org.yaml.snakeyaml.DumperOptions.FlowStyle} for arrays.
+         * <p>
+         * Passing {@code null} to set the default style ({@link org.yaml.snakeyaml.DumperOptions.FlowStyle#FLOW}.
+         * <p>
+         * This style is only applied when the root style (set by {@link #flowStyle(DumperOptions.FlowStyle)} is {@link org.yaml.snakeyaml.DumperOptions.FlowStyle#BLOCK}
+         *
+         * @param flowStyle {@link org.yaml.snakeyaml.DumperOptions.FlowStyle} or null to set the default style
+         * @return this {@link Builder} instance
+         */
+        @Contract("_ -> this")
+        public @NotNull Builder arrayFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
+            this.arrayFlowStyle = flowStyle != null ? flowStyle : DumperOptions.FlowStyle.FLOW;
+            return this;
+        }
+
+        /**
+         * Sets {@link org.yaml.snakeyaml.DumperOptions.FlowStyle} for sequences.
+         * <p>
+         * Passing {@code null} to set the default style ({@link org.yaml.snakeyaml.DumperOptions.FlowStyle#BLOCK}.
+         * <p>
+         * This style is only applied when the root style (set by {@link #flowStyle(DumperOptions.FlowStyle)} is {@link org.yaml.snakeyaml.DumperOptions.FlowStyle#BLOCK}
+         *
+         * @param flowStyle {@link org.yaml.snakeyaml.DumperOptions.FlowStyle} or null to set the default style
+         * @return this {@link Builder} instance
+         */
+        @Contract("_ -> this")
+        public @NotNull Builder sequenceFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
+            this.sequenceFlowStyle = flowStyle != null ? flowStyle : DumperOptions.FlowStyle.BLOCK;
+            return this;
+        }
+
+        /**
+         * Sets {@link org.yaml.snakeyaml.DumperOptions.FlowStyle} for maps.
+         * <p>
+         * Passing {@code null} to set the default style ({@link org.yaml.snakeyaml.DumperOptions.FlowStyle#BLOCK}.
+         * <p>
+         * This style is only applied when the root style (set by {@link #flowStyle(DumperOptions.FlowStyle)} is {@link org.yaml.snakeyaml.DumperOptions.FlowStyle#BLOCK}
+         *
+         * @param flowStyle {@link org.yaml.snakeyaml.DumperOptions.FlowStyle} or null to set the default style
+         * @return this {@link Builder} instance
+         */
+        @Contract("_ -> this")
+        public @NotNull Builder mapFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
+            this.mapFlowStyle = flowStyle != null ? flowStyle : DumperOptions.FlowStyle.BLOCK;
             return this;
         }
 
@@ -154,6 +199,8 @@ public final class YamlFormat implements FileFormat<MapNode> {
 
         /**
          * Sets whether to process comments.
+         * <p>
+         * Node that the comments will be processed when {@link #flowStyle(DumperOptions.FlowStyle)} is {@link DumperOptions.FlowStyle#BLOCK}
          *
          * @param processComment {@code true} to process comments, {@code false} to ignore comments
          * @return this {@link Builder} instance
@@ -170,59 +217,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          * @return a created {@link YamlFormat}
          */
         public @NotNull YamlFormat build() {
-            return new YamlFormat(new YamlFactory(this.flowStyle, this.scalarStyle, this.indent, this.processComment));
-        }
-    }
-
-    private record YamlFactory(@NotNull DumperOptions.FlowStyle flowStyle,
-                               @NotNull DumperOptions.ScalarStyle scalarStyle,
-                               int indent,
-                               boolean processComment) implements Supplier<Yaml> {
-        @Override
-        public Yaml get() {
-            var loaderOptions = this.loaderOptions();
-            var dumperOptions = this.dumperOptions();
-            return new Yaml(objectConstructor(loaderOptions), representer(dumperOptions), dumperOptions, loaderOptions);
-        }
-
-        private @NotNull LoaderOptions loaderOptions() {
-            var loaderOptions = new LoaderOptions();
-
-            loaderOptions.setCodePointLimit(Integer.MAX_VALUE);
-            loaderOptions.setMaxAliasesForCollections(Integer.MAX_VALUE);
-            loaderOptions.setProcessComments(this.processComment);
-
-            return loaderOptions;
-        }
-
-        private @NotNull DumperOptions dumperOptions() {
-            var dumperOptions = new DumperOptions();
-
-            dumperOptions.setDefaultFlowStyle(this.flowStyle);
-            dumperOptions.setDefaultScalarStyle(this.scalarStyle);
-            dumperOptions.setIndent(this.indent);
-            dumperOptions.setProcessComments(this.processComment);
-
-            return dumperOptions;
-        }
-
-        private @NotNull ObjectConstructor objectConstructor() {
-            return this.objectConstructor(this.loaderOptions());
-        }
-
-        private @NotNull ObjectConstructor objectConstructor(@NotNull LoaderOptions loaderOptions) {
-            return new ObjectConstructor(loaderOptions);
-        }
-
-        private @NotNull Representer representer() {
-            return this.representer(this.dumperOptions());
-        }
-
-        private @NotNull Representer representer(@NotNull DumperOptions dumperOptions) {
-            var representer = new Representer(dumperOptions);
-            representer.setDefaultFlowStyle(this.flowStyle);
-            representer.setDefaultScalarStyle(this.scalarStyle);
-            return representer;
+            return new YamlFormat(new YamlParameter(this.flowStyle, this.arrayFlowStyle, this.sequenceFlowStyle, this.mapFlowStyle, this.scalarStyle, this.indent, this.processComment));
         }
     }
 }
