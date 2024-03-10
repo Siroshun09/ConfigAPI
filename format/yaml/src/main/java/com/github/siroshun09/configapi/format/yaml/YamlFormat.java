@@ -199,6 +199,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
             var dumperOptions = new DumperOptions();
 
             dumperOptions.setDefaultFlowStyle(this.flowStyle);
+            dumperOptions.setDefaultScalarStyle(this.scalarStyle);
             dumperOptions.setIndent(this.indent);
             dumperOptions.setProcessComments(this.processComment);
 
@@ -220,6 +221,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
         private @NotNull Representer representer(@NotNull DumperOptions dumperOptions) {
             var representer = new Representer(dumperOptions);
             representer.setDefaultFlowStyle(this.flowStyle);
+            representer.setDefaultScalarStyle(this.scalarStyle);
             return representer;
         }
     }
