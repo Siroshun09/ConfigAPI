@@ -27,7 +27,6 @@ import com.github.siroshun09.configapi.core.node.CharValue;
 import com.github.siroshun09.configapi.core.node.CommentedNode;
 import com.github.siroshun09.configapi.core.node.DoubleArray;
 import com.github.siroshun09.configapi.core.node.DoubleValue;
-import com.github.siroshun09.configapi.core.node.EnumValue;
 import com.github.siroshun09.configapi.core.node.FloatArray;
 import com.github.siroshun09.configapi.core.node.FloatValue;
 import com.github.siroshun09.configapi.core.node.IntArray;
@@ -65,12 +64,7 @@ import java.util.Objects;
  * Supported {@link Node}s:
  *
  * <ul>
- *     <li>{@link com.github.siroshun09.configapi.core.node.ValueNode}s
- *     <ul>
- *         <li>{@link EnumValue} will be written as {@link String} using {@link Enum#name()}</li>
- *         <li>Loading {@link EnumValue} is not supported</li>
- *     </ul>
- *     </li>
+ *     <li>{@link com.github.siroshun09.configapi.core.node.ValueNode}s excluding {@link com.github.siroshun09.configapi.core.node.EnumValue}</li>
  *     <li>{@link ArrayNode}, {@link ListNode} and {@link MapNode}</li>
  *     <li>{@link NullNode}</li>
  *     <li>{@link CommentedNode} - The comment will be dropped</li>
