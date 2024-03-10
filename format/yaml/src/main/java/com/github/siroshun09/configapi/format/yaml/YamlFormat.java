@@ -68,6 +68,15 @@ public final class YamlFormat implements FileFormat<MapNode> {
      */
     public static final YamlFormat COMMENT_PROCESSING = new YamlFormat.Builder().processComment(true).build();
 
+    /**
+     * Creates a new {@link YamlFormat.Builder}.
+     *
+     * @return a new {@link YamlFormat.Builder}
+     */
+    public static @NotNull Builder builder() {
+        return new Builder();
+    }
+
     private final ThreadLocal<YamlHolder> yamlHolder;
 
     private YamlFormat(@NotNull YamlParameter yamlParameter) {
@@ -97,7 +106,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
     /**
      * A builder of {@link YamlFormat}.
      */
-    public static class Builder {
+    public static final class Builder {
 
         private DumperOptions.FlowStyle flowStyle = DumperOptions.FlowStyle.BLOCK;
         private DumperOptions.FlowStyle arrayFlowStyle = DumperOptions.FlowStyle.FLOW;
@@ -106,6 +115,9 @@ public final class YamlFormat implements FileFormat<MapNode> {
         private DumperOptions.ScalarStyle scalarStyle = DumperOptions.ScalarStyle.PLAIN;
         private int indent = 2;
         private boolean processComment;
+
+        private Builder() {
+        }
 
         /**
          * Sets {@link org.yaml.snakeyaml.DumperOptions.FlowStyle}.

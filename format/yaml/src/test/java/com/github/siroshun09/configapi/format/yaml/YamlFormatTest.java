@@ -234,7 +234,7 @@ class YamlFormatTest extends TextFileFormatTest<MapNode, YamlFormat> {
                             mapNode.createMap("map").set("key", "value");
                             mapNode.getOrCreateMap("map").createMap("nested").set("key", "value");
                         })
-                ).saveAndLoadTest(new YamlFormat.Builder().indent(4).build()),
+                ).saveAndLoadTest(YamlFormat.builder().indent(4).build()),
                 testCase(
                         """
                                 array:
@@ -243,13 +243,13 @@ class YamlFormatTest extends TextFileFormatTest<MapNode, YamlFormat> {
                                 - c
                                 """,
                         mapNode(mapNode -> mapNode.set("array", new char[]{'a', 'b', 'c'}))
-                ).saveTest(new YamlFormat.Builder().arrayFlowStyle(DumperOptions.FlowStyle.BLOCK).build()),
+                ).saveTest(YamlFormat.builder().arrayFlowStyle(DumperOptions.FlowStyle.BLOCK).build()),
                 testCase(
                         """
                                 list: [a, b, c]
                                 """,
                         mapNode(mapNode -> mapNode.createList("list").addAll(List.of("a", "b", "c")))
-                ).saveAndLoadTest(new YamlFormat.Builder().sequenceFlowStyle(DumperOptions.FlowStyle.FLOW).build()),
+                ).saveAndLoadTest(YamlFormat.builder().sequenceFlowStyle(DumperOptions.FlowStyle.FLOW).build()),
                 testCase(
                         """
                                 map-1: {key: value}
@@ -259,7 +259,7 @@ class YamlFormatTest extends TextFileFormatTest<MapNode, YamlFormat> {
                             mapNode.createMap("map-1").set("key", "value");
                             mapNode.getOrCreateMap("map-2").createMap("nested").set("key", "value");
                         })
-                ).saveAndLoadTest(new YamlFormat.Builder().mapFlowStyle(DumperOptions.FlowStyle.FLOW).build()),
+                ).saveAndLoadTest(YamlFormat.builder().mapFlowStyle(DumperOptions.FlowStyle.FLOW).build()),
                 testCase(
                         """
                                 {string: test, list: [a, b, c], map: {key: value}}
@@ -269,19 +269,19 @@ class YamlFormatTest extends TextFileFormatTest<MapNode, YamlFormat> {
                             mapNode.set("list", List.of("a", "b", "c"));
                             mapNode.set("map", Map.of("key", "value"));
                         })
-                ).saveAndLoadTest(new YamlFormat.Builder().flowStyle(DumperOptions.FlowStyle.FLOW).build()),
+                ).saveAndLoadTest(YamlFormat.builder().flowStyle(DumperOptions.FlowStyle.FLOW).build()),
                 testCase(
                         """
                                 "string": "3.14"
                                 """,
                         mapNode(mapNode -> mapNode.set("string", "3.14"))
-                ).saveAndLoadTest(new YamlFormat.Builder().scalarStyle(DumperOptions.ScalarStyle.DOUBLE_QUOTED).build()),
+                ).saveAndLoadTest(YamlFormat.builder().scalarStyle(DumperOptions.ScalarStyle.DOUBLE_QUOTED).build()),
                 testCase(
                         """
                                 'string': '3.14'
                                 """,
                         mapNode(mapNode -> mapNode.set("string", "3.14"))
-                ).saveAndLoadTest(new YamlFormat.Builder().scalarStyle(DumperOptions.ScalarStyle.SINGLE_QUOTED).build())
+                ).saveAndLoadTest(YamlFormat.builder().scalarStyle(DumperOptions.ScalarStyle.SINGLE_QUOTED).build())
         ).flatMap(Function.identity());
     }
 
