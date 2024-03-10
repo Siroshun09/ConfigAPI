@@ -45,7 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class NodeConverter {
+final class NodeConverter {
 
     static @NotNull MapNode toMapNode(@Nullable org.yaml.snakeyaml.nodes.Node root, @NotNull YamlHolder yamlHolder) throws IOException {
         if (root instanceof MappingNode mappingNode) {
@@ -346,5 +346,9 @@ class NodeConverter {
                 blockTarget.setBlockComments(commentLines);
             }
         }
+    }
+
+    private NodeConverter() {
+        throw new UnsupportedOperationException();
     }
 }
