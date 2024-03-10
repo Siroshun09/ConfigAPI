@@ -237,7 +237,7 @@ class NodeConverter {
                 nodes.add(yNode);
             }
 
-            return new SequenceNode(Tag.SEQ, nodes, DumperOptions.FlowStyle.BLOCK);
+            return new SequenceNode(Tag.SEQ, nodes, representer.getDefaultFlowStyle());
         } else if (node instanceof CommentedNode<?> commentedNode) {
             return toNode(commentedNode.node(), representer);
         } else if (node instanceof EnumValue<?> enumValue) {
