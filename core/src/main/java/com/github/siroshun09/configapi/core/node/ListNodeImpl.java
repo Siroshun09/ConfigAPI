@@ -150,7 +150,7 @@ final class ListNodeImpl implements ListNode {
 
     @Override
     public void replaceAll(@NotNull UnaryOperator<Node<?>> operator) {
-        this.backing.replaceAll(operator);
+        this.backing.replaceAll(node -> Objects.requireNonNullElse(operator.apply(node), NullNode.NULL));
     }
 
     @Override
