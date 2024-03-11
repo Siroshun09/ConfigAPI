@@ -24,8 +24,10 @@ import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
@@ -157,11 +159,50 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
     @NotNull MapNode addMap();
 
     /**
+     * Clears this {@link ListNode}.
+     */
+    void clear();
+
+    /**
+     * Checks if the specified object is contained in this {@link ListNode}.
+     *
+     * @param object the object to check
+     * @return {@code true} if the specified object is contained in this {@link ListNode}, otherwise {@code false}
+     */
+    boolean contains(@NotNull Object object);
+
+    /**
+     * Gets the element at the specified position in this {@link ListNode}.
+     *
+     * @param index the index of the element to return
+     * @return the element at the specified position
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    @NotNull Node<?> get(int index);
+
+    /**
+     * Checks if this {@link ListNode} has no element.
+     *
+     * @return {@code true} if this {@link ListNode} has no element, otherwise {@code false}
+     */
+    boolean isEmpty();
+
+    /**
+     * Removes the element at the specified position in this {@link ListNode}.
+     *
+     * @param index the index of the element to remove
+     * @return the removed {@link Node}
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    @NotNull Node<?> remove(int index);
+
+    /**
      * Removes an object from this {@link ListNode}.
      *
      * @param value an object to remove from this {@link ListNode}
+     * @return {@code true} if the specified object is removed, otherwise {@code false}
      */
-    void remove(@NotNull Object value);
+    boolean remove(@NotNull Object value);
 
     /**
      * Removes the elements from this {@link ListNode} that satisfy the given predicate.
@@ -171,9 +212,35 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
     void removeIf(@NotNull Predicate<Node<?>> predicate);
 
     /**
-     * Clears this {@link ListNode}.
+     * Replaces each element in this {@link ListNode} using the given {@link UnaryOperator}.
+     *
+     * @param operator a {@link UnaryOperator} that replaces the elements
      */
-    void clear();
+    void replaceAll(@NotNull UnaryOperator<Node<?>> operator);
+
+    /**
+     * Sets the new element at the specified position in this {@link ListNode}.
+     *
+     * @param index  the index of the element to set
+     * @param object the object to set
+     * @return the removed {@link Node}
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    @NotNull Node<?> set(int index, @NotNull Object object);
+
+    /**
+     * Returns the number of elements in this {@link ListNode}.
+     *
+     * @return the number of elements in this {@link ListNode}
+     */
+    int size();
+
+    /**
+     * Sorts this {@link ListNode} using the given {@link Comparator}.
+     *
+     * @param comparator the {@link Comparator} to use for sorting this {@link ListNode}
+     */
+    void sort(@NotNull Comparator<? super Node<?>> comparator);
 
     /**
      * Copies this {@link ListNode}.

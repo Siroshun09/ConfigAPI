@@ -28,9 +28,11 @@ import org.jetbrains.annotations.UnmodifiableView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 final class ListNodeImpl implements ListNode {
@@ -117,8 +119,28 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
-    public void remove(@NotNull Object value) {
-        this.backing.remove(Node.fromObject(value));
+    public void clear() {
+        this.backing.clear();
+    }
+
+    @Override
+    public boolean contains(@NotNull Object object) {
+        return this.backing.contains(Node.fromObject(object));
+    }
+
+    @Override
+    public @NotNull Node<?> get(int index) {
+        return this.backing.get(index);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.backing.isEmpty();
+    }
+
+    @Override
+    public boolean remove(@NotNull Object value) {
+        return this.backing.remove(Node.fromObject(value));
     }
 
     @Override
@@ -127,8 +149,28 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
-    public void clear() {
-        this.backing.clear();
+    public void replaceAll(@NotNull UnaryOperator<Node<?>> operator) {
+        this.backing.replaceAll(operator);
+    }
+
+    @Override
+    public @NotNull Node<?> set(int index, @NotNull Object object) {
+        return this.backing.set(index, Node.fromObject(object));
+    }
+
+    @Override
+    public int size() {
+        return this.backing.size();
+    }
+
+    @Override
+    public void sort(@NotNull Comparator<? super Node<?>> comparator) {
+        this.backing.sort(comparator);
+    }
+
+    @Override
+    public @NotNull Node<?> remove(int index) {
+        return this.backing.remove(index);
     }
 
     @Contract(" -> new")
