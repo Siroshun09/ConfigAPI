@@ -19,6 +19,7 @@ package com.github.siroshun09.configapi.core.node;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -127,7 +128,7 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
      *
      * @param value a new object
      */
-    void add(@NotNull Object value);
+    void add(@Nullable Object value);
 
     /**
      * Adds new objects in the given {@link Collection} to this {@link ListNode}.
@@ -169,7 +170,7 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
      * @param object the object to check
      * @return {@code true} if the specified object is contained in this {@link ListNode}, otherwise {@code false}
      */
-    boolean contains(@NotNull Object object);
+    boolean contains(@Nullable Object object);
 
     /**
      * Gets the element at the specified position in this {@link ListNode}.
@@ -202,7 +203,7 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
      * @param value an object to remove from this {@link ListNode}
      * @return {@code true} if the specified object is removed, otherwise {@code false}
      */
-    boolean remove(@NotNull Object value);
+    boolean remove(@Nullable Object value);
 
     /**
      * Removes the elements from this {@link ListNode} that satisfy the given predicate.
@@ -226,7 +227,7 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
      * @return the removed {@link Node}
      * @throws IndexOutOfBoundsException if the index is out of range
      */
-    @NotNull Node<?> set(int index, @NotNull Object object);
+    @NotNull Node<?> set(int index, @Nullable Object object);
 
     /**
      * Returns the number of elements in this {@link ListNode}.

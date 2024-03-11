@@ -86,7 +86,7 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
-    public void add(@NotNull Object value) {
+    public void add(@Nullable Object value) {
         this.backing.add(Node.fromObject(value));
     }
 
@@ -124,7 +124,7 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
-    public boolean contains(@NotNull Object object) {
+    public boolean contains(@Nullable Object object) {
         return this.backing.contains(Node.fromObject(object));
     }
 
@@ -139,7 +139,7 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
-    public boolean remove(@NotNull Object value) {
+    public boolean remove(@Nullable Object value) {
         return this.backing.remove(Node.fromObject(value));
     }
 
@@ -154,7 +154,7 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
-    public @NotNull Node<?> set(int index, @NotNull Object object) {
+    public @NotNull Node<?> set(int index, @Nullable Object object) {
         return this.backing.set(index, Node.fromObject(object));
     }
 
