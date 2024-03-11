@@ -144,7 +144,7 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
-    public void removeIf(@NotNull Predicate<Node<?>> predicate) {
+    public void removeIf(@NotNull Predicate<? super Node<?>> predicate) {
         this.backing.removeIf(predicate);
     }
 

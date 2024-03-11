@@ -210,7 +210,7 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
      *
      * @param predicate a predicate which returns {@code true} for elements to be removed
      */
-    void removeIf(@NotNull Predicate<Node<?>> predicate);
+    void removeIf(@NotNull Predicate<? super Node<?>> predicate);
 
     /**
      * Replaces each element in this {@link ListNode} using the given {@link UnaryOperator}.
