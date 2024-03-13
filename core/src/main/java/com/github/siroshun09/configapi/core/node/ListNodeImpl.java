@@ -31,21 +31,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 final class ListNodeImpl implements ListNode {
 
-    static final ListNodeImpl EMPTY = new ListNodeImpl(Collections.emptyList(), true);
+    static final ListNodeImpl EMPTY = new ListNodeImpl(Collections.emptyList(), true, new AtomicReference<>());
 
     private final List<Node<?>> backing;
     private final boolean view;
-    private @Nullable Comment comment;
+    private final AtomicReference<@Nullable Comment> commentRef;
 
-    ListNodeImpl(@NotNull List<Node<?>> backing, boolean view) {
+    ListNodeImpl(@NotNull List<Node<?>> backing, boolean view, @NotNull AtomicReference<Comment> commentRef) {
         this.backing = backing;
         this.view = view;
+        this.commentRef = commentRef;
     }
 
     @Override
@@ -188,30 +190,31 @@ final class ListNodeImpl implements ListNode {
                 copiedList.add(Node.fromObject(this.backing.get(i)));
             }
 
-            copied = new ListNodeImpl(copiedList, false);
+            copied = new ListNodeImpl(copiedList, false, new AtomicReference<>());
         }
 
-        copied.setComment(this.comment);
+        copied.setComment(this.commentRef.get());
         return copied;
     }
 
     @Contract(" -> new")
     @Override
     public @NotNull @UnmodifiableView ListNode asView() {
-        return this == EMPTY ? EMPTY : new ListNodeImpl(Collections.unmodifiableList(this.backing), true);
+        return this == EMPTY ? EMPTY : new ListNodeImpl(Collections.unmodifiableList(this.backing), true, this.commentRef);
     }
 
     @Override
     public boolean hasComment() {
-        return this.comment != null;
+        return this.commentRef.get() != null;
     }
 
     @Override
     public @NotNull Comment getComment() {
-        if (this.comment == null) {
+        var comment = this.commentRef.get();
+        if (comment == null) {
             throw new IllegalStateException("Comment is not set.");
         }
-        return this.comment;
+        return comment;
     }
 
     @Override
@@ -219,7 +222,7 @@ final class ListNodeImpl implements ListNode {
         if (this.view) {
             throw new UnsupportedOperationException("Cannot change the comment of this ListNode because this is view mode.");
         }
-        this.comment = comment;
+        this.commentRef.set(comment);
     }
 
     @Override
@@ -268,7 +271,7 @@ final class ListNodeImpl implements ListNode {
     @Override
     public String toString() {
         return "ListNodeImpl{" +
-                "comment=" + this.comment +
+                "comment=" + this.commentRef.get() +
                 ", backing=" + this.backing +
                 '}';
     }

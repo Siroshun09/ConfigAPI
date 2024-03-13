@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A {@link Node} implementation that represents a {@link Map} ({@link Object} - {@link Node}).
@@ -47,7 +48,7 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
      * @return a new {@link MapNode}
      */
     static @NotNull MapNode create() {
-        return new MapNodeImpl(new LinkedHashMap<>(), false);
+        return new MapNodeImpl(new LinkedHashMap<>(), false, new AtomicReference<>());
     }
 
     /**
@@ -65,7 +66,7 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
             converted.put(entry.getKey(), Node.fromObject(entry.getValue()));
         }
 
-        return new MapNodeImpl(converted, false);
+        return new MapNodeImpl(converted, false, new AtomicReference<>());
     }
 
     /**

@@ -28,19 +28,20 @@ import org.jetbrains.annotations.UnmodifiableView;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 final class MapNodeImpl implements MapNode {
 
-    static final MapNodeImpl EMPTY = new MapNodeImpl(Collections.emptyMap(), true);
+    static final MapNodeImpl EMPTY = new MapNodeImpl(Collections.emptyMap(), true, new AtomicReference<>());
 
     private final Map<Object, Node<?>> backing;
     private final boolean view;
+    private final AtomicReference<@Nullable Comment> commentRef;
 
-    private @Nullable Comment comment;
-
-    MapNodeImpl(@NotNull Map<Object, Node<?>> backing, boolean view) {
+    MapNodeImpl(@NotNull Map<Object, Node<?>> backing, boolean view, @NotNull AtomicReference<Comment> commentRef) {
         this.backing = backing;
         this.view = view;
+        this.commentRef = commentRef;
     }
 
     @Override
@@ -92,15 +93,13 @@ final class MapNodeImpl implements MapNode {
     @Override
     public @NotNull MapNode copy() {
         var copied = MapNode.create(this.backing);
-        copied.setComment(this.comment);
+        copied.setComment(this.commentRef.get());
         return copied;
     }
 
     @Override
     public @NotNull @UnmodifiableView MapNode asView() {
-        var view = new MapNodeImpl(Collections.unmodifiableMap(this.backing), true);
-        view.comment = this.comment;
-        return view;
+        return this == EMPTY ? EMPTY : new MapNodeImpl(Collections.unmodifiableMap(this.backing), true, this.commentRef);
     }
 
     @Override
@@ -119,23 +118,24 @@ final class MapNodeImpl implements MapNode {
 
     @Override
     public boolean hasComment() {
-        return this.comment != null;
+        return this.commentRef.get() != null;
     }
 
     @Override
     public @NotNull Comment getComment() {
-        if (this.comment == null) {
+        var comment = this.commentRef.get();
+        if (comment == null) {
             throw new IllegalStateException("Comment is not set.");
         }
-        return this.comment;
+        return comment;
     }
 
     @Override
     public void setComment(@Nullable Comment comment) {
         if (this.view) {
-            throw new UnsupportedOperationException("Cannot change the comment of this MapNode because this is view mode.");
+            throw new UnsupportedOperationException("Cannot change the comment of this ListNode because this is view mode.");
         }
-        this.comment = comment;
+        this.commentRef.set(comment);
     }
 
     @Override
@@ -184,8 +184,8 @@ final class MapNodeImpl implements MapNode {
     @Override
     public String toString() {
         return "MapNodeImpl{" +
-                "comment=" + this.comment +
-                ", backing=" + this.backing +
-                '}';
+               "comment=" + this.commentRef.get() +
+               ", backing=" + this.backing +
+               '}';
     }
 }

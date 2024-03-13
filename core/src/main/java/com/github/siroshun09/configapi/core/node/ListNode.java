@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
@@ -48,7 +49,7 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
      * @return a new {@link ListNode}
      */
     static @NotNull ListNode create() {
-        return new ListNodeImpl(new ArrayList<>(), false);
+        return new ListNodeImpl(new ArrayList<>(), false, new AtomicReference<>());
     }
 
     /**
@@ -58,7 +59,7 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
      * @return a new {@link ListNode}
      */
     static @NotNull ListNode create(int initialCapacity) {
-        return new ListNodeImpl(new ArrayList<>(initialCapacity), false);
+        return new ListNodeImpl(new ArrayList<>(initialCapacity), false, new AtomicReference<>());
     }
 
     /**
@@ -78,7 +79,7 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
             converted.add(Node.fromObject(element));
         }
 
-        return new ListNodeImpl(converted, false);
+        return new ListNodeImpl(converted, false, new AtomicReference<>());
     }
 
     /**
