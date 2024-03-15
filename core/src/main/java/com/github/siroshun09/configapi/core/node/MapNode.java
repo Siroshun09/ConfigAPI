@@ -126,9 +126,70 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
     @Nullable Node<?> setIfAbsent(@NotNull Object key, @NotNull Object value);
 
     /**
+     * Puts all entries in the given {@link Map} to this {@link MapNode}.
+     *
+     * @param map the {@link Map} that includes entries to add this {@link MapNode}
+     */
+    void putAll(@NotNull Map<?, ?> map);
+
+    /**
+     * Puts all entries in the given {@link MapNode} to this {@link MapNode}.
+     *
+     * @param mapNode the {@link MapNode} that includes entries to add this {@link MapNode}
+     */
+    void putAll(@NotNull MapNode mapNode);
+
+    /**
+     * Replaces the value that is mapped by the specified key with the given {@link Node}.
+     *
+     * @param key   the key to replace
+     * @param value the value to be associated with the specified key
+     * @return the previous {@link Node}, or {@link NullNode} if the specified key is not present this {@link MapNode}
+     */
+    @NotNull Node<?> replace(@NotNull Object key, @Nullable Object value);
+
+    /**
+     * Removes the value that is mapped by the specified key.
+     *
+     * @param key the key to remove
+     * @return the removed value, or {@link NullNode} if the specified key is not present this {@link MapNode}
+     */
+    @NotNull Node<?> remove(@NotNull Object key);
+
+    /**
      * Clears this {@link MapNode}.
      */
     void clear();
+
+    /**
+     * Checks if the specified key is contained in this {@link MapNode}.
+     *
+     * @param key the key to check
+     * @return {@code true} if the specified key is contained in this {@link MapNode}, otherwise {@code false}
+     */
+    boolean containsKey(@NotNull Object key);
+
+    /**
+     * Checks if the specified value is contained in this {@link MapNode}.
+     *
+     * @param value the value to check
+     * @return {@code true} if the specified value is contained in this {@link MapNode}, otherwise {@code false}
+     */
+    boolean containsValue(@NotNull Object value);
+
+    /**
+     * Checks if this {@link MapNode} has no entries.
+     *
+     * @return {@code true} if this {@link MapNode} has no entries, otherwise {@code false}
+     */
+    boolean isEmpty();
+
+    /**
+     * Returns the number of entries in this {@link MapNode}.
+     *
+     * @return the number of entries in this {@link MapNode}
+     */
+    int size();
 
     /**
      * Copies this {@link MapNode}.

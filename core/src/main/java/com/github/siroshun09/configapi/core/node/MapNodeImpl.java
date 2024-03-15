@@ -86,8 +86,68 @@ final class MapNodeImpl implements MapNode {
     }
 
     @Override
+    public void putAll(@NotNull Map<?, ?> map) {
+        if (map.isEmpty()) {
+            return;
+        }
+
+        for (var entry : map.entrySet().toArray(Map.Entry[]::new)) {
+            this.set(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
+    public void putAll(@NotNull MapNode mapNode) {
+        if (mapNode.isEmpty()) {
+            return;
+        }
+
+        for (var entry : mapNode.value().entrySet().toArray(Map.Entry[]::new)) {
+            this.set(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
+    public @NotNull Node<?> replace(@NotNull Object key, @Nullable Object value) {
+        if (value == null || value == NullNode.NULL) {
+            return this.remove(key);
+        } else {
+            return Objects.requireNonNullElse(this.backing.replace(key, Node.fromObject(value)), NullNode.NULL);
+        }
+    }
+
+    @Override
+    public @NotNull Node<?> remove(@NotNull Object key) {
+        return Objects.requireNonNullElse(this.backing.remove(key), NullNode.NULL);
+    }
+
+    @Override
     public void clear() {
         this.backing.clear();
+    }
+
+    @Override
+    public boolean containsKey(@NotNull Object key) {
+        return this.backing.containsKey(Objects.requireNonNull(key));
+    }
+
+    @Override
+    public boolean containsValue(@NotNull Object value) {
+        if (Objects.requireNonNull(value) == NullNode.NULL) {
+            return false;
+        }
+
+        return this.backing.containsValue(Node.fromObject(value));
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.backing.isEmpty();
+    }
+
+    @Override
+    public int size() {
+        return this.backing.size();
     }
 
     @Override
