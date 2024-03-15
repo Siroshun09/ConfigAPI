@@ -94,7 +94,11 @@ final class ListNodeImpl implements ListNode {
 
     @Override
     public void addAll(@NotNull Collection<?> collection) {
-        for (var element : collection) {
+        if (collection.isEmpty()) {
+            return;
+        }
+
+        for (var element : collection.toArray()) { // We need to create an array to prevent ConcurrentModificationException
             this.backing.add(Node.fromObject(element));
         }
     }
