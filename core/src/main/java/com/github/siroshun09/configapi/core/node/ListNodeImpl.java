@@ -100,6 +100,17 @@ final class ListNodeImpl implements ListNode {
     }
 
     @Override
+    public void addAll(@NotNull ListNode listNode) {
+        if (listNode.isEmpty()) {
+            return;
+        }
+
+        for (var node : listNode.value().toArray(Node[]::new)) { // We need to create an array to prevent ConcurrentModificationException
+            this.add(node);
+        }
+    }
+
+    @Override
     public @NotNull ListNode addList() {
         var listNode = ListNode.create();
         this.backing.add(listNode);

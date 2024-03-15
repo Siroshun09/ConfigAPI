@@ -139,6 +139,13 @@ public sealed interface ListNode extends CommentableNode<List<Node<?>>> permits 
     void addAll(@NotNull Collection<?> collection);
 
     /**
+     * Adds new nodes in the given {@link ListNode} to this {@link ListNode}.
+     *
+     * @param listNode a {@link ListNode} that includes new nodes to add
+     */
+    void addAll(@NotNull ListNode listNode);
+
+    /**
      * Adds a new {@link ListNode} to this {@link ListNode}.
      *
      * @return a created {@link ListNode}

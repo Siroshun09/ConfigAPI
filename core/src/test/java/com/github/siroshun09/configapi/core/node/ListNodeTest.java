@@ -108,6 +108,31 @@ class ListNodeTest extends AbstractCommentableNodeTest<ListNode> {
                         (initial, modified) -> assertEquals(List.of(StringValue.fromString("a"), new IntValue(1), BooleanValue.TRUE), modified.value())
                 ),
                 nodeTest(
+                        "ListNode#addAll(ListNode)",
+                        ListNode.create(List.of("a", "b", "c")),
+                        node -> {
+                            var other = ListNode.create(List.of("d", "e", "f"));
+                            node.addAll(other);
+                            return node;
+                        },
+                        (initial, modified) -> {
+                            assertEquals(6, modified.size());
+                            assertEquals(List.of("a", "b", "c", "d", "e", "f"), modified.asList(String.class));
+                        }
+                ),
+                nodeTest(
+                        "ListNode#addAll(ListNode) by itself",
+                        ListNode.create(List.of("a", "b", "c")),
+                        node -> {
+                            node.addAll(node);
+                            return node;
+                        },
+                        (initial, modified) -> {
+                            assertEquals(6, modified.size());
+                            assertEquals(List.of("a", "b", "c", "a", "b", "c"), modified.asList(String.class));
+                        }
+                ),
+                nodeTest(
                         "ListNode#addList()",
                         ListNode.create(),
                         ListNode::addList,
