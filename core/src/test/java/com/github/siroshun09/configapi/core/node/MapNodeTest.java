@@ -16,340 +16,199 @@
 
 package com.github.siroshun09.configapi.core.node;
 
-import com.github.siroshun09.configapi.core.comment.SimpleComment;
-import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
-class MapNodeTest {
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    private static final SimpleComment COMMENT = SimpleComment.create("test");
+class MapNodeTest extends AbstractCommentableNodeTest<MapNode> {
 
-    private static @NotNull MapNode createSharedMapNode() {
-        var mapNode = MapNode.create();
+    @Override
+    protected Stream<NodeTestCase<MapNode>> nodeTestCases() {
+        return Stream.of(
+                nodeTest("MapNode#create()", MapNode.create(), node -> {
+                    assertTrue(node.isEmpty());
+                    assertTrue(node.value().isEmpty());
+                    assertTrue(node.hasValue()); // MapNode#hasValue always returns true
+                    assertDoesNotThrow(() -> node.set("a", "b"));
+                    assertDoesNotThrow(() -> node.setComment(COMMENT));
+                }),
+                nodeTest("MapNode#create(Map)", MapNode.create(Map.of("a", "b")), node -> {
+                    assertFalse(node.isEmpty());
+                    assertEquals(1, node.size());
+                    assertFalse(node.value().isEmpty());
+                    assertEquals(1, node.value().size());
+                    assertTrue(node.hasValue()); // MapNode#hasValue always returns true
+                    assertDoesNotThrow(() -> node.set("c", "d"));
+                    assertDoesNotThrow(() -> node.setComment(COMMENT));
+                }),
+                nodeTest("MapNode#empty()", MapNode.empty(), node -> {
+                    assertTrue(node.isEmpty());
+                    assertTrue(node.value().isEmpty());
+                    assertTrue(node.hasValue()); // MapNode#hasValue always returns true
+                    assertThrows(UnsupportedOperationException.class, () -> node.set("a", "b"));
+                    assertThrows(UnsupportedOperationException.class, () -> node.setComment(COMMENT));
+                }),
+                nodeTest("MapNode#get(Object)", MapNode.create(Map.of("a", "b")), node -> {
+                    assertEquals(StringValue.fromString("b"), node.get("a"));
+                    assertEquals(NullNode.NULL, node.get("1"));
+                }),
+                nodeTest("MapNode#get(Object, Node)", MapNode.create(Map.of("a", "b")), node -> {
+                    var c = StringValue.fromString("c");
+                    assertEquals(StringValue.fromString("b"), node.getOrDefault("a", c));
+                    assertEquals(c, node.getOrDefault("1", c));
+                }),
+                nodeTest("MapNode#set(Object, Object)", MapNode.create(Map.of("a", "b")), node -> {
+                    assertEquals(StringValue.fromString("b"), node.set("a", "A"));
+                    assertEquals(NullNode.NULL, node.set("1", "2"));
+                    assertEquals(StringValue.fromString("A"), node.set("a", null));
+                    assertEquals(StringValue.fromString("2"), node.set("1", NullNode.NULL));
+                    assertEquals(NullNode.NULL, node.set("b", null));
+                }),
+                nodeTest("MapNode#setIfAbsent(Object, Object)", MapNode.create(Map.of("a", "b")), node -> {
+                    assertEquals(StringValue.fromString("b"), node.setIfAbsent("a", "c"));
+                    assertEquals(StringValue.fromString("b"), node.get("a"));
+                    assertNull(node.setIfAbsent("1", "2"));
+                }),
+                nodeTest(
+                        "MapNode#putAll(Map)",
+                        MapNode.create(Map.of("a", "b")),
+                        node -> {
+                            node.putAll(Map.of("c", "d"));
+                            assertEquals(StringValue.fromString("b"), node.get("a"));
+                            assertEquals(StringValue.fromString("d"), node.get("c"));
+                        }
+                ),
+                nodeTest(
+                        "MapNode#putAll(Map) by itself",
+                        MapNode.create(Map.of("a", "b")),
+                        node -> assertDoesNotThrow(() -> node.putAll(node.value()))
+                ),
+                nodeTest(
+                        "MapNode#putAll(MapNode)",
+                        MapNode.create(Map.of("a", "b")),
+                        node -> {
+                            node.putAll(MapNode.create(Map.of("c", "d")));
+                            assertEquals(StringValue.fromString("b"), node.get("a"));
+                            assertEquals(StringValue.fromString("d"), node.get("c"));
+                        }
+                ),
+                nodeTest(
+                        "MapNode#putAll(MapNode) by itself",
+                        MapNode.create(Map.of("a", "b")),
+                        node -> assertDoesNotThrow(() -> node.putAll(node))
+                ),
+                nodeTest(
+                        "MapNode#replace(Object, Object)",
+                        MapNode.create(Map.of("a", "b", "1", "2")),
+                        node -> {
+                            assertEquals(StringValue.fromString("b"), node.replace("a", "A"));
+                            assertEquals(StringValue.fromString("2"), node.replace("1", null));
+                            assertEquals(NullNode.NULL, node.replace("unknown", "value"));
+                            return node;
+                        },
+                        (initial, modified) -> {
+                            assertEquals(StringValue.fromString("A"), modified.get("a"));
+                            assertEquals(NullNode.NULL, modified.get("1"));
+                            assertEquals(NullNode.NULL, modified.get("unknown"));
+                        }
+                ),
+                nodeTest(
+                        "MapNode#remove(Object)",
+                        MapNode.create(Map.of("a", "b")),
+                        node -> {
+                            assertEquals(StringValue.fromString("b"), node.remove("a"));
+                            assertEquals(NullNode.NULL, node.remove("unknown"));
+                            return node;
+                        },
+                        (initial, modified) -> {
+                            assertEquals(NullNode.NULL, modified.get("a"));
+                            assertEquals(NullNode.NULL, modified.get("unknown"));
+                        }
+                ),
+                nodeTest(
+                        "MapNode#clear()",
+                        MapNode.create(Map.of("a", "b", "1", "2")),
+                        node -> {
+                            node.clear();
+                            return node;
+                        },
+                        (initial, modified) -> {
+                            assertTrue(modified.isEmpty());
+                            assertEquals(NullNode.NULL, modified.get("a"));
+                            assertEquals(NullNode.NULL, modified.get("1"));
+                        }
+                ),
+                nodeTest(
+                        "MapNode#copy()",
+                        MapNode.create(Map.of("a", "b")),
+                        MapNode::copy,
+                        (initial, copied) -> {
+                            assertNotSame(initial, copied);
 
-        mapNode.set("string", "value");
-        mapNode.set("char", 'a');
-        mapNode.set("integer", 100);
-        mapNode.set("double", 3.14);
-        mapNode.set("bool", true);
-        mapNode.set("list", List.of("A", "B", "C"));
-        mapNode.set("map", Map.of("key", "value"));
-        mapNode.set("nested", Map.of("map", Map.of("key", "value")));
+                            initial.set("a", "A");
+                            copied.set("a", "1");
+                            assertEquals(Map.of("a", StringValue.fromString("A")), initial.value());
+                            assertEquals(Map.of("a", StringValue.fromString("1")), copied.value());
 
-        return mapNode;
+                            copied.setComment(COMMENT);
+                            assertNull(initial.getCommentOrNull());
+                            assertSame(COMMENT, copied.getComment());
+                        }
+                ),
+                nodeTest(
+                        "MapNode#asView()",
+                        MapNode.create(Map.of("a", "b")),
+                        MapNode::asView,
+                        (initial, view) -> {
+                            assertNotSame(initial, view);
+
+                            initial.set("a", "A");
+                            assertThrows(UnsupportedOperationException.class, () -> view.set("a", "1"));
+                            assertEquals(Map.of("a", StringValue.fromString("A")), initial.value());
+                            assertEquals(Map.of("a", StringValue.fromString("A")), view.value());
+
+                            assertThrows(UnsupportedOperationException.class, () -> view.setComment(COMMENT));
+                            assertNull(initial.getCommentOrNull());
+                            assertNull(view.getCommentOrNull());
+
+                            initial.setComment(COMMENT);
+                            assertSame(COMMENT, initial.getComment());
+                            assertSame(COMMENT, view.getComment());
+                        }
+                )
+        );
     }
 
-    private enum ExampleEnum {
-        A,
-        B,
-        C
+    @Override
+    protected Stream<FromObjectTestCase<MapNode>> fromObjectTestCases() {
+        return Stream.of(
+                fromObjectTest(new HashMap<>(), map -> {
+                    assertTrue(map.isEmpty());
+                    assertDoesNotThrow(() -> map.set("a", "b"));
+                }),
+                fromObjectTest(Map.of("a", "b"), map -> {
+                    assertEquals(Map.of("a", StringValue.fromString("b")), map.value());
+                    assertDoesNotThrow(() -> map.set("c", "d"));
+                })
+        );
     }
 
-    @Test
-    void testCreate() {
-        var mapNode = MapNode.create();
-        Assertions.assertTrue(mapNode.value().isEmpty());
-
-        // checks if the list is modifiable
-        Assertions.assertDoesNotThrow(() -> mapNode.set(1, 1));
-        Assertions.assertDoesNotThrow(() -> mapNode.setComment(COMMENT));
+    @Override
+    protected MapNode cast(Node<?> node) {
+        return (MapNode) node;
     }
 
-    @Test
-    void testCreateWithMap() {
-        var original = new HashMap<>(Map.of("a", "b", "c", "d"));
-        var mapNode = MapNode.create(original);
-
-        Assertions.assertEquals(2, mapNode.value().size());
-
-        // Checks if the MapNode is not modified by adding the entry to the original map.
-        original.put("e", "f");
-        Assertions.assertEquals(2, mapNode.value().size());
-
-        // checks if the list is modifiable
-        Assertions.assertDoesNotThrow(() -> mapNode.set("e", "f"));
-        Assertions.assertDoesNotThrow(() -> mapNode.setComment(COMMENT));
-        Assertions.assertDoesNotThrow(() -> MapNode.create(Map.of(1, 2)).set(3, 4));
-    }
-
-    @Test
-    void testEmpty() {
-        Assertions.assertTrue(MapNode.empty().value().isEmpty());
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> MapNode.empty().set(1, 2));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> MapNode.empty().setComment(COMMENT));
-    }
-
-    @Test
-    void testValue() {
-        var mapNode = MapNode.create(Map.of("a", "b", 1, 2));
-        Assertions.assertEquals(Map.of("a", new StringValue("b"), 1, new IntValue(2)), mapNode.value());
-    }
-
-    @Test
-    void testHasValue() {
-        Assertions.assertTrue(MapNode.create().hasValue());
-        Assertions.assertTrue(MapNode.create(Map.of("a", "b", 1, 2)).hasValue());
-        Assertions.assertTrue(MapNode.empty().hasValue());
-    }
-
-    @Test
-    void testGet() {
-        var mapNode = MapNode.create(Map.of("a", "b", 1, 2));
-        Assertions.assertEquals(new StringValue("b"), mapNode.get("a"));
-        Assertions.assertEquals(new IntValue(2), mapNode.get(1));
-
-        Assertions.assertSame(NullNode.NULL, mapNode.get("b"));
-        Assertions.assertSame(NullNode.NULL, MapNode.empty().get("a"));
-
-        Assertions.assertSame(BooleanValue.TRUE, mapNode.getOrDefault("b", BooleanValue.TRUE));
-        Assertions.assertSame(BooleanValue.TRUE, MapNode.empty().getOrDefault("a", BooleanValue.TRUE));
-    }
-
-    @Test
-    void testSet() {
-        var mapNode = MapNode.create(Map.of("a", "b", 1, 2));
-
-        Assertions.assertEquals(new StringValue("b"), mapNode.set("a", "c"));
-        Assertions.assertEquals(new StringValue("c"), mapNode.get("a"));
-
-        Assertions.assertEquals(new IntValue(2), mapNode.set(1, null));
-        Assertions.assertEquals(NullNode.NULL, mapNode.get(1));
-
-        Assertions.assertSame(NullNode.NULL, mapNode.set("d", "e"));
-        Assertions.assertEquals(new StringValue("e"), mapNode.get("d"));
-
-        Assertions.assertEquals(new StringValue("e"), mapNode.set("d", NullNode.NULL));
-        Assertions.assertEquals(NullNode.NULL, mapNode.get("d"));
-
-        Assertions.assertEquals(Map.of("a", new StringValue("c")), mapNode.value());
-
-        var commented = MapNode.create(Map.of("x", "y"));
-        commented.setComment(COMMENT);
-        mapNode.set("commented", commented);
-        NodeAssertion.assertEquals(commented, mapNode.get("commented"));
-        mapNode.set("commented", "new");
-        NodeAssertion.assertEquals(new CommentedNode<>(new StringValue("new"), COMMENT), mapNode.get("commented"));
-    }
-
-    @Test
-    void testSetIfAbsent() {
-        var mapNode = MapNode.create(Map.of("a", "b"));
-
-        Assertions.assertEquals(new StringValue("b"), mapNode.setIfAbsent("a", "c"));
-        Assertions.assertEquals(new StringValue("b"), mapNode.get("a"));
-
-        Assertions.assertNull(mapNode.setIfAbsent("c", "d"));
-        Assertions.assertEquals(new StringValue("d"), mapNode.get("c"));
-    }
-
-    @Test
-    void testClear() {
-        var mapNode = MapNode.create(Map.of("a", "b", 1, 2));
-        mapNode.setComment(COMMENT);
-
-        mapNode.clear();
-
-        Assertions.assertTrue(mapNode.value().isEmpty());
-        Assertions.assertSame(NullNode.NULL, mapNode.get("a"));
-        Assertions.assertSame(NullNode.NULL, mapNode.get(1));
-        Assertions.assertEquals(COMMENT, mapNode.getCommentOrNull()); // comment should not be cleared
-    }
-
-    @Test
-    void testCopy() {
-        var mapNode = MapNode.create(Map.of("a", "b"));
-        mapNode.setComment(COMMENT);
-        var copied = mapNode.copy();
-
-        mapNode.set("c", 3);
-        copied.set(3, "c");
-
-        Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new IntValue(3)), mapNode.value());
-        Assertions.assertEquals(Map.of("a", new StringValue("b"), 3, new StringValue("c")), copied.value());
-        Assertions.assertEquals(mapNode.getCommentOrNull(), copied.getCommentOrNull());
-    }
-
-    @Test
-    void testAsView() {
-        var mapNode = MapNode.create(Map.of("a", "b"));
-        var view = mapNode.asView();
-
-        mapNode.set("c", "d");
-
-        Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new StringValue("d")), mapNode.value());
-        Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new StringValue("d")), view.value());
-
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("e", "f"));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("c", "f"));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> view.set("a", null));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> view.setComment(COMMENT));
-
-        Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new StringValue("d")), mapNode.value());
-        Assertions.assertEquals(Map.of("a", new StringValue("b"), "c", new StringValue("d")), view.value());
-    }
-
-    @Test
-    void testList() {
-        var mapNode = createSharedMapNode();
-
-        NodeAssertion.assertEquals(ListNode.create(List.of("A", "B", "C")), mapNode.getList("list"));
-        Assertions.assertSame(ListNode.empty(), mapNode.getList("string"));
-
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getList("list").add("D"));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getList("list").setComment(COMMENT));
-
-        NodeAssertion.assertEquals(ListNode.create(List.of("A", "B", "C")), mapNode.getOrCreateList("list"));
-
-        var list = mapNode.getOrCreateList("string");
-        Assertions.assertNotSame(ListNode.empty(), mapNode.getList("string"));
-        list.add("A");
-        NodeAssertion.assertEquals(ListNode.create(List.of("A")), mapNode.getList("string"));
-
-        var newList = mapNode.createList("string");
-        newList.add("B");
-        NodeAssertion.assertEquals(ListNode.create(List.of("B")), mapNode.getList("string"));
-    }
-
-    @Test
-    void testMap() {
-        var mapNode = createSharedMapNode();
-
-        NodeAssertion.assertEquals(MapNode.create(Map.of("key", "value")), mapNode.getMap("map"));
-        Assertions.assertSame(MapNode.empty(), mapNode.getMap("string"));
-
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getMap("map").set("a", "b"));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> mapNode.getMap("map").setComment(COMMENT));
-
-        NodeAssertion.assertEquals(MapNode.create(Map.of("key", "value")), mapNode.getOrCreateMap("map"));
-
-        var map = mapNode.getOrCreateMap("string");
-        Assertions.assertNotSame(MapNode.empty(), mapNode.getMap("string"));
-        map.set("A", "B");
-        NodeAssertion.assertEquals(MapNode.create(Map.of("A", "B")), mapNode.getMap("string"));
-
-        var newMap = mapNode.createMap("string");
-        newMap.set("C", "D");
-        NodeAssertion.assertEquals(MapNode.create(Map.of("C", "D")), mapNode.getMap("string"));
-    }
-
-    @Test
-    void testString() {
-        var mapNode = createSharedMapNode();
-
-        Assertions.assertEquals("value", mapNode.getString("string"));
-        Assertions.assertEquals("", mapNode.getString("integer"));
-
-        Assertions.assertEquals("value", mapNode.getString("string", "default"));
-        Assertions.assertEquals("default", mapNode.getString("integer", "default"));
-
-        Assertions.assertEquals("value", mapNode.getStringOrNull("string"));
-        Assertions.assertNull(mapNode.getStringOrNull("integer"));
-    }
-
-    @Test
-    void testEnum() {
-        var mapNode = createSharedMapNode();
-
-        mapNode.set("enum", ExampleEnum.A);
-        mapNode.set("enum-name", "B");
-        mapNode.set("enum-lower-name", "b");
-
-        Assertions.assertEquals(ExampleEnum.A, mapNode.getEnum("enum", ExampleEnum.class));
-        Assertions.assertEquals(ExampleEnum.B, mapNode.getEnum("enum-name", ExampleEnum.class));
-        Assertions.assertNull(mapNode.getEnum("string", ExampleEnum.class));
-        Assertions.assertNull(mapNode.getEnum("integer", ExampleEnum.class));
-
-        Assertions.assertEquals(ExampleEnum.A, mapNode.getEnum("enum", ExampleEnum.C));
-        Assertions.assertEquals(ExampleEnum.B, mapNode.getEnum("enum-name", ExampleEnum.C));
-        Assertions.assertEquals(ExampleEnum.C, mapNode.getEnum("string", ExampleEnum.C));
-        Assertions.assertEquals(ExampleEnum.C, mapNode.getEnum("integer", ExampleEnum.C));
-
-        Assertions.assertEquals(ExampleEnum.B, mapNode.getEnum("enum-lower-name", ExampleEnum.C));
-    }
-
-    @Test
-    void testBoolean() {
-        var mapNode = createSharedMapNode();
-
-        Assertions.assertTrue(mapNode.getBoolean("bool"));
-        Assertions.assertFalse(mapNode.getBoolean("string"));
-
-        Assertions.assertTrue(mapNode.getBoolean("bool"));
-        Assertions.assertTrue(mapNode.getBoolean("string", true));
-    }
-
-    @Test
-    void testInteger() {
-        var mapNode = createSharedMapNode();
-
-        Assertions.assertEquals(100, mapNode.getInteger("integer"));
-        Assertions.assertEquals(3, mapNode.getInteger("double"));
-        Assertions.assertEquals(0, mapNode.getInteger("string"));
-        Assertions.assertEquals(10, mapNode.getInteger("string", 10));
-    }
-
-    @Test
-    void testLong() {
-        var mapNode = createSharedMapNode();
-
-        Assertions.assertEquals(100, mapNode.getLong("integer"));
-        Assertions.assertEquals(3, mapNode.getLong("double"));
-        Assertions.assertEquals(0, mapNode.getLong("string"));
-        Assertions.assertEquals(10, mapNode.getLong("string", 10));
-    }
-
-    @Test
-    void testFloat() {
-        var mapNode = createSharedMapNode();
-
-        Assertions.assertEquals(100f, mapNode.getFloat("integer"));
-        Assertions.assertEquals(3.14f, mapNode.getFloat("double"));
-        Assertions.assertEquals(0, mapNode.getFloat("string"));
-        Assertions.assertEquals(10.5f, mapNode.getFloat("string", 10.5f));
-    }
-
-    @Test
-    void testDouble() {
-        var mapNode = createSharedMapNode();
-
-        Assertions.assertEquals(100, mapNode.getDouble("integer"));
-        Assertions.assertEquals(3.14, mapNode.getDouble("double"));
-        Assertions.assertEquals(0, mapNode.getDouble("string"));
-        Assertions.assertEquals(10.5, mapNode.getDouble("string", 10.5f));
-    }
-
-    @Test
-    void testByte() {
-        var mapNode = createSharedMapNode();
-
-        Assertions.assertEquals(100, mapNode.getByte("integer"));
-        Assertions.assertEquals(3, mapNode.getByte("double"));
-        Assertions.assertEquals(0, mapNode.getByte("string"));
-        Assertions.assertEquals(10, mapNode.getByte("string", (byte) 10));
-    }
-
-    @Test
-    void testShort() {
-        var mapNode = createSharedMapNode();
-
-        Assertions.assertEquals(100, mapNode.getShort("integer"));
-        Assertions.assertEquals(3, mapNode.getShort("double"));
-        Assertions.assertEquals(0, mapNode.getShort("string"));
-        Assertions.assertEquals(10, mapNode.getShort("string", (short) 10));
-    }
-
-    @Test
-    void testChar() {
-        var mapNode = MapNode.create(Map.of("char", 'a', "integer", 100));
-
-        Assertions.assertEquals('a', mapNode.getChar("char"));
-        Assertions.assertEquals(Character.MIN_VALUE, mapNode.getChar("integer"));
-        Assertions.assertEquals('b', mapNode.getChar("integer", 'b'));
+    @Override
+    protected Stream<MapNode> commentableNodes() {
+        return Stream.of(MapNode.create());
     }
 }
