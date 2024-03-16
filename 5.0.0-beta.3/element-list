@@ -1,0 +1,16 @@
+com.github.siroshun09.configapi.core.comment
+com.github.siroshun09.configapi.core.file
+com.github.siroshun09.configapi.core.file.java.binary
+com.github.siroshun09.configapi.core.file.java.properties
+com.github.siroshun09.configapi.core.node
+com.github.siroshun09.configapi.core.node.visitor
+com.github.siroshun09.configapi.core.serialization
+com.github.siroshun09.configapi.core.serialization.annotation
+com.github.siroshun09.configapi.core.serialization.key
+com.github.siroshun09.configapi.core.serialization.record
+com.github.siroshun09.configapi.core.serialization.registry
+com.github.siroshun09.configapi.core.util
+com.github.siroshun09.configapi.format.gson
+com.github.siroshun09.configapi.format.jackson
+com.github.siroshun09.configapi.format.yaml
+com.github.siroshun09.configapi.format.yaml.comment
