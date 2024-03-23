@@ -184,6 +184,16 @@ class MapNodeTest extends AbstractCommentableNodeTest<MapNode> {
                             assertSame(COMMENT, initial.getComment());
                             assertSame(COMMENT, view.getComment());
                         }
+                ),
+                nodeTest(
+                        "MapNode#getString(String)",
+                        MapNode.create(Map.of("a", "b", 1, 2)),
+                        node -> {
+                            assertEquals("b", node.getString("a"));
+                            assertEquals("2", node.getString(1));
+                            assertEquals("", node.getString("unknown"));
+                            assertEquals("default", node.getString("unknown", "default"));
+                        }
                 )
         );
     }

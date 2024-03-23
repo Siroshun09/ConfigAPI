@@ -294,7 +294,7 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
      * @return the {@link String} to which the specified key is mapped, or the specified value if the key is not mapped to {@link StringValue}
      */
     default @NotNull String getString(@NotNull Object key, @NotNull String def) {
-        return this.raw(key) instanceof StringValue value ? value.asString() : def;
+        return this.raw(key) instanceof StringRepresentable value ? value.asString() : def;
     }
 
     /**
@@ -304,7 +304,7 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
      * @return the {@link String} to which the specified key is mapped, or {@code null} if the key is not mapped to {@link StringValue}
      */
     default @Nullable String getStringOrNull(@NotNull Object key) {
-        return this.raw(key) instanceof StringValue value ? value.asString() : null;
+        return this.raw(key) instanceof StringRepresentable value ? value.asString() : null;
     }
 
     /**
