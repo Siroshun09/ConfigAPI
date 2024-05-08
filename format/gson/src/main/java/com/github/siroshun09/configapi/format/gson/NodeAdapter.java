@@ -48,35 +48,85 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 
-final class NodeSerializer extends TypeAdapter<MapNode> {
+final class NodeAdapter extends TypeAdapter<Node<?>> {
 
-    static final NodeSerializer INSTANCE = new NodeSerializer();
+    static final TypeAdapter<Node<?>> INSTANCE = new NodeAdapter();
 
-    private NodeSerializer() {
+    static final TypeAdapter<ListNode> LIST_NODE_ADAPTER = new TypeAdapter<>() {
+        @Override
+        public ListNode read(JsonReader in) throws IOException {
+            var listNode = ListNode.create();
+
+            var token = in.peek();
+
+            if (token == JsonToken.BEGIN_ARRAY) {
+                in.beginArray();
+
+                while (in.hasNext()) {
+                    listNode.add(NodeAdapter.INSTANCE.read(in));
+                }
+
+                in.endArray();
+
+                return listNode;
+            } else {
+                throw new IOException("Unexpected token: " + token);
+            }
+        }
+
+        @Override
+        public void write(JsonWriter out, ListNode value) throws IOException {
+            out.beginArray();
+
+            for (var element : value.value()) {
+                NodeAdapter.INSTANCE.write(out, element);
+            }
+
+            out.endArray();
+        }
+    };
+
+    static final TypeAdapter<MapNode> MAP_NODE_ADAPTER = new TypeAdapter<>() {
+
+        @Override
+        public MapNode read(JsonReader in) throws IOException {
+            var mapNode = MapNode.create();
+
+            var token = in.peek();
+
+            if (token == JsonToken.BEGIN_OBJECT) {
+                in.beginObject();
+
+                while (in.hasNext()) {
+                    mapNode.set(in.nextName(), NodeAdapter.INSTANCE.read(in));
+                }
+
+                in.endObject();
+            } else {
+                throw new IOException("Unexpected token: " + token);
+            }
+
+            return mapNode;
+        }
+
+        @Override
+        public void write(JsonWriter out, MapNode value) throws IOException {
+            out.beginObject();
+
+            for (var entry : value.value().entrySet()) {
+                out.name(String.valueOf(entry.getKey()));
+                NodeAdapter.INSTANCE.write(out, entry.getValue());
+            }
+
+            out.endObject();
+        }
+    };
+
+    private NodeAdapter() {
     }
 
     @Override
-    public MapNode read(JsonReader in) throws IOException {
-        var mapNode = MapNode.create();
-
-        var token = in.peek();
-
-        if (token == JsonToken.BEGIN_OBJECT) {
-            in.beginObject();
-
-            while (in.hasNext()) {
-                mapNode.set(in.nextName(), this.readNode(in));
-            }
-
-            in.endObject();
-        } else {
-            throw new IOException("Unexpected token: " + token);
-        }
-
-        return mapNode;
-    }
-
-    private Node<?> readNode(JsonReader in) throws IOException {
+    public Node<?> read(JsonReader in) throws IOException {
         var token = in.peek();
 
         if (token == JsonToken.STRING) {
@@ -88,26 +138,9 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
         } else if (token == JsonToken.NULL) {
             return NullNode.NULL;
         } else if (token == JsonToken.BEGIN_ARRAY) {
-            in.beginArray();
-            var listNode = ListNode.create();
-
-            while (in.hasNext()) {
-                listNode.add(this.readNode(in));
-            }
-
-            in.endArray();
-
-            return listNode;
+            return LIST_NODE_ADAPTER.read(in);
         } else if (token == JsonToken.BEGIN_OBJECT) {
-            in.beginObject();
-            var mapNode = MapNode.create();
-
-            while (in.hasNext()) {
-                mapNode.set(in.nextName(), this.readNode(in));
-            }
-
-            in.endObject();
-            return mapNode;
+            return MAP_NODE_ADAPTER.read(in);
         } else {
             throw new IOException("Unexpected token: " + token);
         }
@@ -127,11 +160,7 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
     }
 
     @Override
-    public void write(JsonWriter out, MapNode value) throws IOException {
-        writeNode(out, value);
-    }
-
-    private void writeNode(JsonWriter out, Node<?> value) throws IOException {
+    public void write(JsonWriter out, Node<?> value) throws IOException {
         if (value instanceof StringValue stringValue) {
             out.value(stringValue.value());
         } else if (value instanceof EnumValue<?> enumValue) {
@@ -153,22 +182,9 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
         } else if (value instanceof NullNode || value == null) {
             out.nullValue();
         } else if (value instanceof ListNode listNode) {
-            out.beginArray();
-
-            for (var element : listNode.value()) {
-                writeNode(out, element);
-            }
-
-            out.endArray();
+            LIST_NODE_ADAPTER.write(out, listNode);
         } else if (value instanceof MapNode mapNode) {
-            out.beginObject();
-
-            for (var entry : mapNode.value().entrySet()) {
-                out.name(String.valueOf(entry.getKey()));
-                writeNode(out, entry.getValue());
-            }
-
-            out.endObject();
+            MAP_NODE_ADAPTER.write(out, mapNode);
         } else if (value instanceof ArrayNode<?>) {
             out.beginArray();
 
@@ -208,7 +224,7 @@ final class NodeSerializer extends TypeAdapter<MapNode> {
 
             out.endArray();
         } else if (value instanceof CommentedNode<?> commentedNode) {
-            writeNode(out, commentedNode.node());
+            write(out, commentedNode.node());
         } else {
             throw new IOException("Cannot serialize " + value.getClass().getName());
         }

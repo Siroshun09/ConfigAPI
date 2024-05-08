@@ -28,7 +28,7 @@ import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A {@link FileFormat} implementation that loading/saving {@link MapNode} from/to json files using {@link Gson}.
+ * A {@link FileFormat} implementation that loading/saving {@link ListNode} from/to json files using {@link Gson}.
  * <p>
  * Supported {@link Node}s:
  *
@@ -46,29 +46,29 @@ import org.jetbrains.annotations.NotNull;
  *     <li>{@link CommentedNode} - The comment will be dropped</li>
  * </ul>
  */
-public final class GsonFormat extends AbstractGsonFormat<MapNode> {
+public final class GsonArrayFormat extends AbstractGsonFormat<ListNode> {
 
     /**
-     * An instance of {@link GsonFormat} that created from a plain {@link GsonBuilder}.
+     * An instance of {@link GsonArrayFormat} that created from a plain {@link GsonBuilder}.
      */
-    public static final GsonFormat DEFAULT = new GsonFormat(new GsonBuilder());
+    public static final GsonArrayFormat DEFAULT = new GsonArrayFormat(new GsonBuilder());
 
     /**
-     * An instance of {@link GsonFormat} that created from a {@link GsonBuilder} that set pretty printing.
+     * An instance of {@link GsonArrayFormat} that created from a {@link GsonBuilder} that set pretty printing.
      */
-    public static final GsonFormat PRETTY_PRINTING = new GsonFormat(new GsonBuilder().setPrettyPrinting());
+    public static final GsonArrayFormat PRETTY_PRINTING = new GsonArrayFormat(new GsonBuilder().setPrettyPrinting());
 
     /**
      * Creates a new {@link GsonFormat} from the {@link GsonBuilder}.
      *
      * @param gsonBuilder the {@link GsonBuilder}
      */
-    public GsonFormat(@NotNull GsonBuilder gsonBuilder) {
-        super(gsonBuilder, MapNode.class, NodeAdapter.MAP_NODE_ADAPTER);
+    public GsonArrayFormat(@NotNull GsonBuilder gsonBuilder) {
+        super(gsonBuilder, ListNode.class, NodeAdapter.LIST_NODE_ADAPTER);
     }
 
     @Override
-    protected @NotNull MapNode createEmptyNode() {
-        return MapNode.create();
+    protected @NotNull ListNode createEmptyNode() {
+        return ListNode.create();
     }
 }
