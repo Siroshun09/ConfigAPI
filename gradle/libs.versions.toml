@@ -6,7 +6,7 @@ jackson = "2.17.2"
 snakeyaml = "2.2"
 
 # testing tool
-junit = "5.10.3"
+junit = "5.11.0"
 
 [libraries]
 
