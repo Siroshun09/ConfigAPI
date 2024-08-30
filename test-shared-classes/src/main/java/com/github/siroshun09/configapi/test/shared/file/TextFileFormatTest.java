@@ -19,7 +19,6 @@ package com.github.siroshun09.configapi.test.shared.file;
 import com.github.siroshun09.configapi.core.file.FileFormat;
 import com.github.siroshun09.configapi.core.node.Node;
 import com.github.siroshun09.configapi.test.shared.util.NodeAssertion;
-import com.github.siroshun09.configapi.test.shared.util.Replacer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.io.TempDir;
@@ -242,23 +241,23 @@ public abstract class TextFileFormatTest<N extends Node<?>, F extends FileFormat
     protected record SaveTestCase<N extends Node<?>, F extends FileFormat<N>>(F fileFormat, N node,
                                                                               String expectedText) implements TestCase<N, F> {
         private void checkText(String text) {
-            Assertions.assertEquals(Replacer.lines(this.expectedText), Replacer.lines(text));
+            Assertions.assertLinesMatch(this.expectedText.lines(), text.lines());
         }
     }
 
     /**
      * A {@link TestCase} implementation that tests loading/saving the node from/to the text.
      *
-     * @param fileFormat a {@link FileFormat} to use for loading/saving the node
-     * @param node       a {@link Node} to save and expected one when loading
-     * @param text       a text to load and expected on when saving
-     * @param <N>        a {@link Node} type
-     * @param <F>        a {@link FileFormat} type
+     * @param fileFormat   a {@link FileFormat} to use for loading/saving the node
+     * @param node         a {@link Node} to save and expected one when loading
+     * @param expectedText a text to load and expected on when saving
+     * @param <N>          a {@link Node} type
+     * @param <F>          a {@link FileFormat} type
      */
     protected record SaveAndLoadTestCase<N extends Node<?>, F extends FileFormat<N>>(F fileFormat, N node,
-                                                                                     String text) implements TestCase<N, F> {
+                                                                                     String expectedText) implements TestCase<N, F> {
         private void checkText(String text) {
-            Assertions.assertEquals(Replacer.lines(this.text), Replacer.lines(text));
+            Assertions.assertLinesMatch(this.expectedText.lines(), text.lines());
         }
 
         private void checkNode(N node) {

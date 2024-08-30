@@ -34,7 +34,6 @@ import com.github.siroshun09.configapi.format.yaml.comment.YamlInlineComment;
 import com.github.siroshun09.configapi.format.yaml.comment.YamlNodeComment;
 import com.github.siroshun09.configapi.format.yaml.comment.YamlRootComment;
 import com.github.siroshun09.configapi.test.shared.file.TextFileFormatTest;
-import com.github.siroshun09.configapi.test.shared.util.Replacer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -121,7 +120,7 @@ class YamlFormatTest extends TextFileFormatTest<MapNode, YamlFormat> {
     private static final String COMMENT_TEST_YAML =
             """
                     # header
-                                
+
                     # key
                     # block
                     # comment
@@ -210,7 +209,7 @@ class YamlFormatTest extends TextFileFormatTest<MapNode, YamlFormat> {
                         COMMENT_TEST_YAML,
                         mapNode(mapNode -> {
                             mapNode.setComment(new YamlRootComment(new YamlBlockComment(" header", 0), new YamlBlockComment(" footer", 0)));
-                            mapNode.set("test", CommentableNode.withComment(BooleanValue.TRUE, new YamlNodeComment(new YamlBlockComment(Replacer.lines(" key\n block\n comment"), 0), new YamlInlineComment(" inline"))));
+                            mapNode.set("test", CommentableNode.withComment(BooleanValue.TRUE, new YamlNodeComment(new YamlBlockComment(" key" + System.lineSeparator() + " block" + System.lineSeparator() + " comment", 0), new YamlInlineComment(" inline"))));
                         })
                 ).saveAndLoadTest(YamlFormat.COMMENT_PROCESSING),
                 testCase(
