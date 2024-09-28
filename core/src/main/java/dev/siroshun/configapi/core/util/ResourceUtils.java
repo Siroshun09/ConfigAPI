@@ -195,7 +195,7 @@ public final class ResourceUtils {
         }
     }
 
-    private static void copy(@NotNull IOSupplier<InputStream> inputSupplier, @NotNull Path target) throws IOException {
+    private static void copy(@NotNull InputStreamSupplier inputSupplier, @NotNull Path target) throws IOException {
         var parent = target.getParent();
 
         if (parent != null && !Files.isDirectory(parent)) {
@@ -210,10 +210,8 @@ public final class ResourceUtils {
     }
 
     @FunctionalInterface
-    private interface IOSupplier<T> {
-
-        T get() throws IOException;
-
+    private interface InputStreamSupplier {
+        InputStream get() throws IOException;
     }
 
     private ResourceUtils() {
