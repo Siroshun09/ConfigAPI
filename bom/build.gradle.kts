@@ -20,8 +20,9 @@ plugins {
 
 dependencies {
     api(projects.configapiCore)
+    api(projects.configapiFormatBinary)
     api(projects.configapiFormatGson)
     api(projects.configapiFormatJackson)
+    api(projects.configapiFormatProperties)
     api(projects.configapiFormatYaml)
-    testImplementation(projects.configapiTestSharedClasses)
 }
