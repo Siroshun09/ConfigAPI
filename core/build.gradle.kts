@@ -16,6 +16,7 @@
 
 plugins {
     id("configapi.common-conventions")
+    id("configapi.publication")
 }
 
 dependencies {
