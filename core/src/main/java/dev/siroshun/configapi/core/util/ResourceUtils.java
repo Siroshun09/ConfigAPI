@@ -198,8 +198,8 @@ public final class ResourceUtils {
     private static void copy(@NotNull IOSupplier<InputStream> inputSupplier, @NotNull Path target) throws IOException {
         var parent = target.getParent();
 
-        if (parent != null) {
-            FileUtils.createDirectoriesIfNotExists(parent);
+        if (parent != null && !Files.isDirectory(parent)) {
+            Files.createDirectories(parent);
         }
 
         try (var input = inputSupplier.get()) {
