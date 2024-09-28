@@ -14,7 +14,15 @@
  *     limitations under the License.
  */
 
-/**
- * A package that includes {@link com.github.siroshun09.configapi.core.file.java.binary.BinaryFormat}.
- */
-package com.github.siroshun09.configapi.core.file.java.binary;
+plugins {
+    id ("configapi.common-conventions")
+}
+
+dependencies {
+    api(projects.configapiCore)
+    testImplementation(projects.configapiTestSharedClasses)
+}
+
+afterEvaluate {
+    aggregator.JavadocAggregator.addProject(this)
+}

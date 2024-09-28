@@ -37,8 +37,10 @@ project(":$prefix-test-shared-classes").projectDir = file("test-shared-classes")
 
 // file formats
 sequenceOf(
+    "binary",
         "gson",
         "jackson",
+    "properties",
         "yaml"
 ).forEach {
     include("$prefix-format-$it")
