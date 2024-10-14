@@ -1,6 +1,6 @@
 [versions]
 # libraries
-annotations = "25.0.0"
+annotations = "26.0.1"
 gson = "2.11.0"
 jackson = "2.18.0"
 snakeyaml = "2.3"
