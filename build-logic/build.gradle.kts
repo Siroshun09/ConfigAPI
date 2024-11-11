@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /*
  *     Copyright 2024 Siroshun09
  *
@@ -53,8 +55,8 @@ tasks {
     }
 
     compileKotlin {
-        kotlinOptions {
-            jvmTarget = javaVersion.majorVersion
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(javaVersion.majorVersion))
         }
     }
 }
