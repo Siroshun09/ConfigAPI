@@ -30,6 +30,9 @@ val prefix = rootProject.name
 include("$prefix-core")
 project(":$prefix-core").projectDir = file("core")
 
+include("$prefix-codec")
+project(":$prefix-codec").projectDir = file("codec")
+
 include("$prefix-test-shared-classes")
 project(":$prefix-test-shared-classes").projectDir = file("test-shared-classes")
 

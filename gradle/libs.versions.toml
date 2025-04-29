@@ -1,6 +1,7 @@
 [versions]
 # libraries
 annotations = "26.0.2"
+codec4j = "0.0.1-alpha.1"
 gson = "2.13.1"
 jackson = "2.19.0"
 snakeyaml = "2.4"
@@ -15,6 +16,8 @@ gradle-plugins = "1.0.1"
 
 # libraries
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+codec4j = { module = "dev.siroshun.codec4j:codec4j-api", version.ref = "codec4j" }
+codec4j-io-memory = { module = "dev.siroshun.codec4j:codec4j-io-memory", version.ref = "codec4j" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
