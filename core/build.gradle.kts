@@ -15,14 +15,10 @@
  */
 
 plugins {
-    id("configapi.common-conventions")
-    id("configapi.publication")
+    alias(libs.plugins.aggregated.javadoc.collector)
+    alias(libs.plugins.mavenPublication)
 }
 
 dependencies {
     testImplementation(projects.configapiTestSharedClasses)
-}
-
-afterEvaluate {
-    aggregator.JavadocAggregator.addProject(this)
 }

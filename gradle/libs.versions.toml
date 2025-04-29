@@ -8,6 +8,9 @@ snakeyaml = "2.4"
 # testing tool
 junit = "5.12.2"
 
+# plugins
+gradle-plugins = "1.0.1"
+
 [libraries]
 
 # libraries
@@ -19,3 +22,11 @@ snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 # testing tool
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+
+[plugins]
+
+jcommon = { id = "dev.siroshun.gradle.plugins.jcommon", version.ref = "gradle-plugins" }
+aggregated-javadoc = { id = "dev.siroshun.gradle.plugins.aggregated-javadoc", version.ref = "gradle-plugins" }
+aggregated-javadoc-collector = { id = "dev.siroshun.gradle.plugins.aggregated-javadoc-collector", version.ref = "gradle-plugins" }
+mavenCentralPortal = { id = "dev.siroshun.gradle.plugins.maven-central-portal", version.ref = "gradle-plugins" }
+mavenPublication = { id = "dev.siroshun.gradle.plugins.maven-publication", version.ref = "gradle-plugins" }

@@ -15,12 +15,28 @@
  */
 
 plugins {
-    id("configapi.aggregate-javadoc")
+    alias(libs.plugins.jcommon)
+    alias(libs.plugins.aggregated.javadoc)
+    alias(libs.plugins.mavenPublication)
+    alias(libs.plugins.mavenCentralPortal)
 }
 
-tasks {
-    register<Delete>("clean") {
-        group = "build"
-        layout.buildDirectory.get().asFile.deleteRecursively()
+jcommon {
+    javaVersion = JavaVersion.VERSION_17
+
+    commonDependencies {
+        compileOnlyApi(libs.annotations)
+
+        testImplementation(platform(libs.junit.bom))
+        testImplementation(libs.junit.jupiter)
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
+}
+
+mavenPublication {
+    localRepository(mavenCentralPortal.stagingDirectory)
+    description("A configuration library for Java.")
+    apacheLicense()
+    developer("Siroshun09")
+    github("Siroshun09/ConfigAPI")
 }

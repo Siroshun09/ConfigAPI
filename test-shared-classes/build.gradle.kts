@@ -14,10 +14,6 @@
  *     limitations under the License.
  */
 
-plugins {
-    id ("configapi.common-conventions")
-}
-
 dependencies {
     implementation(projects.configapiCore)
     implementation(libs.junit.jupiter)
