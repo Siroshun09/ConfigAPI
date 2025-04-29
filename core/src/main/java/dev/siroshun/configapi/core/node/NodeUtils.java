@@ -32,64 +32,45 @@ final class NodeUtils {
         }
 
         if (value instanceof Node<?>) {
-            if (value instanceof ValueNode<?> valueNode) {
-                return valueNode;
-            } else if (value instanceof ListNode listNode) {
-                return listNode.copy();
-            } else if (value instanceof MapNode mapNode) {
-                return mapNode.copy();
-            } else if (value instanceof CommentedNode commentedNode) {
-                return CommentableNode.withComment(toNode(commentedNode.node()), commentedNode.getCommentOrNull());
-            } else {
-                return toNode(((Node<?>) value).value());
-            }
+            return switch (value) {
+                case ValueNode<?> valueNode -> valueNode;
+                case ListNode listNode -> listNode.copy();
+                case MapNode mapNode -> mapNode.copy();
+                case CommentedNode<?> commentedNode ->
+                        CommentableNode.withComment(toNode(commentedNode.node()), commentedNode.getCommentOrNull());
+                default -> toNode(((Node<?>) value).value());
+            };
         }
 
         if (value.getClass().isArray()) {
             return fromArray(value);
         }
 
-        if (value instanceof String string) {
-            return StringValue.fromString(string);
-        } else if (value instanceof Number number) {
-            return NumberValue.fromNumber(number);
-        } else if (value instanceof Boolean bool) {
-            return BooleanValue.fromBoolean(bool);
-        } else if (value instanceof Character charValue) {
-            return new CharValue(charValue);
-        } else if (value instanceof Enum enumValue) {
-            return new EnumValue<>(enumValue);
-        } else if (value instanceof Collection<?> collection) {
-            return ListNode.create(collection);
-        } else if (value instanceof Map<?, ?> map) {
-            return MapNode.create(map);
-        } else {
-            return new ObjectNode<>(value);
-        }
+        return switch (value) {
+            case String string -> StringValue.fromString(string);
+            case Number number -> NumberValue.fromNumber(number);
+            case Boolean bool -> BooleanValue.fromBoolean(bool);
+            case Character charValue -> new CharValue(charValue);
+            case Enum enumValue -> new EnumValue<>(enumValue);
+            case Collection<?> collection -> ListNode.create(collection);
+            case Map<?, ?> map -> MapNode.create(map);
+            default -> new ObjectNode<>(value);
+        };
     }
 
     private static @NotNull Node<?> fromArray(@NotNull Object value) {
-        if (value instanceof int[] array) {
-            return new IntArray(array);
-        } else if (value instanceof long[] array) {
-            return new LongArray(array);
-        } else if (value instanceof float[] array) {
-            return new FloatArray(array);
-        } else if (value instanceof double[] array) {
-            return new DoubleArray(array);
-        } else if (value instanceof byte[] array) {
-            return new ByteArray(array);
-        } else if (value instanceof short[] array) {
-            return new ShortArray(array);
-        } else if (value instanceof boolean[] array) {
-            return new BooleanArray(array);
-        } else if (value instanceof char[] array) {
-            return new CharArray(array);
-        } else if (value instanceof Object[] array) {
-            return ListNode.create(Arrays.asList(array));
-        } else {
-            throw new IllegalArgumentException("unexpected array: " + value);
-        }
+        return switch (value) {
+            case int[] array -> new IntArray(array);
+            case long[] array -> new LongArray(array);
+            case float[] array -> new FloatArray(array);
+            case double[] array -> new DoubleArray(array);
+            case byte[] array -> new ByteArray(array);
+            case short[] array -> new ShortArray(array);
+            case boolean[] array -> new BooleanArray(array);
+            case char[] array -> new CharArray(array);
+            case Object[] array -> ListNode.create(Arrays.asList(array));
+            default -> throw new IllegalArgumentException("unexpected array: " + value);
+        };
     }
 
     private NodeUtils() {
