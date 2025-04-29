@@ -1,7 +1,6 @@
 # ConfigAPI
 
-![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.configapi/configapi-core)
-![Maven Central](https://img.shields.io/nexus/s/com.github.siroshun09.configapi/configapi-core?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
+![Maven Central](https://img.shields.io/maven-central/v/dev.siroshun.configapi/configapi-core)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Siroshun09/ConfigAPI/gradle.yml?branch=v5.x.x)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/ConfigAPI)
 
@@ -19,9 +18,9 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 
 ```xml
 <dependency>
-    <groupId>com.github.siroshun09.configapi</groupId>
+    <groupId>dev.siroshun.configapi</groupId>
     <artifactId>configapi-core</artifactId>
-    <version>5.0.0-beta.3</version>
+    <version>5.0.0-beta.4</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -30,9 +29,9 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 
 ```xml
 <dependency>
-    <groupId>com.github.siroshun09.configapi</groupId>
+    <groupId>dev.siroshun.configapi</groupId>
     <artifactId>configapi-format-gson</artifactId>
-    <version>5.0.0-beta.3</version>
+    <version>5.0.0-beta.4</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -41,9 +40,9 @@ Javadoc is [here](https://siroshun09.github.io/ConfigAPI/latest)
 
 ```xml
 <dependency>
-    <groupId>com.github.siroshun09.configapi</groupId>
+    <groupId>dev.siroshun.configapi</groupId>
     <artifactId>configapi-format-yaml</artifactId>
-    <version>5.0.0-beta.3</version>
+    <version>5.0.0-beta.4</version>
     <scope>compile</scope>
 </dependency>
 ```
