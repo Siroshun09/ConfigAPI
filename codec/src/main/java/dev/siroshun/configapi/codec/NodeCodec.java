@@ -259,7 +259,15 @@ public final class NodeCodec {
                 case Type.IntValue ignored -> in.readAsInt().map(IntValue::new);
                 case Type.LongValue ignored -> in.readAsLong().map(LongValue::new);
                 case Type.FloatValue ignored -> in.readAsFloat().map(FloatValue::new);
-                case Type.DoubleValue ignored -> in.readAsDouble().map(DoubleValue::new);
+                case Type.DoubleValue ignored -> in.readAsDouble().map(val -> {
+                    if (val.intValue() == val) {
+                        return new IntValue(val.intValue());
+                    } else if (val.longValue() == val) {
+                        return new LongValue(val.longValue());
+                    } else {
+                        return new DoubleValue(val);
+                    }
+                });
                 case Type.CharValue ignored -> in.readAsChar().map(CharValue::new);
                 case Type.StringValue ignored -> in.readAsString().map(StringValue::fromString);
             };
