@@ -30,6 +30,7 @@ val prefix = rootProject.name
 sequenceOf(
     "core",
     "codec",
+    "serialization-record",
     "test-shared-classes"
 ).forEach {
     include("$prefix-$it")

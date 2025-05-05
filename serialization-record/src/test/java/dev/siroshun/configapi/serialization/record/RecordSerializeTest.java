@@ -14,10 +14,10 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
-import dev.siroshun.configapi.core.serialization.annotation.CollectionType;
-import dev.siroshun.configapi.core.serialization.annotation.MapType;
+import dev.siroshun.serialization.annotation.CollectionType;
+import dev.siroshun.serialization.annotation.MapType;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -31,7 +31,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static dev.siroshun.configapi.core.serialization.record.RecordTestCase.create;
+import static dev.siroshun.configapi.serialization.record.RecordTestCase.create;
 
 class RecordSerializeTest {
 
@@ -166,9 +166,9 @@ class RecordSerializeTest {
         public boolean equals(Object o) {
             if (o instanceof CollectionRecord other) {
                 return this.collection.size() == other.collection.size() && this.collection.containsAll(other.collection) && other.collection.containsAll(this.collection) &&
-                        this.list.equals(other.list) &&
-                        this.set.size() == other.set.size() && this.set.containsAll(other.set) && other.set.containsAll(this.set) &&
-                        this.map.equals(other.map);
+                       this.list.equals(other.list) &&
+                       this.set.size() == other.set.size() && this.set.containsAll(other.set) && other.set.containsAll(this.set) &&
+                       this.map.equals(other.map);
             } else {
                 return false;
             }
@@ -196,15 +196,15 @@ class RecordSerializeTest {
         public boolean equals(Object o) {
             if (o instanceof ArrayRecord that) {
                 return Arrays.equals(this.booleanArray, that.booleanArray) &&
-                        Arrays.equals(this.byteArray, that.byteArray) &&
-                        Arrays.equals(this.charArray, that.charArray) &&
-                        Arrays.equals(this.doubleArray, that.doubleArray) &&
-                        Arrays.equals(this.floatArray, that.floatArray) &&
-                        Arrays.equals(this.intArray, that.intArray) &&
-                        Arrays.equals(this.longArray, that.longArray) &&
-                        Arrays.equals(this.shortArray, that.shortArray) &&
-                        Arrays.equals(this.stringArray, that.stringArray) &&
-                        Arrays.equals(this.enumArray, that.enumArray);
+                       Arrays.equals(this.byteArray, that.byteArray) &&
+                       Arrays.equals(this.charArray, that.charArray) &&
+                       Arrays.equals(this.doubleArray, that.doubleArray) &&
+                       Arrays.equals(this.floatArray, that.floatArray) &&
+                       Arrays.equals(this.intArray, that.intArray) &&
+                       Arrays.equals(this.longArray, that.longArray) &&
+                       Arrays.equals(this.shortArray, that.shortArray) &&
+                       Arrays.equals(this.stringArray, that.stringArray) &&
+                       Arrays.equals(this.enumArray, that.enumArray);
             } else {
                 return false;
             }

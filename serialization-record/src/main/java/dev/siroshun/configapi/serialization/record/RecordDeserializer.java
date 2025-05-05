@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
 import dev.siroshun.configapi.core.node.BooleanArray;
 import dev.siroshun.configapi.core.node.BooleanValue;
@@ -33,14 +33,14 @@ import dev.siroshun.configapi.core.node.Node;
 import dev.siroshun.configapi.core.node.NumberValue;
 import dev.siroshun.configapi.core.node.ShortArray;
 import dev.siroshun.configapi.core.node.StringValue;
-import dev.siroshun.configapi.core.serialization.Deserializer;
-import dev.siroshun.configapi.core.serialization.SerializationException;
-import dev.siroshun.configapi.core.serialization.annotation.CollectionType;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultMapKey;
-import dev.siroshun.configapi.core.serialization.annotation.Inline;
-import dev.siroshun.configapi.core.serialization.annotation.MapType;
-import dev.siroshun.configapi.core.serialization.key.KeyGenerator;
-import dev.siroshun.configapi.core.serialization.registry.DeserializerRegistry;
+import dev.siroshun.serialization.core.Deserializer;
+import dev.siroshun.serialization.core.SerializationException;
+import dev.siroshun.serialization.annotation.CollectionType;
+import dev.siroshun.serialization.annotation.DefaultMapKey;
+import dev.siroshun.serialization.annotation.Inline;
+import dev.siroshun.serialization.annotation.MapType;
+import dev.siroshun.serialization.core.key.KeyGenerator;
+import dev.siroshun.serialization.core.registry.DeserializerRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

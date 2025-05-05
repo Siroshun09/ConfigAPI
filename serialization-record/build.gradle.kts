@@ -14,7 +14,14 @@
  *     limitations under the License.
  */
 
-/**
- * A package that includes implementations for {@link dev.siroshun.configapi.core.serialization.Serializer}/{@link dev.siroshun.configapi.core.serialization.Deserializer} of the records.
- */
-package dev.siroshun.configapi.core.serialization.record;
+plugins {
+    alias(libs.plugins.aggregated.javadoc.collector)
+    alias(libs.plugins.mavenPublication)
+}
+
+dependencies {
+    api(projects.configapiCore)
+    api(libs.serialization.annotation)
+    api(libs.serialization.core)
+    testImplementation(projects.configapiTestSharedClasses)
+}

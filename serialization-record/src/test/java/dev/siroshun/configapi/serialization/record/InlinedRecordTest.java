@@ -14,21 +14,21 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
 import dev.siroshun.configapi.core.comment.SimpleComment;
 import dev.siroshun.configapi.core.node.BooleanValue;
 import dev.siroshun.configapi.core.node.CommentableNode;
 import dev.siroshun.configapi.core.node.StringValue;
-import dev.siroshun.configapi.core.serialization.annotation.Comment;
-import dev.siroshun.configapi.core.serialization.annotation.Inline;
+import dev.siroshun.serialization.annotation.Comment;
+import dev.siroshun.serialization.annotation.Inline;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static dev.siroshun.configapi.core.serialization.record.RecordTestCase.create;
+import static dev.siroshun.configapi.serialization.record.RecordTestCase.create;
 
 class InlinedRecordTest {
 

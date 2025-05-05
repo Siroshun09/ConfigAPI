@@ -14,29 +14,29 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
 import dev.siroshun.configapi.core.node.CharValue;
 import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.core.node.NumberValue;
-import dev.siroshun.configapi.core.serialization.SerializationException;
-import dev.siroshun.configapi.core.serialization.annotation.CollectionType;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultBoolean;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultByte;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultChar;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultDouble;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultEnum;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultField;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultFloat;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultInt;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultLong;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultMapKey;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultMethod;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultNull;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultShort;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultString;
-import dev.siroshun.configapi.core.serialization.annotation.Inline;
-import dev.siroshun.configapi.core.serialization.annotation.MapType;
+import dev.siroshun.serialization.core.SerializationException;
+import dev.siroshun.serialization.annotation.CollectionType;
+import dev.siroshun.serialization.annotation.DefaultBoolean;
+import dev.siroshun.serialization.annotation.DefaultByte;
+import dev.siroshun.serialization.annotation.DefaultChar;
+import dev.siroshun.serialization.annotation.DefaultDouble;
+import dev.siroshun.serialization.annotation.DefaultEnum;
+import dev.siroshun.serialization.annotation.DefaultField;
+import dev.siroshun.serialization.annotation.DefaultFloat;
+import dev.siroshun.serialization.annotation.DefaultInt;
+import dev.siroshun.serialization.annotation.DefaultLong;
+import dev.siroshun.serialization.annotation.DefaultMapKey;
+import dev.siroshun.serialization.annotation.DefaultMethod;
+import dev.siroshun.serialization.annotation.DefaultNull;
+import dev.siroshun.serialization.annotation.DefaultShort;
+import dev.siroshun.serialization.annotation.DefaultString;
+import dev.siroshun.serialization.annotation.Inline;
+import dev.siroshun.serialization.annotation.MapType;
 import dev.siroshun.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static dev.siroshun.configapi.core.serialization.record.RecordTestCase.create;
+import static dev.siroshun.configapi.serialization.record.RecordTestCase.create;
 
 class DefaultValueTest {
 
@@ -63,10 +63,6 @@ class DefaultValueTest {
         testCase.testDefaultDeserializers();
 
         NodeAssertion.assertEquals(testCase.expectedMapNode(), RecordSerializer.serializer().serializeDefault(testCase.recordClass()));
-    }
-
-    private static <R extends Record> void testDeserializer(@NotNull R expectedRecord, @NotNull RecordDeserializer<? extends R> deserializer) {
-        Assertions.assertEquals(expectedRecord, deserializer.deserialize(MapNode.empty()));
     }
 
     private static Stream<RecordTestCase<?>> testCases() {
@@ -136,7 +132,7 @@ class DefaultValueTest {
                             mapNode.set("shortValue", 0);
                             mapNode.set("wrappedBooleanValue", false);
                             mapNode.set("wrappedByteValue", 0);
-                            mapNode.set("wrappedCharValue",  Character.MIN_VALUE);
+                            mapNode.set("wrappedCharValue", Character.MIN_VALUE);
                             mapNode.set("wrappedDoubleValue", 0);
                             mapNode.set("wrappedFloatValue", 0);
                             mapNode.set("wrappedIntValue", 0);
@@ -281,14 +277,14 @@ class DefaultValueTest {
         public boolean equals(Object o) {
             if (o instanceof ImplicitlyDefaultArrays that) {
                 return Arrays.equals(this.booleanArray, that.booleanArray) &&
-                        Arrays.equals(this.byteArray, that.byteArray) &&
-                        Arrays.equals(this.charArray, that.charArray) &&
-                        Arrays.equals(this.doubleArray, that.doubleArray) &&
-                        Arrays.equals(this.floatArray, that.floatArray) &&
-                        Arrays.equals(this.intArray, that.intArray) &&
-                        Arrays.equals(this.longArray, that.longArray) &&
-                        Arrays.equals(this.shortArray, that.shortArray) &&
-                        Arrays.equals(this.stringArray, that.stringArray);
+                       Arrays.equals(this.byteArray, that.byteArray) &&
+                       Arrays.equals(this.charArray, that.charArray) &&
+                       Arrays.equals(this.doubleArray, that.doubleArray) &&
+                       Arrays.equals(this.floatArray, that.floatArray) &&
+                       Arrays.equals(this.intArray, that.intArray) &&
+                       Arrays.equals(this.longArray, that.longArray) &&
+                       Arrays.equals(this.shortArray, that.shortArray) &&
+                       Arrays.equals(this.stringArray, that.stringArray);
             } else {
                 return false;
             }
@@ -379,7 +375,7 @@ class DefaultValueTest {
 
     @Test
     void testWrongDefaultObjectType() {
-        Assertions.assertThrows(SerializationException.class, () -> RecordDeserializer.create(WrongDefaultObjectType.class).deserialize(MapNode.empty()));
+        Assertions.assertThrows(SerializationException.class, () -> dev.siroshun.configapi.serialization.record.RecordDeserializer.create(WrongDefaultObjectType.class).deserialize(MapNode.empty()));
     }
 
     private record WrongDefaultObjectType(
@@ -397,7 +393,7 @@ class DefaultValueTest {
     @Test
     void testNotExistDefaultFieldAndMethod() {
         {
-            var ex = Assertions.assertThrows(SerializationException.class, () -> RecordDeserializer.create(NotExistDefaultField.class).deserialize(MapNode.empty()));
+            var ex = Assertions.assertThrows(SerializationException.class, () -> dev.siroshun.configapi.serialization.record.RecordDeserializer.create(NotExistDefaultField.class).deserialize(MapNode.empty()));
             Assertions.assertInstanceOf(NoSuchFieldException.class, ex.getCause());
         }
 

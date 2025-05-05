@@ -5,6 +5,7 @@ codec4j = "0.1.0"
 gson = "2.13.1"
 jackson = "2.19.0"
 snakeyaml = "2.4"
+serialization = "1.0.0-rc.1"
 
 # testing tool
 junit = "5.12.2"
@@ -21,6 +22,8 @@ codec4j-io-memory = { module = "dev.siroshun.codec4j:codec4j-io-memory", version
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
+serialization-annotation = { module = "dev.siroshun.serialization:serialization-annotation", version.ref = "serialization" }
+serialization-core = { module = "dev.siroshun.serialization:serialization-core", version.ref = "serialization" }
 
 # testing tool
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }

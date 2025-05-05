@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
 import org.jetbrains.annotations.NotNull;
 

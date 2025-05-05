@@ -14,14 +14,14 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
 import dev.siroshun.configapi.core.comment.SimpleComment;
 import dev.siroshun.configapi.core.node.CommentableNode;
 import dev.siroshun.configapi.core.node.StringValue;
-import dev.siroshun.configapi.core.serialization.annotation.Comment;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultString;
-import dev.siroshun.configapi.core.serialization.annotation.Inline;
+import dev.siroshun.serialization.annotation.Comment;
+import dev.siroshun.serialization.annotation.DefaultString;
+import dev.siroshun.serialization.annotation.Inline;
 import dev.siroshun.configapi.test.shared.util.NodeAssertion;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +30,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static dev.siroshun.configapi.core.serialization.record.RecordTestCase.create;
+import static dev.siroshun.configapi.serialization.record.RecordTestCase.create;
 
 class CommentTest {
 
@@ -76,7 +76,7 @@ class CommentTest {
         NodeAssertion.assertEquals(expectedMapNode, RecordSerializer.serializer().serializeDefault(testCase.expectedRecord().getClass()));
 
         var expectedRecord = testCase.expectedRecord();
-        Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord.getClass()).deserialize(expectedMapNode));
+        Assertions.assertEquals(expectedRecord, dev.siroshun.configapi.serialization.record.RecordDeserializer.create(expectedRecord.getClass()).deserialize(expectedMapNode));
         Assertions.assertEquals(expectedRecord, RecordDeserializer.create(expectedRecord).deserialize(expectedMapNode));
     }
 

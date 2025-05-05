@@ -14,14 +14,14 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
 import dev.siroshun.configapi.core.node.LongArray;
 import dev.siroshun.configapi.core.node.Node;
-import dev.siroshun.configapi.core.serialization.Serialization;
-import dev.siroshun.configapi.core.serialization.SerializationException;
-import dev.siroshun.configapi.core.serialization.annotation.CollectionType;
-import dev.siroshun.configapi.core.serialization.registry.SerializationRegistry;
+import dev.siroshun.serialization.core.Serialization;
+import dev.siroshun.serialization.core.SerializationException;
+import dev.siroshun.serialization.annotation.CollectionType;
+import dev.siroshun.serialization.core.registry.SerializationRegistry;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -59,29 +59,29 @@ class CustomSerializerTest {
     @MethodSource("testCases")
     <R extends Record> void testSerializeCustomObject(RecordTestCase<R> testCase) {
         testCase.testSerialize(
-                RecordSerializer.builder().addSerializer(UUID.class, UUID_SERIALIZATION.serializer()).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerializer.builder().addSerializer(UUID.class, UUID_SERIALIZATION.serializer()).build(),
                 RecordSerializer.builder().addSerializers(REGISTRY.asSerializerRegistry()).build()
         );
 
         testCase.testDeserialize(
-                RecordDeserializer.builder(testCase.recordClass()).addDeserializer(UUID.class, UUID_SERIALIZATION.deserializer()).build(),
-                RecordDeserializer.builder(testCase.expectedRecord()).addDeserializer(UUID.class, UUID_SERIALIZATION.deserializer()).build(),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.builder(testCase.recordClass()).addDeserializer(UUID.class, UUID_SERIALIZATION.deserializer()).build(),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.builder(testCase.expectedRecord()).addDeserializer(UUID.class, UUID_SERIALIZATION.deserializer()).build(),
 
-                RecordDeserializer.builder(testCase.recordClass()).addDeserializers(REGISTRY.asDeserializerRegistry()).build(),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.builder(testCase.recordClass()).addDeserializers(REGISTRY.asDeserializerRegistry()).build(),
                 RecordDeserializer.builder(testCase.expectedRecord()).addDeserializers(REGISTRY.asDeserializerRegistry()).build()
         );
 
         testCase.testSerialization(
-                RecordSerialization.builder(testCase.recordClass()).addSerialization(UUID.class, UUID_SERIALIZATION).build(),
-                RecordSerialization.builder(testCase.expectedRecord()).addSerialization(UUID.class, UUID_SERIALIZATION).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(testCase.recordClass()).addSerialization(UUID.class, UUID_SERIALIZATION).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(testCase.expectedRecord()).addSerialization(UUID.class, UUID_SERIALIZATION).build(),
 
-                RecordSerialization.builder(testCase.recordClass()).addSerialization(REGISTRY).build(),
-                RecordSerialization.builder(testCase.expectedRecord()).addSerialization(REGISTRY).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(testCase.recordClass()).addSerialization(REGISTRY).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(testCase.expectedRecord()).addSerialization(REGISTRY).build(),
 
-                RecordSerialization.builder(testCase.recordClass()).addSerializer(UUID.class, UUID_SERIALIZATION.serializer()).addDeserializer(UUID.class, UUID_SERIALIZATION.deserializer()).build(),
-                RecordSerialization.builder(testCase.expectedRecord()).addSerializer(UUID.class, UUID_SERIALIZATION.serializer()).addDeserializer(UUID.class, UUID_SERIALIZATION.deserializer()).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(testCase.recordClass()).addSerializer(UUID.class, UUID_SERIALIZATION.serializer()).addDeserializer(UUID.class, UUID_SERIALIZATION.deserializer()).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(testCase.expectedRecord()).addSerializer(UUID.class, UUID_SERIALIZATION.serializer()).addDeserializer(UUID.class, UUID_SERIALIZATION.deserializer()).build(),
 
-                RecordSerialization.builder(testCase.recordClass()).addSerializers(REGISTRY.asSerializerRegistry()).addDeserializers(REGISTRY.asDeserializerRegistry()).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(testCase.recordClass()).addSerializers(REGISTRY.asSerializerRegistry()).addDeserializers(REGISTRY.asDeserializerRegistry()).build(),
                 RecordSerialization.builder(testCase.expectedRecord()).addSerializers(REGISTRY.asSerializerRegistry()).addDeserializers(REGISTRY.asDeserializerRegistry()).build()
         );
     }

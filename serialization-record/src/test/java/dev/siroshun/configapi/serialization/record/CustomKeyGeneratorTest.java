@@ -14,11 +14,11 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
-import dev.siroshun.configapi.core.serialization.annotation.DefaultString;
-import dev.siroshun.configapi.core.serialization.key.Key;
-import dev.siroshun.configapi.core.serialization.key.KeyGenerator;
+import dev.siroshun.serialization.annotation.DefaultString;
+import dev.siroshun.serialization.core.key.Key;
+import dev.siroshun.serialization.core.key.KeyGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -31,21 +31,21 @@ class CustomKeyGeneratorTest {
     @MethodSource("testCases")
     void test(@NotNull CustomKeyGeneratorTest.TestCase testCase) {
         testCase.testCase().testSerialize(
-                RecordSerializer.create(testCase.keyGenerator()),
+                dev.siroshun.configapi.serialization.record.RecordSerializer.create(testCase.keyGenerator()),
                 RecordSerializer.<SampleRecord>builder().keyGenerator(testCase.keyGenerator()).build()
         );
 
         testCase.testCase().testDeserialize(
-                RecordDeserializer.create(SampleRecord.class, testCase.keyGenerator()),
-                RecordDeserializer.create(EXPECTED_RECORD, testCase.keyGenerator()),
-                RecordDeserializer.builder(SampleRecord.class).keyGenerator(testCase.keyGenerator()).build(),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.create(SampleRecord.class, testCase.keyGenerator()),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.create(EXPECTED_RECORD, testCase.keyGenerator()),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.builder(SampleRecord.class).keyGenerator(testCase.keyGenerator()).build(),
                 RecordDeserializer.builder(EXPECTED_RECORD).keyGenerator(testCase.keyGenerator()).build()
         );
 
         testCase.testCase().testSerialization(
-                RecordSerialization.create(SampleRecord.class, testCase.keyGenerator()),
-                RecordSerialization.create(EXPECTED_RECORD, testCase.keyGenerator()),
-                RecordSerialization.builder(SampleRecord.class).keyGenerator(testCase.keyGenerator()).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.create(SampleRecord.class, testCase.keyGenerator()),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.create(EXPECTED_RECORD, testCase.keyGenerator()),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(SampleRecord.class).keyGenerator(testCase.keyGenerator()).build(),
                 RecordSerialization.builder(EXPECTED_RECORD).keyGenerator(testCase.keyGenerator()).build()
         );
     }

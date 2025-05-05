@@ -14,9 +14,9 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
-import dev.siroshun.configapi.core.serialization.annotation.CollectionType;
+import dev.siroshun.serialization.annotation.CollectionType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

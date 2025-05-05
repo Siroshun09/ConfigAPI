@@ -14,26 +14,26 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
-import dev.siroshun.configapi.core.serialization.SerializationException;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultBoolean;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultByte;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultChar;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultDouble;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultEnum;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultField;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultFloat;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultInt;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultLong;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultMapKey;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultMethod;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultNull;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultShort;
-import dev.siroshun.configapi.core.serialization.annotation.DefaultString;
-import dev.siroshun.configapi.core.serialization.annotation.MapType;
-import dev.siroshun.configapi.core.serialization.key.Key;
-import dev.siroshun.configapi.core.serialization.key.KeyGenerator;
+import dev.siroshun.serialization.core.SerializationException;
+import dev.siroshun.serialization.annotation.DefaultBoolean;
+import dev.siroshun.serialization.annotation.DefaultByte;
+import dev.siroshun.serialization.annotation.DefaultChar;
+import dev.siroshun.serialization.annotation.DefaultDouble;
+import dev.siroshun.serialization.annotation.DefaultEnum;
+import dev.siroshun.serialization.annotation.DefaultField;
+import dev.siroshun.serialization.annotation.DefaultFloat;
+import dev.siroshun.serialization.annotation.DefaultInt;
+import dev.siroshun.serialization.annotation.DefaultLong;
+import dev.siroshun.serialization.annotation.DefaultMapKey;
+import dev.siroshun.serialization.annotation.DefaultMethod;
+import dev.siroshun.serialization.annotation.DefaultNull;
+import dev.siroshun.serialization.annotation.DefaultShort;
+import dev.siroshun.serialization.annotation.DefaultString;
+import dev.siroshun.serialization.annotation.MapType;
+import dev.siroshun.serialization.core.key.Key;
+import dev.siroshun.serialization.core.key.KeyGenerator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;

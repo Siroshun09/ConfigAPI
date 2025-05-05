@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
 import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.test.shared.util.NodeAssertion;
@@ -48,12 +48,12 @@ record RecordTestCase<R extends Record>(@NotNull R expectedRecord, @NotNull MapN
         this.testDefaultSerializations();
     }
 
-    void testSerialize(@NotNull RecordSerializer<? super R> serializer) {
+    void testSerialize(@NotNull dev.siroshun.configapi.serialization.record.RecordSerializer<? super R> serializer) {
         NodeAssertion.assertEquals(this.expectedMapNode, serializer.serialize(this.expectedRecord));
     }
 
     @SafeVarargs
-    final void testSerialize(@NotNull RecordSerializer<? super R> @NotNull ... serializers) {
+    final void testSerialize(@NotNull dev.siroshun.configapi.serialization.record.RecordSerializer<? super R> @NotNull ... serializers) {
         for (var serializer : serializers) {
             this.testSerialize(serializer);
         }
@@ -61,17 +61,17 @@ record RecordTestCase<R extends Record>(@NotNull R expectedRecord, @NotNull MapN
 
     void testDefaultSerializers() {
         this.testSerialize(
-                RecordSerializer.serializer(),
+                dev.siroshun.configapi.serialization.record.RecordSerializer.serializer(),
                 RecordSerializer.<R>builder().build()
         );
     }
 
-    void testDeserialize(@NotNull RecordDeserializer<? extends R> deserializer) {
+    void testDeserialize(@NotNull dev.siroshun.configapi.serialization.record.RecordDeserializer<? extends R> deserializer) {
         Assertions.assertEquals(this.expectedRecord, deserializer.deserialize(this.deserializingMapNode));
     }
 
     @SafeVarargs
-    final void testDeserialize(@NotNull RecordDeserializer<? extends R> @NotNull ... deserializers) {
+    final void testDeserialize(@NotNull dev.siroshun.configapi.serialization.record.RecordDeserializer<? extends R> @NotNull ... deserializers) {
         for (var deserializer : deserializers) {
             this.testDeserialize(deserializer);
         }
@@ -79,20 +79,20 @@ record RecordTestCase<R extends Record>(@NotNull R expectedRecord, @NotNull MapN
 
     void testDefaultDeserializers() {
         this.testDeserialize(
-                RecordDeserializer.create(this.recordClass),
-                RecordDeserializer.create(this.expectedRecord),
-                RecordDeserializer.builder(this.recordClass).build(),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.create(this.recordClass),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.create(this.expectedRecord),
+                dev.siroshun.configapi.serialization.record.RecordDeserializer.builder(this.recordClass).build(),
                 RecordDeserializer.builder(this.expectedRecord).build()
         );
     }
 
-    void testSerialization(@NotNull RecordSerialization<R> serialization) {
+    void testSerialization(@NotNull dev.siroshun.configapi.serialization.record.RecordSerialization<R> serialization) {
         this.testSerialize(serialization.serializer());
         this.testDeserialize(serialization.deserializer());
     }
 
     @SafeVarargs
-    final void testSerialization(@NotNull RecordSerialization<R> @NotNull ... serializations) {
+    final void testSerialization(@NotNull dev.siroshun.configapi.serialization.record.RecordSerialization<R> @NotNull ... serializations) {
         for (var serialization : serializations) {
             this.testSerialization(serialization);
         }
@@ -100,9 +100,9 @@ record RecordTestCase<R extends Record>(@NotNull R expectedRecord, @NotNull MapN
 
     void testDefaultSerializations() {
         this.testSerialization(
-                RecordSerialization.create(this.recordClass),
-                RecordSerialization.create(this.expectedRecord),
-                RecordSerialization.builder(this.recordClass).build(),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.create(this.recordClass),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.create(this.expectedRecord),
+                dev.siroshun.configapi.serialization.record.RecordSerialization.builder(this.recordClass).build(),
                 RecordSerialization.builder(this.expectedRecord).build()
         );
     }

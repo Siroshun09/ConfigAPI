@@ -14,17 +14,17 @@
  *     limitations under the License.
  */
 
-package dev.siroshun.configapi.core.serialization.record;
+package dev.siroshun.configapi.serialization.record;
 
 import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.core.node.Node;
-import dev.siroshun.configapi.core.serialization.Deserializer;
-import dev.siroshun.configapi.core.serialization.Serialization;
-import dev.siroshun.configapi.core.serialization.Serializer;
-import dev.siroshun.configapi.core.serialization.key.KeyGenerator;
-import dev.siroshun.configapi.core.serialization.registry.DeserializerRegistry;
-import dev.siroshun.configapi.core.serialization.registry.SerializationRegistry;
-import dev.siroshun.configapi.core.serialization.registry.SerializerRegistry;
+import dev.siroshun.serialization.core.Deserializer;
+import dev.siroshun.serialization.core.Serialization;
+import dev.siroshun.serialization.core.Serializer;
+import dev.siroshun.serialization.core.key.KeyGenerator;
+import dev.siroshun.serialization.core.registry.DeserializerRegistry;
+import dev.siroshun.serialization.core.registry.SerializationRegistry;
+import dev.siroshun.serialization.core.registry.SerializerRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
