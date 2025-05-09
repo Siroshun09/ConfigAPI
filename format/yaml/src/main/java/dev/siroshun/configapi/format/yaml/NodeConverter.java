@@ -54,7 +54,7 @@ final class NodeConverter {
             }
 
             if (yamlHolder.parameter().processComment()) {
-                var first = mappingNode.getValue().get(0).getKeyNode();
+                var first = mappingNode.getValue().getFirst().getKeyNode();
                 var blockComments = first.getBlockComments();
 
                 if (blockComments != null) {
