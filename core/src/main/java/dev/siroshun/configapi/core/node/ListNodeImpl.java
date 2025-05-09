@@ -273,7 +273,7 @@ final class ListNodeImpl implements ListNode {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || this.getClass() != o.getClass()) return false;
         ListNodeImpl other = (ListNodeImpl) o;
         return this.backing == other.backing;  // If they do not refer to the same list assume they are different.
     }

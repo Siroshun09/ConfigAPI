@@ -83,7 +83,7 @@ public sealed interface Node<T> permits ArrayNode, CommentableNode, NullNode, Ob
      * @return {@code true} if this {@link Node} holds an object, otherwise {@code false}
      */
     default boolean hasValue() {
-        return value() != null;
+        return this.value() != null;
     }
 
     /**
@@ -94,7 +94,7 @@ public sealed interface Node<T> permits ArrayNode, CommentableNode, NullNode, Ob
      * @return the {@link Optional}
      */
     default @NotNull Optional<T> asOptional() {
-        return Optional.ofNullable(value());
+        return Optional.ofNullable(this.value());
     }
 
     /**

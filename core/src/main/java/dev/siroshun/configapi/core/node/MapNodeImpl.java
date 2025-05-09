@@ -231,7 +231,7 @@ final class MapNodeImpl implements MapNode {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || this.getClass() != o.getClass()) return false;
         MapNodeImpl other = (MapNodeImpl) o;
         return this.backing == other.backing; // If they do not refer to the same Map, assume they are different.
     }

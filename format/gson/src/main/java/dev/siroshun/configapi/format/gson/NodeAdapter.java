@@ -132,7 +132,7 @@ final class NodeAdapter extends TypeAdapter<Node<?>> {
         if (token == JsonToken.STRING) {
             return StringValue.fromString(in.nextString());
         } else if (token == JsonToken.NUMBER) {
-            return readNumber(in);
+            return this.readNumber(in);
         } else if (token == JsonToken.BOOLEAN) {
             return BooleanValue.fromBoolean(in.nextBoolean());
         } else if (token == JsonToken.NULL) {
@@ -224,7 +224,7 @@ final class NodeAdapter extends TypeAdapter<Node<?>> {
 
             out.endArray();
         } else if (value instanceof CommentedNode<?> commentedNode) {
-            write(out, commentedNode.node());
+            this.write(out, commentedNode.node());
         } else {
             throw new IOException("Cannot serialize " + value.getClass().getName());
         }

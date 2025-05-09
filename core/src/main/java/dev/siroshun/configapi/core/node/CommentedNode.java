@@ -81,21 +81,21 @@ public final class CommentedNode<T> implements CommentableNode<T> {
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (object == null || this.getClass() != object.getClass()) return false;
         CommentedNode<?> that = (CommentedNode<?>) object;
         return this.node.equals(that.node) && Objects.equals(this.comment, that.comment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(node, comment);
+        return Objects.hash(this.node, this.comment);
     }
 
     @Override
     public String toString() {
         return "CommentedNode{" +
-                "comment=" + this.comment +
-                ", node=" + node +
-                '}';
+               "comment=" + this.comment +
+               ", node=" + this.node +
+               '}';
     }
 }

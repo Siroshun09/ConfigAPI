@@ -330,8 +330,8 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         var map = new HashMap<>(node.value().size(), 1.0f);
 
         for (var entry : node.value().entrySet()) {
-            var key = deserializeKey(entry.getKey(), keyType);
-            var value = deserializeNode(entry.getValue(), valueType, DefaultValueSupplier.nullSupplier());
+            var key = this.deserializeKey(entry.getKey(), keyType);
+            var value = this.deserializeNode(entry.getValue(), valueType, DefaultValueSupplier.nullSupplier());
 
             if (key != null && value != null) {
                 map.put(key, value);
@@ -379,7 +379,7 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
                     } else if (componentType.isInstance(element.value())) {
                         array[i] = element.value();
                     } else {
-                        array[i] = deserializeNode(list.get(i), componentType, DefaultValueSupplier.nullSupplier());
+                        array[i] = this.deserializeNode(list.get(i), componentType, DefaultValueSupplier.nullSupplier());
                     }
                 }
                 return array;

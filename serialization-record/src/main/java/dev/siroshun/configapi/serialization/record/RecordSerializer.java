@@ -190,11 +190,11 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
         if (serializer != null) {
             return serializer.serialize(obj);
         } else if (Record.class.isAssignableFrom(obj.getClass())) {
-            return serialize0((Record) obj);
+            return this.serialize0((Record) obj);
         } else if (Collection.class.isAssignableFrom(obj.getClass())) {
-            return serializeCollection((Collection<?>) obj);
+            return this.serializeCollection((Collection<?>) obj);
         } else if (Map.class.isAssignableFrom(obj.getClass())) {
-            return serializeMap((Map<?, ?>) obj);
+            return this.serializeMap((Map<?, ?>) obj);
         } else if (obj.getClass().isArray()) {
             return this.serializeArray(obj);
         } else {
@@ -210,7 +210,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
                 continue;
             }
 
-            var serialized = serializeValue(element);
+            var serialized = this.serializeValue(element);
 
             if (serialized != null) {
                 listNode.add(serialized);
@@ -231,7 +231,7 @@ public final class RecordSerializer<R extends Record> implements Serializer<R, M
                 continue;
             }
 
-            var serialized = serializeValue(value);
+            var serialized = this.serializeValue(value);
 
             if (serialized != null) {
                 mapNode.set(key.toString(), serialized);
