@@ -161,72 +161,78 @@ final class NodeAdapter extends TypeAdapter<Node<?>> {
 
     @Override
     public void write(JsonWriter out, Node<?> value) throws IOException {
-        if (value instanceof StringValue(String value1)) {
-            out.value(value1);
-        } else if (value instanceof EnumValue<?>(Enum<?> value1)) {
-            out.value(value1.name());
-        } else if (value instanceof NumberValue numberValue) {
-            var clazz = numberValue.getClass();
+        switch (value) {
+            case StringValue(String value1) -> out.value(value1);
+            case EnumValue<?>(Enum<?> value1) -> out.value(value1.name());
+            case NumberValue numberValue -> {
+                var clazz = numberValue.getClass();
 
-            if (clazz == IntValue.class || clazz == LongValue.class || clazz == ByteValue.class || clazz == ShortValue.class) {
-                out.value(numberValue.asLong());
-            } else if (clazz == FloatValue.class) {
-                out.value(numberValue.asFloat());
-            } else if (clazz == DoubleValue.class) {
-                out.value(numberValue.asDouble());
-            }
-        } else if (value instanceof BooleanValue booleanValue) {
-            out.value(booleanValue.value());
-        } else if (value instanceof CharValue charValue) {
-            out.value(charValue.asString());
-        } else if (value instanceof NullNode || value == null) {
-            out.nullValue();
-        } else if (value instanceof ListNode listNode) {
-            LIST_NODE_ADAPTER.write(out, listNode);
-        } else if (value instanceof MapNode mapNode) {
-            MAP_NODE_ADAPTER.write(out, mapNode);
-        } else if (value instanceof ArrayNode<?>) {
-            out.beginArray();
-
-            if (value instanceof IntArray(int[] values)) {
-                for (int val : values) {
-                    out.value(val);
-                }
-            } else if (value instanceof LongArray(long[] values)) {
-                for (long val : values) {
-                    out.value(val);
-                }
-            } else if (value instanceof DoubleArray(double[] values)) {
-                for (double val : values) {
-                    out.value(val);
-                }
-            } else if (value instanceof FloatArray(float[] values)) {
-                for (float val : values) {
-                    out.value(val);
-                }
-            } else if (value instanceof ByteArray(byte[] values)) {
-                for (byte val : values) {
-                    out.value(val);
-                }
-            } else if (value instanceof ShortArray(short[] values)) {
-                for (short val : values) {
-                    out.value(val);
-                }
-            } else if (value instanceof BooleanArray(boolean[] values)) {
-                for (boolean val : values) {
-                    out.value(val);
-                }
-            } else if (value instanceof CharArray(char[] values)) {
-                for (char val : values) {
-                    out.value(String.valueOf(val));
+                if (clazz == IntValue.class || clazz == LongValue.class || clazz == ByteValue.class || clazz == ShortValue.class) {
+                    out.value(numberValue.asLong());
+                } else if (clazz == FloatValue.class) {
+                    out.value(numberValue.asFloat());
+                } else if (clazz == DoubleValue.class) {
+                    out.value(numberValue.asDouble());
                 }
             }
+            case BooleanValue booleanValue -> out.value(booleanValue.value());
+            case CharValue charValue -> out.value(charValue.asString());
+            case NullNode nullNode -> out.nullValue();
+            case null -> out.nullValue();
+            case ListNode listNode -> LIST_NODE_ADAPTER.write(out, listNode);
+            case MapNode mapNode -> MAP_NODE_ADAPTER.write(out, mapNode);
+            case ArrayNode<?> arrayNode -> {
+                out.beginArray();
 
-            out.endArray();
-        } else if (value instanceof CommentedNode<?> commentedNode) {
-            this.write(out, commentedNode.node());
-        } else {
-            throw new IOException("Cannot serialize " + value.getClass().getName());
+                switch (value) {
+                    case IntArray(int[] values) -> {
+                        for (int val : values) {
+                            out.value(val);
+                        }
+                    }
+                    case LongArray(long[] values) -> {
+                        for (long val : values) {
+                            out.value(val);
+                        }
+                    }
+                    case DoubleArray(double[] values) -> {
+                        for (double val : values) {
+                            out.value(val);
+                        }
+                    }
+                    case FloatArray(float[] values) -> {
+                        for (float val : values) {
+                            out.value(val);
+                        }
+                    }
+                    case ByteArray(byte[] values) -> {
+                        for (byte val : values) {
+                            out.value(val);
+                        }
+                    }
+                    case ShortArray(short[] values) -> {
+                        for (short val : values) {
+                            out.value(val);
+                        }
+                    }
+                    case BooleanArray(boolean[] values) -> {
+                        for (boolean val : values) {
+                            out.value(val);
+                        }
+                    }
+                    case CharArray(char[] values) -> {
+                        for (char val : values) {
+                            out.value(String.valueOf(val));
+                        }
+                    }
+                    default -> {
+                    }
+                }
+
+                out.endArray();
+            }
+            case CommentedNode<?> commentedNode -> this.write(out, commentedNode.node());
+            default -> throw new IOException("Cannot serialize " + value.getClass().getName());
         }
     }
 }

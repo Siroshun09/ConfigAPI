@@ -91,51 +91,55 @@ final class NodeConverter {
     private static @NotNull Node<?> toNode(@NotNull org.yaml.snakeyaml.nodes.Node node, @NotNull YamlHolder yamlHolder) throws IOException {
         var constructor = yamlHolder.constructor();
 
-        if (node instanceof MappingNode mappingNode) {
-            var mapNode = MapNode.create();
+        switch (node) {
+            case MappingNode mappingNode -> {
+                var mapNode = MapNode.create();
 
-            constructor.flattenMapping(mappingNode);
+                constructor.flattenMapping(mappingNode);
 
-            for (var tuple : mappingNode.getValue()) {
-                var key = constructor.constructObject(tuple.getKeyNode());
-                var value = toNode(tuple.getValueNode(), yamlHolder);
+                for (var tuple : mappingNode.getValue()) {
+                    var key = constructor.constructObject(tuple.getKeyNode());
+                    var value = toNode(tuple.getValueNode(), yamlHolder);
 
-                if (yamlHolder.parameter().processComment()) {
-                    if (value instanceof ListNode || value instanceof MapNode) {
-                        ((CommentableNode<?>) value).setComment(processComment(tuple.getKeyNode(), tuple.getKeyNode()));
-                        mapNode.set(key, value);
+                    if (yamlHolder.parameter().processComment()) {
+                        if (value instanceof ListNode || value instanceof MapNode) {
+                            ((CommentableNode<?>) value).setComment(processComment(tuple.getKeyNode(), tuple.getKeyNode()));
+                            mapNode.set(key, value);
+                        } else {
+                            var comment = processComment(tuple.getKeyNode(), tuple.getValueNode());
+                            mapNode.set(key, comment != null ? CommentableNode.withComment(value, comment) : value);
+                        }
                     } else {
-                        var comment = processComment(tuple.getKeyNode(), tuple.getValueNode());
-                        mapNode.set(key, comment != null ? CommentableNode.withComment(value, comment) : value);
+                        mapNode.set(key, value);
                     }
-                } else {
-                    mapNode.set(key, value);
                 }
+
+                return mapNode;
             }
+            case SequenceNode sequenceNode -> {
+                var nodes = sequenceNode.getValue();
+                var listNode = ListNode.create(nodes.size());
 
-            return mapNode;
-        } else if (node instanceof SequenceNode sequenceNode) {
-            var nodes = sequenceNode.getValue();
-            var listNode = ListNode.create(nodes.size());
+                for (var element : nodes) {
+                    var converted = toNode(element, yamlHolder);
 
-            for (var element : nodes) {
-                var converted = toNode(element, yamlHolder);
-
-                if (yamlHolder.parameter().processComment()) {
-                    var commented = CommentableNode.withComment(converted, processComment(element));
-                    listNode.add(commented.hasComment() ? commented : converted);
-                } else {
-                    listNode.add(converted);
+                    if (yamlHolder.parameter().processComment()) {
+                        var commented = CommentableNode.withComment(converted, processComment(element));
+                        listNode.add(commented.hasComment() ? commented : converted);
+                    } else {
+                        listNode.add(converted);
+                    }
                 }
-            }
 
-            return listNode;
-        } else if (node instanceof ScalarNode) {
-            return Node.fromObject(constructor.constructObject(node));
-        } else if (node instanceof AnchorNode anchorNode) {
-            return toNode(anchorNode.getRealNode(), yamlHolder);
-        } else {
-            throw new IOException("Unsupported node: " + node);
+                return listNode;
+            }
+            case ScalarNode scalarNode -> {
+                return Node.fromObject(constructor.constructObject(node));
+            }
+            case AnchorNode anchorNode -> {
+                return toNode(anchorNode.getRealNode(), yamlHolder);
+            }
+            default -> throw new IOException("Unsupported node: " + node);
         }
     }
 
@@ -220,44 +224,51 @@ final class NodeConverter {
     }
 
     private static @NotNull org.yaml.snakeyaml.nodes.Node toNode(@NotNull Node<?> node, @NotNull YamlHolder yamlHolder) {
-        if (node instanceof MapNode mapNode) {
-            var entries = mapNode.value().entrySet();
-            var nodes = new ArrayList<NodeTuple>(entries.size());
+        switch (node) {
+            case MapNode mapNode -> {
+                var entries = mapNode.value().entrySet();
+                var nodes = new ArrayList<NodeTuple>(entries.size());
 
-            for (var entry : entries) {
-                var key = entry.getKey();
-                var value = entry.getValue();
-                var yKey = yamlHolder.representer().represent(key);
-                var yValue = toNode(value, yamlHolder);
+                for (var entry : entries) {
+                    var key = entry.getKey();
+                    var value = entry.getValue();
+                    var yKey = yamlHolder.representer().represent(key);
+                    var yValue = toNode(value, yamlHolder);
 
-                applyComments(value, yKey, (value instanceof ListNode || value instanceof MapNode) ? yKey : yValue);
-                nodes.add(new NodeTuple(yKey, yValue));
+                    applyComments(value, yKey, (value instanceof ListNode || value instanceof MapNode) ? yKey : yValue);
+                    nodes.add(new NodeTuple(yKey, yValue));
+                }
+
+                return new MappingNode(Tag.MAP, nodes, yamlHolder.parameter().mapFlowStyle());
             }
+            case ListNode listNode -> {
+                var list = listNode.value();
+                var nodes = new ArrayList<org.yaml.snakeyaml.nodes.Node>();
 
-            return new MappingNode(Tag.MAP, nodes, yamlHolder.parameter().mapFlowStyle());
-        } else if (node instanceof ListNode listNode) {
-            var list = listNode.value();
-            var nodes = new ArrayList<org.yaml.snakeyaml.nodes.Node>();
+                for (var element : list) {
+                    var yNode = toNode(element, yamlHolder);
+                    applyComments(element, yNode, yNode);
+                    nodes.add(yNode);
+                }
 
-            for (var element : list) {
-                var yNode = toNode(element, yamlHolder);
-                applyComments(element, yNode, yNode);
-                nodes.add(yNode);
+                return new SequenceNode(Tag.SEQ, nodes, yamlHolder.parameter().sequenceFlowStyle());
             }
-
-            return new SequenceNode(Tag.SEQ, nodes, yamlHolder.parameter().sequenceFlowStyle());
-        } else if (node instanceof CommentedNode<?> commentedNode) {
-            return toNode(commentedNode.node(), yamlHolder);
-        } else if (node instanceof EnumValue<?>(Enum<?> value)) {
-            return yamlHolder.representer().represent(value.name());
-        } else if (node instanceof NullNode) {
-            return yamlHolder.representer().represent(null);
-        } else {
-            var represented = yamlHolder.representer().represent(node.value());
-            if (node instanceof ArrayNode<?> && represented instanceof SequenceNode sequenceNode) {
-                sequenceNode.setFlowStyle(yamlHolder.parameter().arrayFlowStyle());
+            case CommentedNode<?> commentedNode -> {
+                return toNode(commentedNode.node(), yamlHolder);
             }
-            return represented;
+            case EnumValue<?>(Enum<?> value) -> {
+                return yamlHolder.representer().represent(value.name());
+            }
+            case NullNode nullNode -> {
+                return yamlHolder.representer().represent(null);
+            }
+            default -> {
+                var represented = yamlHolder.representer().represent(node.value());
+                if (node instanceof ArrayNode<?> && represented instanceof SequenceNode sequenceNode) {
+                    sequenceNode.setFlowStyle(yamlHolder.parameter().arrayFlowStyle());
+                }
+                return represented;
+            }
         }
     }
 
@@ -323,29 +334,32 @@ final class NodeConverter {
 
         Comment comment = commentableNode.getComment();
 
-        if (comment instanceof YamlBlockComment blockComment) {
-            blockTarget.setBlockComments(toCommentLines(blockComment));
-        } else if (comment instanceof YamlInlineComment inlineComment) {
-            inlineTarget.setInLineComments(toCommentLines(inlineComment));
-        } else if (comment instanceof YamlNodeComment(YamlBlockComment block, YamlInlineComment inline)) {
-            blockTarget.setBlockComments(toCommentLines(block));
-            inlineTarget.setInLineComments(toCommentLines(inline));
-        } else if (comment instanceof SimpleComment simpleComment) {
-            boolean inline = simpleComment.type().equalsIgnoreCase(YamlInlineComment.TYPE);
-            CommentType type = inline ? CommentType.IN_LINE : CommentType.BLOCK;
-
-            var lines = simpleComment.content().lines().toList();
-            var commentLines = new ArrayList<CommentLine>(lines.size());
-
-            for (var line : lines) {
-                var value = line.isEmpty() ? "" : " " + line;
-                commentLines.add(new CommentLine(null, null, value, type));
+        switch (comment) {
+            case YamlBlockComment blockComment -> blockTarget.setBlockComments(toCommentLines(blockComment));
+            case YamlInlineComment inlineComment -> inlineTarget.setInLineComments(toCommentLines(inlineComment));
+            case YamlNodeComment(YamlBlockComment block, YamlInlineComment inline) -> {
+                blockTarget.setBlockComments(toCommentLines(block));
+                inlineTarget.setInLineComments(toCommentLines(inline));
             }
+            case SimpleComment simpleComment -> {
+                boolean inline = simpleComment.type().equalsIgnoreCase(YamlInlineComment.TYPE);
+                CommentType type = inline ? CommentType.IN_LINE : CommentType.BLOCK;
 
-            if (inline) {
-                inlineTarget.setInLineComments(commentLines);
-            } else {
-                blockTarget.setBlockComments(commentLines);
+                var lines = simpleComment.content().lines().toList();
+                var commentLines = new ArrayList<CommentLine>(lines.size());
+
+                for (var line : lines) {
+                    var value = line.isEmpty() ? "" : " " + line;
+                    commentLines.add(new CommentLine(null, null, value, type));
+                }
+
+                if (inline) {
+                    inlineTarget.setInLineComments(commentLines);
+                } else {
+                    blockTarget.setBlockComments(commentLines);
+                }
+            }
+            default -> {
             }
         }
     }

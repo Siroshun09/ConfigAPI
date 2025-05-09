@@ -50,28 +50,37 @@ public sealed interface NumberValue extends ValueNode<Number>, Comparable<Number
      * @return a {@link NumberValue} with the given {@link Number}
      */
     static @NotNull NumberValue fromNumber(@Nullable Number value) {
-        if (value instanceof Integer number) {
-            return number == 0 ? NumberValue.ZERO : new IntValue(number);
-        } else if (value instanceof Long number) {
-            return number == 0 ? NumberValue.ZERO : new LongValue(number);
-        } else if (value instanceof Float number) {
-            return Float.compare(number, 0) == 0 ? NumberValue.ZERO : new FloatValue(number);
-        } else if (value instanceof Double number) {
-            return Double.compare(number, 0) == 0 ? NumberValue.ZERO : new DoubleValue(number);
-        } else if (value instanceof Byte number) {
-            return number == 0 ? NumberValue.ZERO : new ByteValue(number);
-        } else if (value instanceof Short number) {
-            return number == 0 ? NumberValue.ZERO : new ShortValue(number);
-        } else if (value instanceof AtomicInteger number) {
-            int v = number.get();
-            return v == 0 ? NumberValue.ZERO : new IntValue(v);
-        } else if (value instanceof AtomicLong number) {
-            long v = number.get();
-            return v == 0 ? NumberValue.ZERO : new LongValue(v);
-        } else if (value == null) {
-            return NumberValue.ZERO;
-        } else {
-            throw new IllegalArgumentException("Unsupported Number: " + value.getClass());
+        switch (value) {
+            case Integer number -> {
+                return number == 0 ? NumberValue.ZERO : new IntValue(number);
+            }
+            case Long number -> {
+                return number == 0 ? NumberValue.ZERO : new LongValue(number);
+            }
+            case Float number -> {
+                return Float.compare(number, 0) == 0 ? NumberValue.ZERO : new FloatValue(number);
+            }
+            case Double number -> {
+                return Double.compare(number, 0) == 0 ? NumberValue.ZERO : new DoubleValue(number);
+            }
+            case Byte number -> {
+                return number == 0 ? NumberValue.ZERO : new ByteValue(number);
+            }
+            case Short number -> {
+                return number == 0 ? NumberValue.ZERO : new ShortValue(number);
+            }
+            case AtomicInteger number -> {
+                int v = number.get();
+                return v == 0 ? NumberValue.ZERO : new IntValue(v);
+            }
+            case AtomicLong number -> {
+                long v = number.get();
+                return v == 0 ? NumberValue.ZERO : new LongValue(v);
+            }
+            case null -> {
+                return NumberValue.ZERO;
+            }
+            default -> throw new IllegalArgumentException("Unsupported Number: " + value.getClass());
         }
     }
 

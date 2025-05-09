@@ -96,91 +96,101 @@ public final class NodeSerialization {
         }
 
         private void writeNode(JsonGenerator gen, Node<?> value) throws IOException {
-            if (value instanceof StringValue(String value1)) {
-                gen.writeString(value1);
-            } else if (value instanceof EnumValue<?>(Enum<?> value1)) {
-                gen.writeString(value1.name());
-            } else if (value instanceof NumberValue numberValue) {
-                var clazz = numberValue.getClass();
+            switch (value) {
+                case StringValue(String value1) -> gen.writeString(value1);
+                case EnumValue<?>(Enum<?> value1) -> gen.writeString(value1.name());
+                case NumberValue numberValue -> {
+                    var clazz = numberValue.getClass();
 
-                if (clazz == IntValue.class) {
-                    gen.writeNumber(numberValue.asInt());
-                } else if (clazz == LongValue.class) {
-                    gen.writeNumber(numberValue.asLong());
-                } else if (clazz == ByteValue.class) {
-                    gen.writeNumber(numberValue.asByte());
-                } else if (clazz == ShortValue.class) {
-                    gen.writeNumber(numberValue.asShort());
-                } else if (clazz == FloatValue.class) {
-                    gen.writeNumber(numberValue.asFloat());
-                } else if (clazz == DoubleValue.class) {
-                    gen.writeNumber(numberValue.asDouble());
-                }
-            } else if (value instanceof BooleanValue booleanValue) {
-                gen.writeBoolean(booleanValue.asBoolean());
-            } else if (value instanceof CharValue charValue) {
-                gen.writeString(charValue.asString());
-            } else if (value instanceof NullNode || value == null) {
-                gen.writeNull();
-            } else if (value instanceof ListNode listNode) {
-                gen.writeStartArray();
-
-                for (var element : listNode.value()) {
-                    this.writeNode(gen, element);
-                }
-
-                gen.writeEndArray();
-            } else if (value instanceof MapNode mapNode) {
-                gen.writeStartObject();
-
-                for (var entry : mapNode.value().entrySet()) {
-                    gen.writeFieldName(String.valueOf(entry.getKey()));
-                    this.writeNode(gen, entry.getValue());
-                }
-
-                gen.writeEndObject();
-            } else if (value instanceof ArrayNode<?>) {
-                gen.writeStartArray();
-
-                if (value instanceof IntArray(int[] values)) {
-                    for (int val : values) {
-                        gen.writeNumber(val);
-                    }
-                } else if (value instanceof LongArray(long[] values)) {
-                    for (long val : values) {
-                        gen.writeNumber(val);
-                    }
-                } else if (value instanceof DoubleArray(double[] values)) {
-                    for (double val : values) {
-                        gen.writeNumber(val);
-                    }
-                } else if (value instanceof FloatArray(float[] values)) {
-                    for (float val : values) {
-                        gen.writeNumber(val);
-                    }
-                } else if (value instanceof ByteArray(byte[] values)) {
-                    for (byte val : values) {
-                        gen.writeNumber(val);
-                    }
-                } else if (value instanceof ShortArray(short[] values)) {
-                    for (short val : values) {
-                        gen.writeNumber(val);
-                    }
-                } else if (value instanceof BooleanArray(boolean[] values)) {
-                    for (boolean val : values) {
-                        gen.writeBoolean(val);
-                    }
-                } else if (value instanceof CharArray(char[] values)) {
-                    for (char val : values) {
-                        gen.writeString(String.valueOf(val));
+                    if (clazz == IntValue.class) {
+                        gen.writeNumber(numberValue.asInt());
+                    } else if (clazz == LongValue.class) {
+                        gen.writeNumber(numberValue.asLong());
+                    } else if (clazz == ByteValue.class) {
+                        gen.writeNumber(numberValue.asByte());
+                    } else if (clazz == ShortValue.class) {
+                        gen.writeNumber(numberValue.asShort());
+                    } else if (clazz == FloatValue.class) {
+                        gen.writeNumber(numberValue.asFloat());
+                    } else if (clazz == DoubleValue.class) {
+                        gen.writeNumber(numberValue.asDouble());
                     }
                 }
+                case BooleanValue booleanValue -> gen.writeBoolean(booleanValue.asBoolean());
+                case CharValue charValue -> gen.writeString(charValue.asString());
+                case NullNode nullNode -> gen.writeNull();
+                case null -> gen.writeNull();
+                case ListNode listNode -> {
+                    gen.writeStartArray();
 
-                gen.writeEndArray();
-            } else if (value instanceof CommentedNode<?> commentedNode) {
-                this.writeNode(gen, commentedNode.node());
-            } else {
-                throw new IOException("Cannot serialize " + value.getClass().getName());
+                    for (var element : listNode.value()) {
+                        this.writeNode(gen, element);
+                    }
+
+                    gen.writeEndArray();
+                }
+                case MapNode mapNode -> {
+                    gen.writeStartObject();
+
+                    for (var entry : mapNode.value().entrySet()) {
+                        gen.writeFieldName(String.valueOf(entry.getKey()));
+                        this.writeNode(gen, entry.getValue());
+                    }
+
+                    gen.writeEndObject();
+                }
+                case ArrayNode<?> arrayNode -> {
+                    gen.writeStartArray();
+
+                    switch (value) {
+                        case IntArray(int[] values) -> {
+                            for (int val : values) {
+                                gen.writeNumber(val);
+                            }
+                        }
+                        case LongArray(long[] values) -> {
+                            for (long val : values) {
+                                gen.writeNumber(val);
+                            }
+                        }
+                        case DoubleArray(double[] values) -> {
+                            for (double val : values) {
+                                gen.writeNumber(val);
+                            }
+                        }
+                        case FloatArray(float[] values) -> {
+                            for (float val : values) {
+                                gen.writeNumber(val);
+                            }
+                        }
+                        case ByteArray(byte[] values) -> {
+                            for (byte val : values) {
+                                gen.writeNumber(val);
+                            }
+                        }
+                        case ShortArray(short[] values) -> {
+                            for (short val : values) {
+                                gen.writeNumber(val);
+                            }
+                        }
+                        case BooleanArray(boolean[] values) -> {
+                            for (boolean val : values) {
+                                gen.writeBoolean(val);
+                            }
+                        }
+                        case CharArray(char[] values) -> {
+                            for (char val : values) {
+                                gen.writeString(String.valueOf(val));
+                            }
+                        }
+                        default -> {
+                        }
+                    }
+
+                    gen.writeEndArray();
+                }
+                case CommentedNode<?> commentedNode -> this.writeNode(gen, commentedNode.node());
+                default -> throw new IOException("Cannot serialize " + value.getClass().getName());
             }
         }
     }

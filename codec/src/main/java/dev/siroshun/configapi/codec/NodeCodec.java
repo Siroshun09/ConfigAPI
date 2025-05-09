@@ -149,94 +149,105 @@ public final class NodeCodec {
         } else if (node instanceof MapNode mapNode) {
             return MAP_NODE_CODEC.encode(out, mapNode);
         } else if (node instanceof ArrayNode<?>) {
-            if (node instanceof IntArray(int[] values)) {
-                return out.createList().flatMap(
-                        appender -> {
-                            for (int value : values) {
-                                var result = appender.append(o -> o.writeInt(value));
-                                if (result.isFailure()) {
-                                    return result.asFailure();
+            switch (node) {
+                case IntArray(int[] values) -> {
+                    return out.createList().flatMap(
+                            appender -> {
+                                for (int value : values) {
+                                    var result = appender.append(o -> o.writeInt(value));
+                                    if (result.isFailure()) {
+                                        return result.asFailure();
+                                    }
                                 }
-                            }
-                            return appender.finish();
-                        }, EncodeError::asFailure);
-            } else if (node instanceof LongArray(long[] values)) {
-                return out.createList().flatMap(
-                        appender -> {
-                            for (long value : values) {
-                                var result = appender.append(o -> o.writeLong(value));
-                                if (result.isFailure()) {
-                                    return result.asFailure();
+                                return appender.finish();
+                            }, EncodeError::asFailure);
+                }
+                case LongArray(long[] values) -> {
+                    return out.createList().flatMap(
+                            appender -> {
+                                for (long value : values) {
+                                    var result = appender.append(o -> o.writeLong(value));
+                                    if (result.isFailure()) {
+                                        return result.asFailure();
+                                    }
                                 }
-                            }
-                            return appender.finish();
-                        }, EncodeError::asFailure);
-            } else if (node instanceof DoubleArray(double[] values)) {
-                return out.createList().flatMap(
-                        appender -> {
-                            for (double value : values) {
-                                var result = appender.append(o -> o.writeDouble(value));
-                                if (result.isFailure()) {
-                                    return result.asFailure();
+                                return appender.finish();
+                            }, EncodeError::asFailure);
+                }
+                case DoubleArray(double[] values) -> {
+                    return out.createList().flatMap(
+                            appender -> {
+                                for (double value : values) {
+                                    var result = appender.append(o -> o.writeDouble(value));
+                                    if (result.isFailure()) {
+                                        return result.asFailure();
+                                    }
                                 }
-                            }
-                            return appender.finish();
-                        }, EncodeError::asFailure);
-            } else if (node instanceof FloatArray(float[] values)) {
-                return out.createList().flatMap(
-                        appender -> {
-                            for (float value : values) {
-                                var result = appender.append(o -> o.writeFloat(value));
-                                if (result.isFailure()) {
-                                    return result.asFailure();
+                                return appender.finish();
+                            }, EncodeError::asFailure);
+                }
+                case FloatArray(float[] values) -> {
+                    return out.createList().flatMap(
+                            appender -> {
+                                for (float value : values) {
+                                    var result = appender.append(o -> o.writeFloat(value));
+                                    if (result.isFailure()) {
+                                        return result.asFailure();
+                                    }
                                 }
-                            }
-                            return appender.finish();
-                        }, EncodeError::asFailure);
-            } else if (node instanceof ByteArray(byte[] values)) {
-                return out.createList().flatMap(
-                        appender -> {
-                            for (byte value : values) {
-                                var result = appender.append(o -> o.writeByte(value));
-                                if (result.isFailure()) {
-                                    return result.asFailure();
+                                return appender.finish();
+                            }, EncodeError::asFailure);
+                }
+                case ByteArray(byte[] values) -> {
+                    return out.createList().flatMap(
+                            appender -> {
+                                for (byte value : values) {
+                                    var result = appender.append(o -> o.writeByte(value));
+                                    if (result.isFailure()) {
+                                        return result.asFailure();
+                                    }
                                 }
-                            }
-                            return appender.finish();
-                        }, EncodeError::asFailure);
-            } else if (node instanceof ShortArray(short[] values)) {
-                return out.createList().flatMap(
-                        appender -> {
-                            for (short value : values) {
-                                var result = appender.append(o -> o.writeShort(value));
-                                if (result.isFailure()) {
-                                    return result.asFailure();
+                                return appender.finish();
+                            }, EncodeError::asFailure);
+                }
+                case ShortArray(short[] values) -> {
+                    return out.createList().flatMap(
+                            appender -> {
+                                for (short value : values) {
+                                    var result = appender.append(o -> o.writeShort(value));
+                                    if (result.isFailure()) {
+                                        return result.asFailure();
+                                    }
                                 }
-                            }
-                            return appender.finish();
-                        }, EncodeError::asFailure);
-            } else if (node instanceof BooleanArray(boolean[] values)) {
-                return out.createList().flatMap(
-                        appender -> {
-                            for (boolean value : values) {
-                                var result = appender.append(o -> o.writeBoolean(value));
-                                if (result.isFailure()) {
-                                    return result.asFailure();
+                                return appender.finish();
+                            }, EncodeError::asFailure);
+                }
+                case BooleanArray(boolean[] values) -> {
+                    return out.createList().flatMap(
+                            appender -> {
+                                for (boolean value : values) {
+                                    var result = appender.append(o -> o.writeBoolean(value));
+                                    if (result.isFailure()) {
+                                        return result.asFailure();
+                                    }
                                 }
-                            }
-                            return appender.finish();
-                        }, EncodeError::asFailure);
-            } else if (node instanceof CharArray(char[] values)) {
-                return out.createList().flatMap(
-                        appender -> {
-                            for (char value : values) {
-                                var result = appender.append(o -> o.writeChar(value));
-                                if (result.isFailure()) {
-                                    return result.asFailure();
+                                return appender.finish();
+                            }, EncodeError::asFailure);
+                }
+                case CharArray(char[] values) -> {
+                    return out.createList().flatMap(
+                            appender -> {
+                                for (char value : values) {
+                                    var result = appender.append(o -> o.writeChar(value));
+                                    if (result.isFailure()) {
+                                        return result.asFailure();
+                                    }
                                 }
-                            }
-                            return appender.finish();
-                        }, EncodeError::asFailure);
+                                return appender.finish();
+                            }, EncodeError::asFailure);
+                }
+                default -> {
+                }
             }
         } else if (node instanceof CommentedNode<?> commentedNode) {
             return encodeNode(out, commentedNode.node());

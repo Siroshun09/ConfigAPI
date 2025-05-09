@@ -57,14 +57,12 @@ public abstract class TextFileFormatTest<N extends Node<?>, F extends FileFormat
     @ParameterizedTest
     @MethodSource("testCases")
     void test(TestCase<N, F> testCase, @TempDir Path directory) throws IOException {
-        if (testCase instanceof TextFileFormatTest.LoadTestCase<N, F> loadTestCase) {
-            this.doLoadTest(loadTestCase, directory);
-        } else if (testCase instanceof TextFileFormatTest.SaveTestCase<N, F> saveTestCase) {
-            this.doSaveTest(saveTestCase, directory);
-        } else if (testCase instanceof TextFileFormatTest.SaveAndLoadTestCase<N, F> saveAndLoadTestCase) {
-            this.doSaveAndLoadTest(saveAndLoadTestCase, directory);
-        } else {
-            throw new IllegalArgumentException("Unsupported test case: " + testCase);
+        switch (testCase) {
+            case TextFileFormatTest.LoadTestCase<N, F> loadTestCase -> this.doLoadTest(loadTestCase, directory);
+            case TextFileFormatTest.SaveTestCase<N, F> saveTestCase -> this.doSaveTest(saveTestCase, directory);
+            case TextFileFormatTest.SaveAndLoadTestCase<N, F> saveAndLoadTestCase ->
+                    this.doSaveAndLoadTest(saveAndLoadTestCase, directory);
+            case null, default -> throw new IllegalArgumentException("Unsupported test case: " + testCase);
         }
     }
 
