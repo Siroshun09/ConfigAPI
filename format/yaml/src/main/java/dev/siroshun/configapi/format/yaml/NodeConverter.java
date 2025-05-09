@@ -207,9 +207,11 @@ final class NodeConverter {
 
         applyComments(mapNode, mappingNode, mappingNode);
 
-        if (mapNode.hasComment() && mapNode.getComment() instanceof YamlRootComment rootComment) {
-            mappingNode.setBlockComments(toHeaderCommentLines(rootComment.header()));
-            mappingNode.setEndComments(toCommentLines(rootComment.footer()));
+        if (mapNode.hasComment() && mapNode.getComment() instanceof YamlRootComment(
+                YamlBlockComment header, YamlBlockComment footer
+        )) {
+            mappingNode.setBlockComments(toHeaderCommentLines(header));
+            mappingNode.setEndComments(toCommentLines(footer));
         }
 
         mappingNode.setFlowStyle(yamlHolder.parameter().defaultFlowStyle());
@@ -246,8 +248,8 @@ final class NodeConverter {
             return new SequenceNode(Tag.SEQ, nodes, yamlHolder.parameter().sequenceFlowStyle());
         } else if (node instanceof CommentedNode<?> commentedNode) {
             return toNode(commentedNode.node(), yamlHolder);
-        } else if (node instanceof EnumValue<?> enumValue) {
-            return yamlHolder.representer().represent(enumValue.value().name());
+        } else if (node instanceof EnumValue<?>(Enum<?> value)) {
+            return yamlHolder.representer().represent(value.name());
         } else if (node instanceof NullNode) {
             return yamlHolder.representer().represent(null);
         } else {
@@ -325,9 +327,9 @@ final class NodeConverter {
             blockTarget.setBlockComments(toCommentLines(blockComment));
         } else if (comment instanceof YamlInlineComment inlineComment) {
             inlineTarget.setInLineComments(toCommentLines(inlineComment));
-        } else if (comment instanceof YamlNodeComment nodeComment) {
-            blockTarget.setBlockComments(toCommentLines(nodeComment.block()));
-            inlineTarget.setInLineComments(toCommentLines(nodeComment.inline()));
+        } else if (comment instanceof YamlNodeComment(YamlBlockComment block, YamlInlineComment inline)) {
+            blockTarget.setBlockComments(toCommentLines(block));
+            inlineTarget.setInLineComments(toCommentLines(inline));
         } else if (comment instanceof SimpleComment simpleComment) {
             boolean inline = simpleComment.type().equalsIgnoreCase(YamlInlineComment.TYPE);
             CommentType type = inline ? CommentType.IN_LINE : CommentType.BLOCK;

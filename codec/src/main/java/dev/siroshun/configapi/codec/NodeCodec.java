@@ -120,10 +120,10 @@ public final class NodeCodec {
     );
 
     private static <O> Result<O, EncodeError> encodeNode(Out<O> out, Node<?> node) {
-        if (node instanceof StringValue stringValue) {
-            return out.writeString(stringValue.value());
-        } else if (node instanceof EnumValue<?> enumValue) {
-            return out.writeString(enumValue.value().name());
+        if (node instanceof StringValue(String value)) {
+            return out.writeString(value);
+        } else if (node instanceof EnumValue<?>(Enum<?> value)) {
+            return out.writeString(value.name());
         } else if (node instanceof NumberValue numberValue) {
             var clazz = numberValue.getClass();
 
@@ -149,10 +149,10 @@ public final class NodeCodec {
         } else if (node instanceof MapNode mapNode) {
             return MAP_NODE_CODEC.encode(out, mapNode);
         } else if (node instanceof ArrayNode<?>) {
-            if (node instanceof IntArray intArray) {
+            if (node instanceof IntArray(int[] values)) {
                 return out.createList().flatMap(
                         appender -> {
-                            for (int value : intArray.value()) {
+                            for (int value : values) {
                                 var result = appender.append(o -> o.writeInt(value));
                                 if (result.isFailure()) {
                                     return result.asFailure();
@@ -160,10 +160,10 @@ public final class NodeCodec {
                             }
                             return appender.finish();
                         }, EncodeError::asFailure);
-            } else if (node instanceof LongArray longArray) {
+            } else if (node instanceof LongArray(long[] values)) {
                 return out.createList().flatMap(
                         appender -> {
-                            for (long value : longArray.value()) {
+                            for (long value : values) {
                                 var result = appender.append(o -> o.writeLong(value));
                                 if (result.isFailure()) {
                                     return result.asFailure();
@@ -171,10 +171,10 @@ public final class NodeCodec {
                             }
                             return appender.finish();
                         }, EncodeError::asFailure);
-            } else if (node instanceof DoubleArray doubleArray) {
+            } else if (node instanceof DoubleArray(double[] values)) {
                 return out.createList().flatMap(
                         appender -> {
-                            for (double value : doubleArray.value()) {
+                            for (double value : values) {
                                 var result = appender.append(o -> o.writeDouble(value));
                                 if (result.isFailure()) {
                                     return result.asFailure();
@@ -182,10 +182,10 @@ public final class NodeCodec {
                             }
                             return appender.finish();
                         }, EncodeError::asFailure);
-            } else if (node instanceof FloatArray floatArray) {
+            } else if (node instanceof FloatArray(float[] values)) {
                 return out.createList().flatMap(
                         appender -> {
-                            for (float value : floatArray.value()) {
+                            for (float value : values) {
                                 var result = appender.append(o -> o.writeFloat(value));
                                 if (result.isFailure()) {
                                     return result.asFailure();
@@ -193,10 +193,10 @@ public final class NodeCodec {
                             }
                             return appender.finish();
                         }, EncodeError::asFailure);
-            } else if (node instanceof ByteArray byteArray) {
+            } else if (node instanceof ByteArray(byte[] values)) {
                 return out.createList().flatMap(
                         appender -> {
-                            for (byte value : byteArray.value()) {
+                            for (byte value : values) {
                                 var result = appender.append(o -> o.writeByte(value));
                                 if (result.isFailure()) {
                                     return result.asFailure();
@@ -204,10 +204,10 @@ public final class NodeCodec {
                             }
                             return appender.finish();
                         }, EncodeError::asFailure);
-            } else if (node instanceof ShortArray shortArray) {
+            } else if (node instanceof ShortArray(short[] values)) {
                 return out.createList().flatMap(
                         appender -> {
-                            for (short value : shortArray.value()) {
+                            for (short value : values) {
                                 var result = appender.append(o -> o.writeShort(value));
                                 if (result.isFailure()) {
                                     return result.asFailure();
@@ -215,10 +215,10 @@ public final class NodeCodec {
                             }
                             return appender.finish();
                         }, EncodeError::asFailure);
-            } else if (node instanceof BooleanArray booleanArray) {
+            } else if (node instanceof BooleanArray(boolean[] values)) {
                 return out.createList().flatMap(
                         appender -> {
-                            for (boolean value : booleanArray.value()) {
+                            for (boolean value : values) {
                                 var result = appender.append(o -> o.writeBoolean(value));
                                 if (result.isFailure()) {
                                     return result.asFailure();
@@ -226,10 +226,10 @@ public final class NodeCodec {
                             }
                             return appender.finish();
                         }, EncodeError::asFailure);
-            } else if (node instanceof CharArray charArray) {
+            } else if (node instanceof CharArray(char[] values)) {
                 return out.createList().flatMap(
                         appender -> {
-                            for (char value : charArray.value()) {
+                            for (char value : values) {
                                 var result = appender.append(o -> o.writeChar(value));
                                 if (result.isFailure()) {
                                     return result.asFailure();

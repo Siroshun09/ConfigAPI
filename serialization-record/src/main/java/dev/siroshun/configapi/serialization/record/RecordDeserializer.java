@@ -245,15 +245,15 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
         } else if (clazz == String.class) {
             return node instanceof StringValue stringValue ? stringValue.asString() : defaultValueSupplier.get();
         } else if (Enum.class.isAssignableFrom(clazz)) {
-            if (node instanceof EnumValue<?> enumValue && clazz.isInstance(enumValue.value())) {
-                return enumValue.value();
-            } else if (node instanceof StringValue stringValue) {
+            if (node instanceof EnumValue<?>(Enum<?> value) && clazz.isInstance(value)) {
+                return value;
+            } else if (node instanceof StringValue(String value)) {
                 var subClass = clazz.asSubclass(Enum.class);
                 try {
-                    return Enum.valueOf(subClass, stringValue.value());
+                    return Enum.valueOf(subClass, value);
                 } catch (IllegalArgumentException ignored1) {
                     try {
-                        return Enum.valueOf(subClass, stringValue.value().toUpperCase(Locale.ENGLISH));
+                        return Enum.valueOf(subClass, value.toUpperCase(Locale.ENGLISH));
                     } catch (IllegalArgumentException ignored2) {
                         return defaultValueSupplier.get();
                     }
@@ -350,21 +350,21 @@ public final class RecordDeserializer<R extends Record> implements Deserializer<
 
     private @Nullable Object deserializeToArray(@NotNull Node<?> node, @NotNull Class<?> clazz, @NotNull DefaultValueSupplier<?> defaultArraySupplier) {
         if (clazz == int[].class) {
-            return node instanceof IntArray intArray ? intArray.value() : defaultArraySupplier.get();
+            return node instanceof IntArray(int[] value) ? value : defaultArraySupplier.get();
         } else if (clazz == long[].class) {
-            return node instanceof LongArray longArray ? longArray.value() : defaultArraySupplier.get();
+            return node instanceof LongArray(long[] value) ? value : defaultArraySupplier.get();
         } else if (clazz == float[].class) {
-            return node instanceof FloatArray floatArray ? floatArray.value() : defaultArraySupplier.get();
+            return node instanceof FloatArray(float[] value) ? value : defaultArraySupplier.get();
         } else if (clazz == double[].class) {
-            return node instanceof DoubleArray doubleArray ? doubleArray.value() : defaultArraySupplier.get();
+            return node instanceof DoubleArray(double[] value) ? value : defaultArraySupplier.get();
         } else if (clazz == byte[].class) {
-            return node instanceof ByteArray byteArray ? byteArray.value() : defaultArraySupplier.get();
+            return node instanceof ByteArray(byte[] value) ? value : defaultArraySupplier.get();
         } else if (clazz == short[].class) {
-            return node instanceof ShortArray shortArray ? shortArray.value() : defaultArraySupplier.get();
+            return node instanceof ShortArray(short[] value) ? value : defaultArraySupplier.get();
         } else if (clazz == boolean[].class) {
-            return node instanceof BooleanArray booleanArray ? booleanArray.value() : defaultArraySupplier.get();
+            return node instanceof BooleanArray(boolean[] value) ? value : defaultArraySupplier.get();
         } else if (clazz == char[].class) {
-            return node instanceof CharArray charArray ? charArray.value() : defaultArraySupplier.get();
+            return node instanceof CharArray(char[] value) ? value : defaultArraySupplier.get();
         } else if (node instanceof ListNode listNode) {
             var list = listNode.value();
             var componentType = clazz.getComponentType();

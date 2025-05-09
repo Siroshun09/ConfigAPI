@@ -358,16 +358,16 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
     default <E extends Enum<E>> @Nullable E getEnum(@NotNull Object key, @NotNull Class<E> enumClass) {
         var node = this.raw(key);
 
-        if (node instanceof EnumValue<?> enumValue) {
-            return enumClass.isInstance(enumValue.value()) ? enumClass.cast(enumValue.value()) : null;
+        if (node instanceof EnumValue<?>(Enum<?> value)) {
+            return enumClass.isInstance(value) ? enumClass.cast(value) : null;
         }
 
-        if (node instanceof StringValue stringValue) {
+        if (node instanceof StringValue(String value)) {
             try {
-                return Enum.valueOf(enumClass, stringValue.value());
+                return Enum.valueOf(enumClass, value);
             } catch (IllegalArgumentException ignored1) {
                 try {
-                    return Enum.valueOf(enumClass, stringValue.value().toUpperCase(Locale.ENGLISH));
+                    return Enum.valueOf(enumClass, value.toUpperCase(Locale.ENGLISH));
                 } catch (IllegalArgumentException ignored2) {
                 }
             }

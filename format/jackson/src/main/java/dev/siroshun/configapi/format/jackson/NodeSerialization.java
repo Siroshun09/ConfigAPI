@@ -96,10 +96,10 @@ public final class NodeSerialization {
         }
 
         private void writeNode(JsonGenerator gen, Node<?> value) throws IOException {
-            if (value instanceof StringValue stringValue) {
-                gen.writeString(stringValue.value());
-            } else if (value instanceof EnumValue<?> enumValue) {
-                gen.writeString(enumValue.value().name());
+            if (value instanceof StringValue(String value1)) {
+                gen.writeString(value1);
+            } else if (value instanceof EnumValue<?>(Enum<?> value1)) {
+                gen.writeString(value1.name());
             } else if (value instanceof NumberValue numberValue) {
                 var clazz = numberValue.getClass();
 
@@ -142,36 +142,36 @@ public final class NodeSerialization {
             } else if (value instanceof ArrayNode<?>) {
                 gen.writeStartArray();
 
-                if (value instanceof IntArray intArray) {
-                    for (int val : intArray.value()) {
+                if (value instanceof IntArray(int[] values)) {
+                    for (int val : values) {
                         gen.writeNumber(val);
                     }
-                } else if (value instanceof LongArray longArray) {
-                    for (long val : longArray.value()) {
+                } else if (value instanceof LongArray(long[] values)) {
+                    for (long val : values) {
                         gen.writeNumber(val);
                     }
-                } else if (value instanceof DoubleArray doubleArray) {
-                    for (double val : doubleArray.value()) {
+                } else if (value instanceof DoubleArray(double[] values)) {
+                    for (double val : values) {
                         gen.writeNumber(val);
                     }
-                } else if (value instanceof FloatArray floatArray) {
-                    for (float val : floatArray.value()) {
+                } else if (value instanceof FloatArray(float[] values)) {
+                    for (float val : values) {
                         gen.writeNumber(val);
                     }
-                } else if (value instanceof ByteArray byteArray) {
-                    for (byte val : byteArray.value()) {
+                } else if (value instanceof ByteArray(byte[] values)) {
+                    for (byte val : values) {
                         gen.writeNumber(val);
                     }
-                } else if (value instanceof ShortArray shortArray) {
-                    for (short val : shortArray.value()) {
+                } else if (value instanceof ShortArray(short[] values)) {
+                    for (short val : values) {
                         gen.writeNumber(val);
                     }
-                } else if (value instanceof BooleanArray booleanArray) {
-                    for (boolean val : booleanArray.value()) {
+                } else if (value instanceof BooleanArray(boolean[] values)) {
+                    for (boolean val : values) {
                         gen.writeBoolean(val);
                     }
-                } else if (value instanceof CharArray charArray) {
-                    for (char val : charArray.value()) {
+                } else if (value instanceof CharArray(char[] values)) {
+                    for (char val : values) {
                         gen.writeString(String.valueOf(val));
                     }
                 }

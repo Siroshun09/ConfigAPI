@@ -161,10 +161,10 @@ final class NodeAdapter extends TypeAdapter<Node<?>> {
 
     @Override
     public void write(JsonWriter out, Node<?> value) throws IOException {
-        if (value instanceof StringValue stringValue) {
-            out.value(stringValue.value());
-        } else if (value instanceof EnumValue<?> enumValue) {
-            out.value(enumValue.value().name());
+        if (value instanceof StringValue(String value1)) {
+            out.value(value1);
+        } else if (value instanceof EnumValue<?>(Enum<?> value1)) {
+            out.value(value1.name());
         } else if (value instanceof NumberValue numberValue) {
             var clazz = numberValue.getClass();
 
@@ -188,36 +188,36 @@ final class NodeAdapter extends TypeAdapter<Node<?>> {
         } else if (value instanceof ArrayNode<?>) {
             out.beginArray();
 
-            if (value instanceof IntArray intArray) {
-                for (int val : intArray.value()) {
+            if (value instanceof IntArray(int[] values)) {
+                for (int val : values) {
                     out.value(val);
                 }
-            } else if (value instanceof LongArray longArray) {
-                for (long val : longArray.value()) {
+            } else if (value instanceof LongArray(long[] values)) {
+                for (long val : values) {
                     out.value(val);
                 }
-            } else if (value instanceof DoubleArray doubleArray) {
-                for (double val : doubleArray.value()) {
+            } else if (value instanceof DoubleArray(double[] values)) {
+                for (double val : values) {
                     out.value(val);
                 }
-            } else if (value instanceof FloatArray floatArray) {
-                for (float val : floatArray.value()) {
+            } else if (value instanceof FloatArray(float[] values)) {
+                for (float val : values) {
                     out.value(val);
                 }
-            } else if (value instanceof ByteArray byteArray) {
-                for (byte val : byteArray.value()) {
+            } else if (value instanceof ByteArray(byte[] values)) {
+                for (byte val : values) {
                     out.value(val);
                 }
-            } else if (value instanceof ShortArray shortArray) {
-                for (short val : shortArray.value()) {
+            } else if (value instanceof ShortArray(short[] values)) {
+                for (short val : values) {
                     out.value(val);
                 }
-            } else if (value instanceof BooleanArray booleanArray) {
-                for (boolean val : booleanArray.value()) {
+            } else if (value instanceof BooleanArray(boolean[] values)) {
+                for (boolean val : values) {
                     out.value(val);
                 }
-            } else if (value instanceof CharArray charArray) {
-                for (char val : charArray.value()) {
+            } else if (value instanceof CharArray(char[] values)) {
+                for (char val : values) {
                     out.value(String.valueOf(val));
                 }
             }
