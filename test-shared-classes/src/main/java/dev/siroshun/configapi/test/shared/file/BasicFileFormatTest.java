@@ -46,6 +46,12 @@ import java.util.stream.Stream;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileFormat<N>> {
 
+    /**
+     * A constructor of {@link BasicFileFormatTest}.
+     */
+    protected BasicFileFormatTest() {
+    }
+
     @ParameterizedTest
     @MethodSource("fileFormats")
     void testNonExistentFile(F fileFormat, @TempDir Path directory) throws IOException {

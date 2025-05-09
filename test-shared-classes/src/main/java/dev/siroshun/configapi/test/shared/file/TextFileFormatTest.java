@@ -48,6 +48,12 @@ import java.util.stream.Stream;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class TextFileFormatTest<N extends Node<?>, F extends FileFormat<N>> extends BasicFileFormatTest<N, F> {
 
+    /**
+     * A constructor of {@link TextFileFormatTest}.
+     */
+    protected TextFileFormatTest() {
+    }
+
     @ParameterizedTest
     @MethodSource("testCases")
     void test(TestCase<N, F> testCase, @TempDir Path directory) throws IOException {

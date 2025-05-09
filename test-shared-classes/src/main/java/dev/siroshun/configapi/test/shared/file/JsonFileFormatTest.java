@@ -203,6 +203,12 @@ public abstract class JsonFileFormatTest<F extends FileFormat<MapNode>> extends 
         });
     }
 
+    /**
+     * A constructor of {@link JsonFileFormatTest}.
+     */
+    protected JsonFileFormatTest() {
+    }
+
     @Override
     protected Stream<TestCase<MapNode, F>> testCases() {
         return Stream.of(
