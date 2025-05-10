@@ -120,137 +120,147 @@ public final class NodeCodec {
     );
 
     private static <O> Result<O, EncodeError> encodeNode(Out<O> out, Node<?> node) {
-        if (node instanceof StringValue(String value)) {
-            return out.writeString(value);
-        } else if (node instanceof EnumValue<?>(Enum<?> value)) {
-            return out.writeString(value.name());
-        } else if (node instanceof NumberValue numberValue) {
-            var clazz = numberValue.getClass();
+        switch (node) {
+            case StringValue(String value) -> {
+                return out.writeString(value);
+            }
+            case EnumValue<?>(Enum<?> value) -> {
+                return out.writeString(value.name());
+            }
+            case NumberValue numberValue -> {
+                Class<? extends NumberValue> clazz = numberValue.getClass();
 
-            if (clazz == ByteValue.class) {
-                return out.writeByte(numberValue.asByte());
-            } else if (clazz == ShortValue.class) {
-                return out.writeShort(numberValue.asShort());
-            } else if (clazz == IntValue.class) {
-                return out.writeInt(numberValue.asInt());
-            } else if (clazz == LongValue.class) {
-                return out.writeLong(numberValue.asLong());
-            } else if (clazz == FloatValue.class) {
-                return out.writeFloat(numberValue.asFloat());
-            } else if (clazz == DoubleValue.class) {
-                return out.writeDouble(numberValue.asDouble());
-            }
-        } else if (node instanceof BooleanValue booleanValue) {
-            return out.writeBoolean(booleanValue.value());
-        } else if (node instanceof CharValue charValue) {
-            return out.writeChar(charValue.asChar());
-        } else if (node instanceof ListNode listNode) {
-            return LIST_NODE_CODEC.encode(out, listNode);
-        } else if (node instanceof MapNode mapNode) {
-            return MAP_NODE_CODEC.encode(out, mapNode);
-        } else if (node instanceof ArrayNode<?>) {
-            switch (node) {
-                case IntArray(int[] values) -> {
-                    return out.createList().flatMap(
-                            appender -> {
-                                for (int value : values) {
-                                    var result = appender.append(o -> o.writeInt(value));
-                                    if (result.isFailure()) {
-                                        return result.asFailure();
-                                    }
-                                }
-                                return appender.finish();
-                            }, EncodeError::asFailure);
-                }
-                case LongArray(long[] values) -> {
-                    return out.createList().flatMap(
-                            appender -> {
-                                for (long value : values) {
-                                    var result = appender.append(o -> o.writeLong(value));
-                                    if (result.isFailure()) {
-                                        return result.asFailure();
-                                    }
-                                }
-                                return appender.finish();
-                            }, EncodeError::asFailure);
-                }
-                case DoubleArray(double[] values) -> {
-                    return out.createList().flatMap(
-                            appender -> {
-                                for (double value : values) {
-                                    var result = appender.append(o -> o.writeDouble(value));
-                                    if (result.isFailure()) {
-                                        return result.asFailure();
-                                    }
-                                }
-                                return appender.finish();
-                            }, EncodeError::asFailure);
-                }
-                case FloatArray(float[] values) -> {
-                    return out.createList().flatMap(
-                            appender -> {
-                                for (float value : values) {
-                                    var result = appender.append(o -> o.writeFloat(value));
-                                    if (result.isFailure()) {
-                                        return result.asFailure();
-                                    }
-                                }
-                                return appender.finish();
-                            }, EncodeError::asFailure);
-                }
-                case ByteArray(byte[] values) -> {
-                    return out.createList().flatMap(
-                            appender -> {
-                                for (byte value : values) {
-                                    var result = appender.append(o -> o.writeByte(value));
-                                    if (result.isFailure()) {
-                                        return result.asFailure();
-                                    }
-                                }
-                                return appender.finish();
-                            }, EncodeError::asFailure);
-                }
-                case ShortArray(short[] values) -> {
-                    return out.createList().flatMap(
-                            appender -> {
-                                for (short value : values) {
-                                    var result = appender.append(o -> o.writeShort(value));
-                                    if (result.isFailure()) {
-                                        return result.asFailure();
-                                    }
-                                }
-                                return appender.finish();
-                            }, EncodeError::asFailure);
-                }
-                case BooleanArray(boolean[] values) -> {
-                    return out.createList().flatMap(
-                            appender -> {
-                                for (boolean value : values) {
-                                    var result = appender.append(o -> o.writeBoolean(value));
-                                    if (result.isFailure()) {
-                                        return result.asFailure();
-                                    }
-                                }
-                                return appender.finish();
-                            }, EncodeError::asFailure);
-                }
-                case CharArray(char[] values) -> {
-                    return out.createList().flatMap(
-                            appender -> {
-                                for (char value : values) {
-                                    var result = appender.append(o -> o.writeChar(value));
-                                    if (result.isFailure()) {
-                                        return result.asFailure();
-                                    }
-                                }
-                                return appender.finish();
-                            }, EncodeError::asFailure);
-                }
-                default -> {
+                if (clazz == ByteValue.class) {
+                    return out.writeByte(numberValue.asByte());
+                } else if (clazz == ShortValue.class) {
+                    return out.writeShort(numberValue.asShort());
+                } else if (clazz == IntValue.class) {
+                    return out.writeInt(numberValue.asInt());
+                } else if (clazz == LongValue.class) {
+                    return out.writeLong(numberValue.asLong());
+                } else if (clazz == FloatValue.class) {
+                    return out.writeFloat(numberValue.asFloat());
+                } else if (clazz == DoubleValue.class) {
+                    return out.writeDouble(numberValue.asDouble());
                 }
             }
-        } else if (node instanceof CommentedNode<?> commentedNode) {
-            return encodeNode(out, commentedNode.node());
+            case BooleanValue booleanValue -> {
+                return out.writeBoolean(booleanValue.value());
+            }
+            case CharValue charValue -> {
+                return out.writeChar(charValue.asChar());
+            }
+            case ListNode listNode -> {
+                return LIST_NODE_CODEC.encode(out, listNode);
+            }
+            case MapNode mapNode -> {
+                return MAP_NODE_CODEC.encode(out, mapNode);
+            }
+            case ArrayNode<?> arrayNode -> {
+                switch (arrayNode) {
+                    case IntArray(int[] values) -> {
+                        return out.createList().flatMap(
+                                appender -> {
+                                    for (int value : values) {
+                                        var result = appender.append(o -> o.writeInt(value));
+                                        if (result.isFailure()) {
+                                            return result.asFailure();
+                                        }
+                                    }
+                                    return appender.finish();
+                                }, EncodeError::asFailure);
+                    }
+                    case LongArray(long[] values) -> {
+                        return out.createList().flatMap(
+                                appender -> {
+                                    for (long value : values) {
+                                        var result = appender.append(o -> o.writeLong(value));
+                                        if (result.isFailure()) {
+                                            return result.asFailure();
+                                        }
+                                    }
+                                    return appender.finish();
+                                }, EncodeError::asFailure);
+                    }
+                    case DoubleArray(double[] values) -> {
+                        return out.createList().flatMap(
+                                appender -> {
+                                    for (double value : values) {
+                                        var result = appender.append(o -> o.writeDouble(value));
+                                        if (result.isFailure()) {
+                                            return result.asFailure();
+                                        }
+                                    }
+                                    return appender.finish();
+                                }, EncodeError::asFailure);
+                    }
+                    case FloatArray(float[] values) -> {
+                        return out.createList().flatMap(
+                                appender -> {
+                                    for (float value : values) {
+                                        var result = appender.append(o -> o.writeFloat(value));
+                                        if (result.isFailure()) {
+                                            return result.asFailure();
+                                        }
+                                    }
+                                    return appender.finish();
+                                }, EncodeError::asFailure);
+                    }
+                    case ByteArray(byte[] values) -> {
+                        return out.createList().flatMap(
+                                appender -> {
+                                    for (byte value : values) {
+                                        var result = appender.append(o -> o.writeByte(value));
+                                        if (result.isFailure()) {
+                                            return result.asFailure();
+                                        }
+                                    }
+                                    return appender.finish();
+                                }, EncodeError::asFailure);
+                    }
+                    case ShortArray(short[] values) -> {
+                        return out.createList().flatMap(
+                                appender -> {
+                                    for (short value : values) {
+                                        var result = appender.append(o -> o.writeShort(value));
+                                        if (result.isFailure()) {
+                                            return result.asFailure();
+                                        }
+                                    }
+                                    return appender.finish();
+                                }, EncodeError::asFailure);
+                    }
+                    case BooleanArray(boolean[] values) -> {
+                        return out.createList().flatMap(
+                                appender -> {
+                                    for (boolean value : values) {
+                                        var result = appender.append(o -> o.writeBoolean(value));
+                                        if (result.isFailure()) {
+                                            return result.asFailure();
+                                        }
+                                    }
+                                    return appender.finish();
+                                }, EncodeError::asFailure);
+                    }
+                    case CharArray(char[] values) -> {
+                        return out.createList().flatMap(
+                                appender -> {
+                                    for (char value : values) {
+                                        var result = appender.append(o -> o.writeChar(value));
+                                        if (result.isFailure()) {
+                                            return result.asFailure();
+                                        }
+                                    }
+                                    return appender.finish();
+                                }, EncodeError::asFailure);
+                    }
+                }
+            }
+            case CommentedNode<?> commentedNode -> {
+                return encodeNode(out, commentedNode.node());
+            }
+            case null, default -> {
+            }
         }
 
         return new UnsupportedNodeEncodeError(node).asFailure();
