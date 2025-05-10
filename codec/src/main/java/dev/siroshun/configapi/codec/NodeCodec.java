@@ -162,7 +162,7 @@ public final class NodeCodec {
                         return out.createList().flatMap(
                                 appender -> {
                                     for (int value : values) {
-                                        var result = appender.append(o -> o.writeInt(value));
+                                        Result<O, EncodeError> result = appender.append(o -> o.writeInt(value));
                                         if (result.isFailure()) {
                                             return result.asFailure();
                                         }
@@ -174,7 +174,7 @@ public final class NodeCodec {
                         return out.createList().flatMap(
                                 appender -> {
                                     for (long value : values) {
-                                        var result = appender.append(o -> o.writeLong(value));
+                                        Result<O, EncodeError> result = appender.append(o -> o.writeLong(value));
                                         if (result.isFailure()) {
                                             return result.asFailure();
                                         }
@@ -186,7 +186,7 @@ public final class NodeCodec {
                         return out.createList().flatMap(
                                 appender -> {
                                     for (double value : values) {
-                                        var result = appender.append(o -> o.writeDouble(value));
+                                        Result<O, EncodeError> result = appender.append(o -> o.writeDouble(value));
                                         if (result.isFailure()) {
                                             return result.asFailure();
                                         }
@@ -198,7 +198,7 @@ public final class NodeCodec {
                         return out.createList().flatMap(
                                 appender -> {
                                     for (float value : values) {
-                                        var result = appender.append(o -> o.writeFloat(value));
+                                        Result<O, EncodeError> result = appender.append(o -> o.writeFloat(value));
                                         if (result.isFailure()) {
                                             return result.asFailure();
                                         }
@@ -210,7 +210,7 @@ public final class NodeCodec {
                         return out.createList().flatMap(
                                 appender -> {
                                     for (byte value : values) {
-                                        var result = appender.append(o -> o.writeByte(value));
+                                        Result<O, EncodeError> result = appender.append(o -> o.writeByte(value));
                                         if (result.isFailure()) {
                                             return result.asFailure();
                                         }
@@ -222,7 +222,7 @@ public final class NodeCodec {
                         return out.createList().flatMap(
                                 appender -> {
                                     for (short value : values) {
-                                        var result = appender.append(o -> o.writeShort(value));
+                                        Result<O, EncodeError> result = appender.append(o -> o.writeShort(value));
                                         if (result.isFailure()) {
                                             return result.asFailure();
                                         }
@@ -234,7 +234,7 @@ public final class NodeCodec {
                         return out.createList().flatMap(
                                 appender -> {
                                     for (boolean value : values) {
-                                        var result = appender.append(o -> o.writeBoolean(value));
+                                        Result<O, EncodeError> result = appender.append(o -> o.writeBoolean(value));
                                         if (result.isFailure()) {
                                             return result.asFailure();
                                         }
@@ -246,7 +246,7 @@ public final class NodeCodec {
                         return out.createList().flatMap(
                                 appender -> {
                                     for (char value : values) {
-                                        var result = appender.append(o -> o.writeChar(value));
+                                        Result<O, EncodeError> result = appender.append(o -> o.writeChar(value));
                                         if (result.isFailure()) {
                                             return result.asFailure();
                                         }
@@ -267,7 +267,7 @@ public final class NodeCodec {
     }
 
     private static Result<Node<?>, DecodeError> decodeNode(In in) {
-        var type = in.type();
+        Result<Type, DecodeError> type = in.type();
         if (type.isFailure()) {
             return type.asFailure();
         }
