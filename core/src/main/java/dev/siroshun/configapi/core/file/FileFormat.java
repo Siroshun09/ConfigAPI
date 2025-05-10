@@ -17,8 +17,9 @@
 package dev.siroshun.configapi.core.file;
 
 import dev.siroshun.configapi.core.node.Node;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,6 +38,7 @@ import java.util.Objects;
  *
  * @param <N> a type of root node
  */
+@NotNullByDefault
 public interface FileFormat<N extends Node<?>> {
 
     /**
@@ -46,7 +48,7 @@ public interface FileFormat<N extends Node<?>> {
      * @return a loaded {@link Node} ({@link N})
      * @throws IOException if I/O error occurred
      */
-    @NotNull N load(@NotNull Reader reader) throws IOException;
+    N load(Reader reader) throws IOException;
 
     /**
      * Loads a node from a file.
@@ -55,9 +57,9 @@ public interface FileFormat<N extends Node<?>> {
      * @return a loaded {@link Node} ({@link N})
      * @throws IOException if I/O error occurred
      */
-    default @NotNull N load(@NotNull Path filepath) throws IOException {
+    default N load(Path filepath) throws IOException {
         Objects.requireNonNull(filepath);
-        try (var reader = Files.isRegularFile(filepath) ? Files.newBufferedReader(filepath, StandardCharsets.UTF_8) : Reader.nullReader()) {
+        try (Reader reader = Files.isRegularFile(filepath) ? Files.newBufferedReader(filepath, StandardCharsets.UTF_8) : Reader.nullReader()) {
             return this.load(reader);
         }
     }
@@ -69,9 +71,9 @@ public interface FileFormat<N extends Node<?>> {
      * @return a loaded {@link Node} ({@link N})
      * @throws IOException if I/O error occurred
      */
-    default @NotNull N load(@NotNull InputStream input) throws IOException {
+    default N load(InputStream input) throws IOException {
         Objects.requireNonNull(input);
-        try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+        try (InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
             return this.load(reader);
         }
     }
@@ -83,7 +85,7 @@ public interface FileFormat<N extends Node<?>> {
      * @param writer a {@link Writer} to write a node
      * @throws IOException if I/O error occurred
      */
-    void save(@NotNull N node, @NotNull Writer writer) throws IOException;
+    void save(N node, Writer writer) throws IOException;
 
     /**
      * Saves a node to a file.
@@ -92,14 +94,14 @@ public interface FileFormat<N extends Node<?>> {
      * @param filepath a filepath to write a node
      * @throws IOException if I/O error occurred
      */
-    default void save(@NotNull N node, @NotNull Path filepath) throws IOException {
-        var parent = filepath.getParent();
+    default void save(N node, Path filepath) throws IOException {
+        Path parent = filepath.getParent();
 
         if (parent != null && !Files.isDirectory(parent)) {
             Files.createDirectories(parent);
         }
 
-        try (var writer = Files.newBufferedWriter(filepath, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
+        try (BufferedWriter writer = Files.newBufferedWriter(filepath, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
             this.save(node, writer);
         }
     }
@@ -111,10 +113,9 @@ public interface FileFormat<N extends Node<?>> {
      * @param output a {@link OutputStream} to write a node
      * @throws IOException if I/O error occurred
      */
-    default void save(@NotNull N node, @NotNull OutputStream output) throws IOException {
-        try (var writer = new OutputStreamWriter(output, StandardCharsets.UTF_8)) {
+    default void save(N node, OutputStream output) throws IOException {
+        try (OutputStreamWriter writer = new OutputStreamWriter(output, StandardCharsets.UTF_8)) {
             this.save(node, writer);
         }
     }
-
 }
