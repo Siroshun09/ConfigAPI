@@ -17,13 +17,14 @@
 package dev.siroshun.configapi.core.comment;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Objects;
 
 /**
  * An interface that has the comment as a {@link String}.
  */
+@NotNullByDefault
 public interface SimpleComment extends Comment {
 
     /**
@@ -33,7 +34,7 @@ public interface SimpleComment extends Comment {
      * @return a new {@link SimpleComment}
      */
     @Contract("_ -> new")
-    static @NotNull SimpleComment create(@NotNull String content) {
+    static SimpleComment create(String content) {
         return create(content, "");
     }
 
@@ -45,7 +46,7 @@ public interface SimpleComment extends Comment {
      * @return a new {@link SimpleComment}
      */
     @Contract("_, _ -> new")
-    static @NotNull SimpleComment create(@NotNull String content, @NotNull String type) {
+    static SimpleComment create(String content, String type) {
         return new SimpleCommentImpl(Objects.requireNonNull(content), Objects.requireNonNull(type));
     }
 
@@ -54,14 +55,14 @@ public interface SimpleComment extends Comment {
      *
      * @return the content
      */
-    @NotNull String content();
+    String content();
 
     /**
      * Returns the type of this comment.
      *
      * @return the type of this comment
      */
-    default @NotNull String type() {
+    default String type() {
         return "";
     }
 }

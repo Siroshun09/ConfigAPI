@@ -19,7 +19,7 @@ package dev.siroshun.configapi.core.comment;
 /**
  * An interface to represent the comment.
  * <p>
- * The classes that implements this interface should be immutable.
+ * The classes that implement this interface should be immutable.
  */
 public interface Comment {
 }
