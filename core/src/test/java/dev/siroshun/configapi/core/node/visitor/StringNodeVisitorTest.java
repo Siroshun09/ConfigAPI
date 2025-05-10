@@ -37,6 +37,7 @@ import dev.siroshun.configapi.core.node.LongValue;
 import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.core.node.Node;
 import dev.siroshun.configapi.core.node.NullNode;
+import dev.siroshun.configapi.core.node.ObjectNode;
 import dev.siroshun.configapi.core.node.ShortArray;
 import dev.siroshun.configapi.core.node.ShortValue;
 import dev.siroshun.configapi.core.node.StringValue;
@@ -57,7 +58,7 @@ class StringNodeVisitorTest {
     @ParameterizedTest
     @MethodSource("testCases")
     void testResult(TestCase testCase) {
-        var visitor = StringNodeVisitor.create();
+        StringNodeVisitor visitor = StringNodeVisitor.create();
         Assertions.assertSame(VisitResult.CONTINUE, testCase.node().accept(visitor));
         Assertions.assertEquals(testCase.expectedResult(), visitor.toString());
     }
@@ -108,13 +109,14 @@ class StringNodeVisitorTest {
                 testCase(new ShortValue((short) 0), "0"),
                 testCase(new ShortValue((short) 1), "1"),
                 testCase(new EnumValue<>(ExampleEnum.B), "B"),
+                testCase(new ObjectNode<>("test"), "test"),
                 testCase(NullNode.NULL, "null"),
                 testCase(ListNode.create(List.of("a", "b", "c")), "[a,b,c]"),
                 // Create a LinkedHashMap to avoid order issue
                 testCase(MapNode.create(Stream.of(1, 2).collect(Collectors.toMap(num -> "key_" + num, num -> "value_" + num, (key1, key2) -> key2, LinkedHashMap::new))), "{key_1=value_1,key_2=value_2}")
         ).flatMap(testCase -> Stream.of(
                 testCase,
-                // The node is in List, and Map (as both key and value)
+                // The node is in List and Map (as both key and value)
                 testCase(ListNode.create(List.of(testCase.node())), "[" + testCase.expectedResult() + "]"),
                 testCase(MapNode.create(Map.of(testCase.node(), "value")), "{" + testCase.expectedResult() + "=value}"),
                 testCase(MapNode.create(Map.of("key", testCase.node())), "{key=" + testCase.expectedResult() + "}")
@@ -148,7 +150,7 @@ class StringNodeVisitorTest {
     }
 
     private static @NotNull String quoteAndEscape(@NotNull String str) {
-        var builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         StringNodeVisitor.appendQuoteAndEscapedString(str, builder);
         return builder.toString();
     }
