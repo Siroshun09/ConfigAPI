@@ -62,7 +62,5 @@ public interface SimpleComment extends Comment {
      *
      * @return the type of this comment
      */
-    default String type() {
-        return "";
-    }
+    String type();
 }
