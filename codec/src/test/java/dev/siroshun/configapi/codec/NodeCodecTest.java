@@ -21,6 +21,7 @@ import dev.siroshun.configapi.core.node.LongArray;
 import dev.siroshun.configapi.core.node.LongValue;
 import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.core.node.Node;
+import dev.siroshun.configapi.core.node.NullNode;
 import dev.siroshun.configapi.core.node.ShortArray;
 import dev.siroshun.configapi.core.node.ShortValue;
 import dev.siroshun.configapi.core.node.StringValue;
@@ -230,5 +231,12 @@ class NodeCodecTest {
     }
 
     private record MapNodeCodecTestCase(MapNode originalNode, MapNode expectedNode) {
+    }
+
+    @Test
+    void testNullNode() {
+        Result<Memory, EncodeError> result = NodeCodec.NODE_CODEC.encode(Memory.out(), NullNode.NULL);
+        Assertions.assertTrue(result.isFailure());
+        Assertions.assertEquals(new NodeCodec.UnsupportedNodeEncodeError(NullNode.NULL), result.unwrapError());
     }
 }
