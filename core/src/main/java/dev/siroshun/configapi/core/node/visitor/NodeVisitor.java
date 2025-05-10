@@ -40,13 +40,14 @@ import dev.siroshun.configapi.core.node.ObjectNode;
 import dev.siroshun.configapi.core.node.ShortArray;
 import dev.siroshun.configapi.core.node.ShortValue;
 import dev.siroshun.configapi.core.node.StringValue;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A visitor of {@link Node}s.
  * <p>
  * This interface can be used through {@link Node#accept(NodeVisitor)}.
  */
+@NotNullByDefault
 public interface NodeVisitor {
 
     /**
@@ -55,7 +56,7 @@ public interface NodeVisitor {
      * @param value a {@link StringValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull StringValue value);
+    VisitResult visit(StringValue value);
 
     /**
      * Visits a {@link BooleanArray}.
@@ -63,7 +64,7 @@ public interface NodeVisitor {
      * @param array a {@link BooleanArray} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull BooleanArray array);
+    VisitResult visit(BooleanArray array);
 
     /**
      * Visits a {@link BooleanValue}.
@@ -71,7 +72,7 @@ public interface NodeVisitor {
      * @param value a {@link BooleanValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull BooleanValue value);
+    VisitResult visit(BooleanValue value);
 
     /**
      * Visits a {@link ByteArray}.
@@ -79,7 +80,7 @@ public interface NodeVisitor {
      * @param array a {@link ByteArray} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull ByteArray array);
+    VisitResult visit(ByteArray array);
 
     /**
      * Visits a {@link ByteValue}.
@@ -87,7 +88,7 @@ public interface NodeVisitor {
      * @param value a {@link ByteValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull ByteValue value);
+    VisitResult visit(ByteValue value);
 
     /**
      * Visits a {@link CharArray}.
@@ -95,7 +96,7 @@ public interface NodeVisitor {
      * @param array a {@link CharArray} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull CharArray array);
+    VisitResult visit(CharArray array);
 
     /**
      * Visits a {@link CharValue}.
@@ -103,7 +104,7 @@ public interface NodeVisitor {
      * @param value a {@link CharValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull CharValue value);
+    VisitResult visit(CharValue value);
 
     /**
      * Visits a {@link DoubleArray}.
@@ -111,7 +112,7 @@ public interface NodeVisitor {
      * @param array a {@link DoubleArray} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull DoubleArray array);
+    VisitResult visit(DoubleArray array);
 
     /**
      * Visits a {@link DoubleValue}.
@@ -119,7 +120,7 @@ public interface NodeVisitor {
      * @param value a {@link DoubleValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull DoubleValue value);
+    VisitResult visit(DoubleValue value);
 
     /**
      * Visits a {@link FloatArray}.
@@ -127,7 +128,7 @@ public interface NodeVisitor {
      * @param array a {@link FloatArray} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull FloatArray array);
+    VisitResult visit(FloatArray array);
 
     /**
      * Visits a {@link FloatValue}.
@@ -135,7 +136,7 @@ public interface NodeVisitor {
      * @param value a {@link FloatValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull FloatValue value);
+    VisitResult visit(FloatValue value);
 
     /**
      * Visits a {@link IntArray}.
@@ -143,7 +144,7 @@ public interface NodeVisitor {
      * @param array a {@link IntArray} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull IntArray array);
+    VisitResult visit(IntArray array);
 
     /**
      * Visits a {@link IntValue}.
@@ -151,7 +152,7 @@ public interface NodeVisitor {
      * @param value a {@link IntValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull IntValue value);
+    VisitResult visit(IntValue value);
 
     /**
      * Visits a {@link LongArray}.
@@ -159,7 +160,7 @@ public interface NodeVisitor {
      * @param array a {@link LongArray} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull LongArray array);
+    VisitResult visit(LongArray array);
 
     /**
      * Visits a {@link LongValue}.
@@ -167,7 +168,7 @@ public interface NodeVisitor {
      * @param value a {@link LongValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull LongValue value);
+    VisitResult visit(LongValue value);
 
     /**
      * Visits a {@link ShortArray}.
@@ -175,7 +176,7 @@ public interface NodeVisitor {
      * @param array a {@link ShortArray} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull ShortArray array);
+    VisitResult visit(ShortArray array);
 
     /**
      * Visits a {@link ShortValue}.
@@ -183,7 +184,7 @@ public interface NodeVisitor {
      * @param value a {@link ShortValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull ShortValue value);
+    VisitResult visit(ShortValue value);
 
     /**
      * Visits a {@link EnumValue}.
@@ -191,7 +192,7 @@ public interface NodeVisitor {
      * @param value a {@link EnumValue} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull EnumValue<?> value);
+    VisitResult visit(EnumValue<?> value);
 
     /**
      * Visits a {@link ObjectNode}.
@@ -199,7 +200,7 @@ public interface NodeVisitor {
      * @param node a {@link ObjectNode} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull ObjectNode<?> node);
+    VisitResult visit(ObjectNode<?> node);
 
     /**
      * Starts visiting a {@link ListNode}.
@@ -209,7 +210,7 @@ public interface NodeVisitor {
      * @param node a {@link ListNode} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult startList(@NotNull ListNode node);
+    VisitResult startList(ListNode node);
 
     /**
      * Visits {@link ListNode}'s element.
@@ -227,7 +228,7 @@ public interface NodeVisitor {
      * @param node  the element
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visitElement(int index, @NotNull Node<?> node);
+    VisitResult visitElement(int index, Node<?> node);
 
     /**
      * Ends visiting a {@link ListNode}.
@@ -235,7 +236,7 @@ public interface NodeVisitor {
      * @param node a {@link ListNode} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult endList(@NotNull ListNode node);
+    VisitResult endList(ListNode node);
 
     /**
      * Starts visiting a {@link MapNode}.
@@ -245,7 +246,7 @@ public interface NodeVisitor {
      * @param node a {@link MapNode} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult startMap(@NotNull MapNode node);
+    VisitResult startMap(MapNode node);
 
     /**
      * Visits {@link MapNode}'s entry.
@@ -264,7 +265,7 @@ public interface NodeVisitor {
      * @param node the value of the entry
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visitEntry(int num, @NotNull Object key, @NotNull Node<?> node);
+    VisitResult visitEntry(int num, Object key, Node<?> node);
 
     /**
      * Ends visiting a {@link MapNode}.
@@ -272,7 +273,7 @@ public interface NodeVisitor {
      * @param node a {@link MapNode} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult endMap(@NotNull MapNode node);
+    VisitResult endMap(MapNode node);
 
     /**
      * Visits a {@link CommentedNode}.
@@ -284,7 +285,7 @@ public interface NodeVisitor {
      * @param node a {@link CommentedNode} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull CommentedNode<?> node);
+    VisitResult visit(CommentedNode<?> node);
 
     /**
      * Visits a {@link NullNode}.
@@ -292,6 +293,6 @@ public interface NodeVisitor {
      * @param node a {@link NullNode} being visited
      * @return a {@link VisitResult}
      */
-    @NotNull VisitResult visit(@NotNull NullNode node);
+    VisitResult visit(NullNode node);
 
 }

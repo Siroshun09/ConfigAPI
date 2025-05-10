@@ -41,11 +41,13 @@ import dev.siroshun.configapi.core.node.ShortArray;
 import dev.siroshun.configapi.core.node.ShortValue;
 import dev.siroshun.configapi.core.node.StringValue;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An implementation of {@link NodeVisitor} that represents {@link Node}s as {@link String}.
  */
+@NotNullByDefault
 public final class StringNodeVisitor implements NodeVisitor {
 
     private static final Appender<String> DEFAULT_ESCAPING_STRING_APPENDER = StringNodeVisitor::appendQuoteAndEscapedString;
@@ -57,7 +59,7 @@ public final class StringNodeVisitor implements NodeVisitor {
      * @param str     the {@link String} to append
      * @param builder a {@link StringBuilder}
      */
-    public static void appendQuoteAndEscapedString(@NotNull String str, @NotNull StringBuilder builder) {
+    public static void appendQuoteAndEscapedString(String str, StringBuilder builder) {
         if (str.isEmpty()) {
             builder.append('"').append('"');
             return;
@@ -93,7 +95,7 @@ public final class StringNodeVisitor implements NodeVisitor {
      * @return a new {@link StringNodeVisitor}
      */
     @Contract(" -> new")
-    public static @NotNull StringNodeVisitor create() {
+    public static StringNodeVisitor create() {
         return new StringNodeVisitor(new StringBuilder(), DEFAULT_ESCAPING_STRING_APPENDER, DEFAULT_OBJECT_APPENDER);
     }
 
@@ -103,7 +105,7 @@ public final class StringNodeVisitor implements NodeVisitor {
      * @return a new {@link StringNodeVisitor.Builder}
      */
     @Contract(value = " -> new", pure = true)
-    public static @NotNull StringNodeVisitor.Builder builder() {
+    public static StringNodeVisitor.Builder builder() {
         return new Builder();
     }
 
@@ -118,153 +120,153 @@ public final class StringNodeVisitor implements NodeVisitor {
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull StringValue value) {
+    public VisitResult visit(StringValue value) {
         this.stringAppender.append(value.asString(), this.builder);
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull BooleanArray array) {
+    public VisitResult visit(BooleanArray array) {
         boolean[] arr = array.value();
         this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull BooleanValue value) {
+    public VisitResult visit(BooleanValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull ByteArray array) {
+    public VisitResult visit(ByteArray array) {
         byte[] arr = array.value();
         this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull ByteValue value) {
+    public VisitResult visit(ByteValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull CharArray array) {
+    public VisitResult visit(CharArray array) {
         char[] arr = array.value();
         this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull CharValue value) {
+    public VisitResult visit(CharValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull DoubleArray array) {
+    public VisitResult visit(DoubleArray array) {
         double[] arr = array.value();
         this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull DoubleValue value) {
+    public VisitResult visit(DoubleValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull FloatArray array) {
+    public VisitResult visit(FloatArray array) {
         float[] arr = array.value();
         this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull FloatValue value) {
+    public VisitResult visit(FloatValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull IntArray array) {
+    public VisitResult visit(IntArray array) {
         int[] arr = array.value();
         this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull IntValue value) {
+    public VisitResult visit(IntValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull LongArray array) {
+    public VisitResult visit(LongArray array) {
         long[] arr = array.value();
         this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull LongValue value) {
+    public VisitResult visit(LongValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull ShortArray array) {
+    public VisitResult visit(ShortArray array) {
         short[] arr = array.value();
         this.appendArray(arr.length, (i, builder) -> builder.append(arr[i]));
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull ShortValue value) {
+    public VisitResult visit(ShortValue value) {
         this.builder.append(value.value());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull EnumValue<?> value) {
+    public VisitResult visit(EnumValue<?> value) {
         this.builder.append(value.value().name());
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull ObjectNode<?> node) {
+    public VisitResult visit(ObjectNode<?> node) {
         this.objecctAppender.append(node.value(), this.builder);
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult startList(@NotNull ListNode node) {
+    public VisitResult startList(ListNode node) {
         this.builder.append('[');
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visitElement(int index, @NotNull Node<?> node) {
+    public VisitResult visitElement(int index, Node<?> node) {
         if (index != 0) this.builder.append(',');
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult endList(@NotNull ListNode node) {
+    public VisitResult endList(ListNode node) {
         this.builder.append(']');
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult startMap(@NotNull MapNode node) {
+    public VisitResult startMap(MapNode node) {
         this.builder.append('{');
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visitEntry(int num, @NotNull Object key, @NotNull Node<?> node) {
+    public VisitResult visitEntry(int num, Object key, Node<?> node) {
         if (num != 0) {
             this.builder.append(',');
         }
@@ -278,18 +280,18 @@ public final class StringNodeVisitor implements NodeVisitor {
     }
 
     @Override
-    public @NotNull VisitResult endMap(@NotNull MapNode node) {
+    public VisitResult endMap(MapNode node) {
         this.builder.append('}');
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull CommentedNode<?> node) {
+    public VisitResult visit(CommentedNode<?> node) {
         return VisitResult.CONTINUE;
     }
 
     @Override
-    public @NotNull VisitResult visit(@NotNull NullNode node) {
+    public VisitResult visit(NullNode node) {
         this.builder.append("null");
         return VisitResult.CONTINUE;
     }
@@ -301,7 +303,7 @@ public final class StringNodeVisitor implements NodeVisitor {
      */
     @Contract(pure = true)
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return this.builder.toString();
     }
 
@@ -333,13 +335,13 @@ public final class StringNodeVisitor implements NodeVisitor {
          * @param obj     an object
          * @param builder a {@link StringBuilder}
          */
-        void append(@NotNull T obj, @NotNull StringBuilder builder);
+        void append(T obj, StringBuilder builder);
 
     }
 
     @FunctionalInterface
     private interface ElementAppender {
-        void append(int index, @NotNull StringBuilder builder);
+        void append(int index, StringBuilder builder);
     }
 
     /**
@@ -347,9 +349,9 @@ public final class StringNodeVisitor implements NodeVisitor {
      */
     public static final class Builder {
 
-        private StringBuilder builder;
-        private Appender<String> stringAppender;
-        private Appender<Object> objectAppender;
+        private @Nullable StringBuilder builder;
+        private @Nullable Appender<String> stringAppender;
+        private @Nullable Appender<Object> objectAppender;
 
         private Builder() {
         }
@@ -361,7 +363,7 @@ public final class StringNodeVisitor implements NodeVisitor {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder setStringBuilder(StringBuilder builder) {
+        public Builder setStringBuilder(StringBuilder builder) {
             this.builder = builder;
             return this;
         }
@@ -375,7 +377,7 @@ public final class StringNodeVisitor implements NodeVisitor {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder setStringAppender(Appender<String> stringAppender) {
+        public Builder setStringAppender(Appender<String> stringAppender) {
             this.stringAppender = stringAppender;
             return this;
         }
@@ -389,7 +391,7 @@ public final class StringNodeVisitor implements NodeVisitor {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder setObjectAppender(Appender<Object> objectAppender) {
+        public Builder setObjectAppender(Appender<Object> objectAppender) {
             this.objectAppender = objectAppender;
             return this;
         }
@@ -400,7 +402,7 @@ public final class StringNodeVisitor implements NodeVisitor {
          * @return a new {@link StringBuilder}
          */
         @Contract("-> new")
-        public @NotNull StringNodeVisitor build() {
+        public StringNodeVisitor build() {
             return new StringNodeVisitor(
                     this.builder != null ? this.builder : new StringBuilder(),
                     this.stringAppender != null ? this.stringAppender : DEFAULT_ESCAPING_STRING_APPENDER,
