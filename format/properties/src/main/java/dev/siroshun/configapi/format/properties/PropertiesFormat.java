@@ -22,7 +22,7 @@ import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.core.node.Node;
 import dev.siroshun.configapi.core.node.StringRepresentable;
 import dev.siroshun.configapi.core.node.StringValue;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -38,6 +38,7 @@ import java.util.Properties;
  * Saving to properties file supports {@link StringRepresentable} nodes and {@link CommentedNode} with {@link StringRepresentable} node.
  * Other {@link Node} types will throw {@link IllegalArgumentException}.
  */
+@NotNullByDefault
 public final class PropertiesFormat implements FileFormat<MapNode> {
 
     /**
@@ -49,7 +50,7 @@ public final class PropertiesFormat implements FileFormat<MapNode> {
     }
 
     @Override
-    public @NotNull MapNode load(@NotNull Reader reader) throws IOException {
+    public MapNode load(Reader reader) throws IOException {
         Objects.requireNonNull(reader);
         var collector = new CollectToMapNode();
         collector.load(reader);
@@ -57,7 +58,7 @@ public final class PropertiesFormat implements FileFormat<MapNode> {
     }
 
     @Override
-    public void save(@NotNull MapNode node, @NotNull Writer writer) throws IOException {
+    public void save(MapNode node, Writer writer) throws IOException {
         Objects.requireNonNull(node);
         Objects.requireNonNull(writer);
 
@@ -83,7 +84,7 @@ public final class PropertiesFormat implements FileFormat<MapNode> {
         }
     }
 
-    private static void appendEscapedString(@NotNull String str, boolean escapeSpace, @NotNull Writer writer) throws IOException {
+    private static void appendEscapedString(String str, boolean escapeSpace, Writer writer) throws IOException {
         char[] chars = str.toCharArray();
 
         for (int i = 0; i < chars.length; i++) {

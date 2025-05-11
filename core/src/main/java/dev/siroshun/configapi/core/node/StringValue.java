@@ -18,7 +18,7 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Objects;
 
@@ -27,7 +27,8 @@ import java.util.Objects;
  *
  * @param value a {@link String} value
  */
-public record StringValue(@NotNull String value) implements ValueNode<String>, StringRepresentable {
+@NotNullByDefault
+public record StringValue(String value) implements ValueNode<String>, StringRepresentable {
 
     /**
      * A {@link StringValue} that represents an empty string.
@@ -40,7 +41,7 @@ public record StringValue(@NotNull String value) implements ValueNode<String>, S
      * @param value a {@link String} value
      * @return a {@link StringValue}
      */
-    public static @NotNull StringValue fromString(@NotNull String value) {
+    public static StringValue fromString(String value) {
         return value.isEmpty() ? EMPTY : new StringValue(value);
     }
 
@@ -59,7 +60,7 @@ public record StringValue(@NotNull String value) implements ValueNode<String>, S
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -69,7 +70,7 @@ public record StringValue(@NotNull String value) implements ValueNode<String>, S
      * @return the value as {@link String}
      */
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return this.value;
     }
 }

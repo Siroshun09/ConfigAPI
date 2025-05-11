@@ -18,7 +18,7 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,7 +28,8 @@ import java.util.Objects;
  *
  * @param value a boolean array
  */
-public record BooleanArray(boolean @NotNull [] value) implements ArrayNode<boolean[]> {
+@NotNullByDefault
+public record BooleanArray(boolean[] value) implements ArrayNode<boolean[]> {
 
     /**
      * A constructor of {@link BooleanArray}.
@@ -40,7 +41,7 @@ public record BooleanArray(boolean @NotNull [] value) implements ArrayNode<boole
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -60,7 +61,7 @@ public record BooleanArray(boolean @NotNull [] value) implements ArrayNode<boole
     @Override
     public String toString() {
         return "BooleanArray[" +
-                "value=" + Arrays.toString(this.value) +
-                ']';
+               "value=" + Arrays.toString(this.value) +
+               ']';
     }
 }

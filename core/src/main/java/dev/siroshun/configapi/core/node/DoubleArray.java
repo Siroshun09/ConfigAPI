@@ -18,7 +18,7 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,7 +28,8 @@ import java.util.Objects;
  *
  * @param value a double array
  */
-public record DoubleArray(double @NotNull [] value) implements ArrayNode<double[]> {
+@NotNullByDefault
+public record DoubleArray(double[] value) implements ArrayNode<double[]> {
 
     /**
      * A constructor of {@link DoubleArray}.
@@ -40,7 +41,7 @@ public record DoubleArray(double @NotNull [] value) implements ArrayNode<double[
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -60,7 +61,7 @@ public record DoubleArray(double @NotNull [] value) implements ArrayNode<double[
     @Override
     public String toString() {
         return "DoubleArray[" +
-                "value=" + Arrays.toString(this.value) +
-                ']';
+               "value=" + Arrays.toString(this.value) +
+               ']';
     }
 }

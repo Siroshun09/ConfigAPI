@@ -18,17 +18,18 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A {@link Node} implementation that holds a float value.
  *
  * @param floatValue a float value
  */
+@NotNullByDefault
 public record FloatValue(float floatValue) implements NumberValue, StringRepresentable {
 
     @Override
-    public @NotNull Float value() {
+    public Float value() {
         return this.floatValue;
     }
 
@@ -63,17 +64,17 @@ public record FloatValue(float floatValue) implements NumberValue, StringReprese
     }
 
     @Override
-    public int compareTo(@NotNull NumberValue o) {
+    public int compareTo(NumberValue o) {
         return Float.compare(this.floatValue, o.asFloat());
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return Float.toString(this.floatValue);
     }
 }

@@ -17,18 +17,18 @@
 package dev.siroshun.configapi.format.yaml;
 
 import dev.siroshun.configapi.core.file.FileFormat;
-import dev.siroshun.configapi.core.node.EnumValue;
 import dev.siroshun.configapi.core.node.ArrayNode;
+import dev.siroshun.configapi.core.node.CharArray;
+import dev.siroshun.configapi.core.node.CharValue;
+import dev.siroshun.configapi.core.node.EnumValue;
 import dev.siroshun.configapi.core.node.ListNode;
 import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.core.node.Node;
 import dev.siroshun.configapi.core.node.NullNode;
-import dev.siroshun.configapi.core.node.CharArray;
-import dev.siroshun.configapi.core.node.CharValue;
 import dev.siroshun.configapi.core.node.ObjectNode;
 import dev.siroshun.configapi.core.node.ValueNode;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -61,6 +61,7 @@ import java.io.Writer;
  *     </li>
  * </ul>
  */
+@NotNullByDefault
 public final class YamlFormat implements FileFormat<MapNode> {
 
     /**
@@ -78,18 +79,18 @@ public final class YamlFormat implements FileFormat<MapNode> {
      *
      * @return a new {@link YamlFormat.Builder}
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
     private final ThreadLocal<YamlHolder> yamlHolder;
 
-    private YamlFormat(@NotNull YamlParameter yamlParameter) {
+    private YamlFormat(YamlParameter yamlParameter) {
         this.yamlHolder = ThreadLocal.withInitial(yamlParameter::createYamlHolder);
     }
 
     @Override
-    public @NotNull MapNode load(@NotNull Reader reader) throws IOException {
+    public MapNode load(Reader reader) throws IOException {
         try {
             var yamlHolder = this.yamlHolder.get();
             return NodeConverter.toMapNode(yamlHolder.yaml().compose(reader), yamlHolder);
@@ -99,7 +100,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
     }
 
     @Override
-    public void save(@NotNull MapNode node, @NotNull Writer writer) throws IOException {
+    public void save(MapNode node, Writer writer) throws IOException {
         try {
             var yamlHolder = this.yamlHolder.get();
             yamlHolder.yaml().serialize(NodeConverter.toYamlNode(node, yamlHolder), writer);
@@ -133,7 +134,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder flowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
+        public Builder flowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
             this.flowStyle = flowStyle != null ? flowStyle : DumperOptions.FlowStyle.BLOCK;
             return this;
         }
@@ -149,7 +150,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder arrayFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
+        public Builder arrayFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
             this.arrayFlowStyle = flowStyle != null ? flowStyle : DumperOptions.FlowStyle.FLOW;
             return this;
         }
@@ -165,7 +166,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder sequenceFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
+        public Builder sequenceFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
             this.sequenceFlowStyle = flowStyle != null ? flowStyle : DumperOptions.FlowStyle.BLOCK;
             return this;
         }
@@ -181,7 +182,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder mapFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
+        public Builder mapFlowStyle(@Nullable DumperOptions.FlowStyle flowStyle) {
             this.mapFlowStyle = flowStyle != null ? flowStyle : DumperOptions.FlowStyle.BLOCK;
             return this;
         }
@@ -195,7 +196,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder scalarStyle(@Nullable DumperOptions.ScalarStyle scalarStyle) {
+        public Builder scalarStyle(@Nullable DumperOptions.ScalarStyle scalarStyle) {
             this.scalarStyle = scalarStyle != null ? scalarStyle : DumperOptions.ScalarStyle.PLAIN;
             return this;
         }
@@ -209,7 +210,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder indent(int indent) {
+        public Builder indent(int indent) {
             this.indent = 0 < indent ? indent : 2;
             return this;
         }
@@ -223,7 +224,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          * @return this {@link Builder} instance
          */
         @Contract("_ -> this")
-        public @NotNull Builder processComment(boolean processComment) {
+        public Builder processComment(boolean processComment) {
             this.processComment = processComment;
             return this;
         }
@@ -233,7 +234,7 @@ public final class YamlFormat implements FileFormat<MapNode> {
          *
          * @return a created {@link YamlFormat}
          */
-        public @NotNull YamlFormat build() {
+        public YamlFormat build() {
             return new YamlFormat(new YamlParameter(this.flowStyle, this.arrayFlowStyle, this.sequenceFlowStyle, this.mapFlowStyle, this.scalarStyle, this.indent, this.processComment));
         }
     }

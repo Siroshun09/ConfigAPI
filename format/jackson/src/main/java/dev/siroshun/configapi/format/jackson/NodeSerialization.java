@@ -118,7 +118,7 @@ public final class NodeSerialization {
                 }
                 case BooleanValue booleanValue -> gen.writeBoolean(booleanValue.asBoolean());
                 case CharValue charValue -> gen.writeString(charValue.asString());
-                case NullNode nullNode -> gen.writeNull();
+                case NullNode ignored -> gen.writeNull();
                 case null -> gen.writeNull();
                 case ListNode listNode -> {
                     gen.writeStartArray();
@@ -142,7 +142,7 @@ public final class NodeSerialization {
                 case ArrayNode<?> arrayNode -> {
                     gen.writeStartArray();
 
-                    switch (value) {
+                    switch (arrayNode) {
                         case IntArray(int[] values) -> {
                             for (int val : values) {
                                 gen.writeNumber(val);
@@ -211,7 +211,6 @@ public final class NodeSerialization {
 
             if (parser.currentToken() == JsonToken.START_OBJECT) {
                 while (parser.nextToken() == JsonToken.FIELD_NAME) {
-                    var fieldName = parser.currentName();
                     mapNode.set(parser.currentName(), this.readNode(parser, parser.nextToken()));
                 }
             } else {

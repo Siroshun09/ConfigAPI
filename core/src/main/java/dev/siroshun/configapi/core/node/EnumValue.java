@@ -18,7 +18,7 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Objects;
 
@@ -28,7 +28,8 @@ import java.util.Objects;
  * @param value an {@link Enum} value
  * @param <E>   a type of {@link Enum}
  */
-public record EnumValue<E extends Enum<E>>(@NotNull E value) implements ValueNode<E>, StringRepresentable {
+@NotNullByDefault
+public record EnumValue<E extends Enum<E>>(E value) implements ValueNode<E>, StringRepresentable {
 
     /**
      * A constructor of {@link EnumValue}.
@@ -40,12 +41,12 @@ public record EnumValue<E extends Enum<E>>(@NotNull E value) implements ValueNod
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return this.value.name();
     }
 }

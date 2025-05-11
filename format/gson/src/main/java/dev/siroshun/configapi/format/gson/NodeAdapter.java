@@ -177,14 +177,14 @@ final class NodeAdapter extends TypeAdapter<Node<?>> {
             }
             case BooleanValue booleanValue -> out.value(booleanValue.value());
             case CharValue charValue -> out.value(charValue.asString());
-            case NullNode nullNode -> out.nullValue();
+            case NullNode ignored -> out.nullValue();
             case null -> out.nullValue();
             case ListNode listNode -> LIST_NODE_ADAPTER.write(out, listNode);
             case MapNode mapNode -> MAP_NODE_ADAPTER.write(out, mapNode);
             case ArrayNode<?> arrayNode -> {
                 out.beginArray();
 
-                switch (value) {
+                switch (arrayNode) {
                     case IntArray(int[] values) -> {
                         for (int val : values) {
                             out.value(val);
@@ -224,8 +224,6 @@ final class NodeAdapter extends TypeAdapter<Node<?>> {
                         for (char val : values) {
                             out.value(String.valueOf(val));
                         }
-                    }
-                    default -> {
                     }
                 }
 

@@ -18,7 +18,7 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,7 +28,8 @@ import java.util.Objects;
  *
  * @param value a byte array
  */
-public record ByteArray(byte @NotNull [] value) implements ArrayNode<byte[]> {
+@NotNullByDefault
+public record ByteArray(byte[] value) implements ArrayNode<byte[]> {
 
     /**
      * A constructor of {@link ByteArray}.
@@ -40,7 +41,7 @@ public record ByteArray(byte @NotNull [] value) implements ArrayNode<byte[]> {
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -60,7 +61,7 @@ public record ByteArray(byte @NotNull [] value) implements ArrayNode<byte[]> {
     @Override
     public String toString() {
         return "ByteArray[" +
-                "value=" + Arrays.toString(this.value) +
-                ']';
+               "value=" + Arrays.toString(this.value) +
+               ']';
     }
 }

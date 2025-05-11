@@ -20,7 +20,7 @@ import dev.siroshun.configapi.core.file.FileFormat;
 import dev.siroshun.configapi.core.node.EnumValue;
 import dev.siroshun.configapi.core.node.Node;
 import dev.siroshun.configapi.test.shared.util.NodeAssertion;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.io.TempDir;
@@ -43,6 +43,7 @@ import java.util.stream.Stream;
  * @param <N> a {@link Node} type
  * @param <F> a {@link FileFormat} type
  */
+@NotNullByDefault
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileFormat<N>> {
 
@@ -190,14 +191,14 @@ public abstract class BasicFileFormatTest<N extends Node<?>, F extends FileForma
      *
      * @return the extension of files
      */
-    protected abstract @NotNull String extension();
+    protected abstract String extension();
 
     /**
      * Gets the empty (default) {@link Node} that is returned when the file does not exist.
      *
      * @return the empty (default) {@link Node}
      */
-    protected abstract @NotNull N emptyNode();
+    protected abstract N emptyNode();
 
     /**
      * Checks if the {@link FileFormat} supports loading from an empty file.

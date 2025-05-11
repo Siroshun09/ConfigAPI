@@ -16,17 +16,19 @@
 
 package dev.siroshun.configapi.core.node;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
- * An interface to represents that {@link Node} holds a value or value based object.
+ * An interface to represents that {@link Node} holds a value or value-based object.
+ * <p>
+ * The implementations of this interface should always be immutable and non-null.
  *
  * @param <T> a type of value
  */
-// immutable and non-null
+@NotNullByDefault
 public sealed interface ValueNode<T> extends Node<T> permits BooleanValue, CharValue, EnumValue, NumberValue, StringValue {
 
     @Override
-    @NotNull T value();
+    T value();
 
 }

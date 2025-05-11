@@ -18,17 +18,18 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A {@link Node} implementation that holds a long value.
  *
  * @param longValue a long value
  */
+@NotNullByDefault
 public record LongValue(long longValue) implements NumberValue, StringRepresentable {
 
     @Override
-    public @NotNull Long value() {
+    public Long value() {
         return this.longValue;
     }
 
@@ -63,17 +64,17 @@ public record LongValue(long longValue) implements NumberValue, StringRepresenta
     }
 
     @Override
-    public int compareTo(@NotNull NumberValue o) {
+    public int compareTo(NumberValue o) {
         return Long.compare(this.longValue, o.asLong());
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return Long.toString(this.longValue);
     }
 }

@@ -28,6 +28,7 @@ import dev.siroshun.configapi.core.node.LongValue;
 import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.core.node.ShortValue;
 import dev.siroshun.configapi.core.node.StringValue;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ import static dev.siroshun.configapi.test.shared.util.NodeFactory.mapNode;
  *
  * @param <F> a {@link FileFormat} type
  */
+@NotNullByDefault
 public abstract class JsonFileFormatTest<F extends FileFormat<MapNode>> extends TextFileFormatTest<MapNode, F> {
 
     private static final String VALUE_TEST_DEFAULT_JSON = "{\"boolean\":true,\"byte\":1,\"char\":\"a\",\"double\":3.14,\"enum\":\"B\",\"float\":3.14,\"int\":1,\"long\":1,\"short\":1,\"string\":\"test\"}";

@@ -22,34 +22,35 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.TypeAdapter;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Objects;
 
+@NotNullByDefault
 abstract class AbstractGsonFormat<N extends Node<?>> implements FileFormat<N> {
 
     private final Gson gson;
     private final Class<N> nodeClass;
 
-    protected AbstractGsonFormat(@NotNull GsonBuilder builder, @NotNull Class<N> nodeClass, @NotNull TypeAdapter<N> adapter) {
+    protected AbstractGsonFormat(GsonBuilder builder, Class<N> nodeClass, TypeAdapter<N> adapter) {
         this.gson = builder.registerTypeAdapter(nodeClass, adapter).create();
         this.nodeClass = nodeClass;
     }
 
     @Override
-    public @NotNull N load(@NotNull Reader reader) throws IOException {
+    public N load(Reader reader) throws IOException {
         try {
-            var node = this.gson.fromJson(reader, this.nodeClass);
-            return node != null ? node : this.createEmptyNode();
+            return Objects.requireNonNullElseGet(this.gson.fromJson(reader, this.nodeClass), this::createEmptyNode);
         } catch (JsonIOException e) {
             throw new IOException(e);
         }
     }
 
     @Override
-    public void save(@NotNull N node, @NotNull Writer writer) throws IOException {
+    public void save(N node, Writer writer) throws IOException {
         try {
             this.gson.toJson(node, this.nodeClass, writer);
         } catch (JsonIOException e) {
@@ -62,5 +63,5 @@ abstract class AbstractGsonFormat<N extends Node<?>> implements FileFormat<N> {
      *
      * @return the empty node
      */
-    protected abstract @NotNull N createEmptyNode();
+    protected abstract N createEmptyNode();
 }

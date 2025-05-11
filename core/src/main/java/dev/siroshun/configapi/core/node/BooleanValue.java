@@ -19,7 +19,7 @@ package dev.siroshun.configapi.core.node;
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param booleanValue a boolean
  */
+@NotNullByDefault
 public record BooleanValue(boolean booleanValue) implements ValueNode<Boolean>, StringRepresentable {
 
     /**
@@ -45,7 +46,7 @@ public record BooleanValue(boolean booleanValue) implements ValueNode<Boolean>, 
      * @param bool a {@link Boolean} to create {@link BooleanValue}
      * @return {@link #TRUE} if the given {@link Boolean} equals {@link Boolean#TRUE}, otherwise {@link #FALSE}
      */
-    public static @NotNull BooleanValue fromBoolean(@Nullable Boolean bool) {
+    public static BooleanValue fromBoolean(@Nullable Boolean bool) {
         return Boolean.TRUE.equals(bool) ? TRUE : FALSE;
     }
 
@@ -55,7 +56,7 @@ public record BooleanValue(boolean booleanValue) implements ValueNode<Boolean>, 
      * @param bool a boolean to create {@link BooleanValue}
      * @return {@link #TRUE} if the given boolean is {@code true}, otherwise {@link #FALSE}
      */
-    public static @NotNull BooleanValue fromBoolean(boolean bool) {
+    public static BooleanValue fromBoolean(boolean bool) {
         return bool ? TRUE : FALSE;
     }
 
@@ -72,7 +73,7 @@ public record BooleanValue(boolean booleanValue) implements ValueNode<Boolean>, 
     }
 
     @Override
-    public @NotNull Boolean value() {
+    public Boolean value() {
         return this.booleanValue;
     }
 
@@ -93,12 +94,12 @@ public record BooleanValue(boolean booleanValue) implements ValueNode<Boolean>, 
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return Boolean.toString(this.booleanValue);
     }
 }

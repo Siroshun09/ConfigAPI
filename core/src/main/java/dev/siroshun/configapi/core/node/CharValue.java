@@ -18,17 +18,18 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A {@link Node} implementation that holds a char value.
  *
  * @param charValue a char
  */
+@NotNullByDefault
 public record CharValue(char charValue) implements ValueNode<Character>, StringRepresentable {
 
     @Override
-    public @NotNull Character value() {
+    public Character value() {
         return this.charValue;
     }
 
@@ -49,12 +50,12 @@ public record CharValue(char charValue) implements ValueNode<Character>, StringR
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return String.valueOf(this.charValue);
     }
 }

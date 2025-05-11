@@ -18,7 +18,7 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -26,6 +26,7 @@ import java.util.Optional;
 /**
  * A {@link Node} implementation that represents {@code null}.
  */
+@NotNullByDefault
 public final class NullNode implements Node<Object> {
 
     /**
@@ -47,12 +48,12 @@ public final class NullNode implements Node<Object> {
     }
 
     @Override
-    public @NotNull Optional<Object> asOptional() {
+    public Optional<Object> asOptional() {
         return Optional.empty();
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 }

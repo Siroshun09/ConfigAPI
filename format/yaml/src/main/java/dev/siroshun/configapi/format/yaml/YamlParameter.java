@@ -16,7 +16,7 @@
 
 package dev.siroshun.configapi.format.yaml;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -25,28 +25,29 @@ import org.yaml.snakeyaml.representer.Representer;
 import static org.yaml.snakeyaml.DumperOptions.FlowStyle.BLOCK;
 import static org.yaml.snakeyaml.DumperOptions.FlowStyle.FLOW;
 
+@NotNullByDefault
 record YamlParameter(
-        @NotNull DumperOptions.FlowStyle defaultFlowStyle,
-        @NotNull DumperOptions.FlowStyle arrayFlowStyle,
-        @NotNull DumperOptions.FlowStyle sequenceFlowStyle,
-        @NotNull DumperOptions.FlowStyle mapFlowStyle,
-        @NotNull DumperOptions.ScalarStyle scalarStyle,
+        DumperOptions.FlowStyle defaultFlowStyle,
+        DumperOptions.FlowStyle arrayFlowStyle,
+        DumperOptions.FlowStyle sequenceFlowStyle,
+        DumperOptions.FlowStyle mapFlowStyle,
+        DumperOptions.ScalarStyle scalarStyle,
         int indent,
         boolean processComment
 ) {
 
     @Override
-    public @NotNull DumperOptions.FlowStyle arrayFlowStyle() {
+    public DumperOptions.FlowStyle arrayFlowStyle() {
         return this.defaultFlowStyle == BLOCK ? this.arrayFlowStyle : FLOW;
     }
 
     @Override
-    public @NotNull DumperOptions.FlowStyle sequenceFlowStyle() {
+    public DumperOptions.FlowStyle sequenceFlowStyle() {
         return this.defaultFlowStyle == BLOCK ? this.sequenceFlowStyle : FLOW;
     }
 
     @Override
-    public @NotNull DumperOptions.FlowStyle mapFlowStyle() {
+    public DumperOptions.FlowStyle mapFlowStyle() {
         return this.defaultFlowStyle == BLOCK ? this.mapFlowStyle : FLOW;
     }
 
@@ -59,7 +60,7 @@ record YamlParameter(
         return new YamlHolder(new Yaml(constructor, representer, dumperOptions, loaderOptions), constructor, representer, this);
     }
 
-    private @NotNull LoaderOptions createLoaderOptions() {
+    private LoaderOptions createLoaderOptions() {
         var loaderOptions = new LoaderOptions();
 
         loaderOptions.setCodePointLimit(Integer.MAX_VALUE);
@@ -69,7 +70,7 @@ record YamlParameter(
         return loaderOptions;
     }
 
-    private @NotNull DumperOptions createDumperOptions() {
+    private DumperOptions createDumperOptions() {
         var dumperOptions = new DumperOptions();
 
         dumperOptions.setDefaultFlowStyle(this.defaultFlowStyle);
@@ -80,19 +81,11 @@ record YamlParameter(
         return dumperOptions;
     }
 
-    private @NotNull ObjectConstructor createConstructor() {
-        return this.createConstructor(this.createLoaderOptions());
-    }
-
-    private @NotNull ObjectConstructor createConstructor(@NotNull LoaderOptions loaderOptions) {
+    private ObjectConstructor createConstructor(LoaderOptions loaderOptions) {
         return new ObjectConstructor(loaderOptions);
     }
 
-    private @NotNull Representer createRepresenter() {
-        return this.createRepresenter(this.createDumperOptions());
-    }
-
-    private @NotNull Representer createRepresenter(@NotNull DumperOptions dumperOptions) {
+    private Representer createRepresenter(DumperOptions dumperOptions) {
         var representer = new Representer(dumperOptions);
         representer.setDefaultFlowStyle(this.defaultFlowStyle);
         representer.setDefaultScalarStyle(this.scalarStyle);

@@ -18,17 +18,18 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A {@link Node} implementation that holds a int value.
  *
  * @param intValue a int value
  */
+@NotNullByDefault
 public record IntValue(int intValue) implements NumberValue, StringRepresentable {
 
     @Override
-    public @NotNull Integer value() {
+    public Integer value() {
         return this.intValue;
     }
 
@@ -63,17 +64,17 @@ public record IntValue(int intValue) implements NumberValue, StringRepresentable
     }
 
     @Override
-    public int compareTo(@NotNull NumberValue o) {
+    public int compareTo(NumberValue o) {
         return Integer.compare(this.intValue, o.asInt());
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return Integer.toString(this.intValue);
     }
 }

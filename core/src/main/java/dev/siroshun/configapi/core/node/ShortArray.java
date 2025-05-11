@@ -18,7 +18,7 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,7 +28,8 @@ import java.util.Objects;
  *
  * @param value a short array
  */
-public record ShortArray(short @NotNull [] value) implements ArrayNode<short[]> {
+@NotNullByDefault
+public record ShortArray(short[] value) implements ArrayNode<short[]> {
 
     /**
      * A constructor of {@link ShortArray}.
@@ -40,7 +41,7 @@ public record ShortArray(short @NotNull [] value) implements ArrayNode<short[]> 
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -60,7 +61,7 @@ public record ShortArray(short @NotNull [] value) implements ArrayNode<short[]> 
     @Override
     public String toString() {
         return "ShortArray[" +
-                "value=" + Arrays.toString(this.value) +
-                ']';
+               "value=" + Arrays.toString(this.value) +
+               ']';
     }
 }

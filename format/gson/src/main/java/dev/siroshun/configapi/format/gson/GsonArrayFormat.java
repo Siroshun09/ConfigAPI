@@ -29,7 +29,7 @@ import com.google.gson.GsonBuilder;
 import dev.siroshun.configapi.core.node.CharArray;
 import dev.siroshun.configapi.core.node.CharValue;
 import dev.siroshun.configapi.core.node.ValueNode;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A {@link FileFormat} implementation that loading/saving {@link ListNode} from/to json files using {@link Gson}.
@@ -50,6 +50,7 @@ import org.jetbrains.annotations.NotNull;
  *     <li>{@link CommentedNode} - The comment will be dropped</li>
  * </ul>
  */
+@NotNullByDefault
 public final class GsonArrayFormat extends AbstractGsonFormat<ListNode> {
 
     /**
@@ -67,12 +68,12 @@ public final class GsonArrayFormat extends AbstractGsonFormat<ListNode> {
      *
      * @param gsonBuilder the {@link GsonBuilder}
      */
-    public GsonArrayFormat(@NotNull GsonBuilder gsonBuilder) {
+    public GsonArrayFormat(GsonBuilder gsonBuilder) {
         super(gsonBuilder, ListNode.class, NodeAdapter.LIST_NODE_ADAPTER);
     }
 
     @Override
-    protected @NotNull ListNode createEmptyNode() {
+    protected ListNode createEmptyNode() {
         return ListNode.create();
     }
 }

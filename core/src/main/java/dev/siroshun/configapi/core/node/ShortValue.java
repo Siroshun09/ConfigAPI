@@ -18,17 +18,18 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A {@link Node} implementation that holds a short value.
  *
  * @param shortValue a short value
  */
+@NotNullByDefault
 public record ShortValue(short shortValue) implements NumberValue, StringRepresentable {
 
     @Override
-    public @NotNull Short value() {
+    public Short value() {
         return this.shortValue;
     }
 
@@ -63,17 +64,17 @@ public record ShortValue(short shortValue) implements NumberValue, StringReprese
     }
 
     @Override
-    public int compareTo(@NotNull NumberValue o) {
+    public int compareTo(NumberValue o) {
         return Short.compare(this.shortValue, o.asShort());
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return Short.toString(this.shortValue);
     }
 }

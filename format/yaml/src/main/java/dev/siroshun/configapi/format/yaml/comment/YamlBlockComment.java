@@ -17,7 +17,7 @@
 package dev.siroshun.configapi.format.yaml.comment;
 
 import dev.siroshun.configapi.core.comment.SimpleComment;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Objects;
 
@@ -27,7 +27,8 @@ import java.util.Objects;
  * @param content           the content of the comment
  * @param prependBlankLines the number of blank lines before the block comments
  */
-public record YamlBlockComment(@NotNull String content, int prependBlankLines) implements SimpleComment {
+@NotNullByDefault
+public record YamlBlockComment(String content, int prependBlankLines) implements SimpleComment {
 
     /**
      * The type of this comment.
@@ -48,7 +49,7 @@ public record YamlBlockComment(@NotNull String content, int prependBlankLines) i
     }
 
     @Override
-    public @NotNull String type() {
+    public String type() {
         return TYPE;
     }
 }

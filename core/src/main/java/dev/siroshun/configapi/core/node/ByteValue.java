@@ -18,17 +18,18 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A {@link Node} implementation that holds a byte value.
  *
  * @param byteValue a byte value
  */
+@NotNullByDefault
 public record ByteValue(byte byteValue) implements NumberValue, StringRepresentable {
 
     @Override
-    public @NotNull Byte value() {
+    public Byte value() {
         return this.byteValue;
     }
 
@@ -63,17 +64,17 @@ public record ByteValue(byte byteValue) implements NumberValue, StringRepresenta
     }
 
     @Override
-    public int compareTo(@NotNull NumberValue o) {
+    public int compareTo(NumberValue o) {
         return Byte.compare(this.byteValue, o.asByte());
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
     @Override
-    public @NotNull String asString() {
+    public String asString() {
         return Byte.toString(this.byteValue);
     }
 }

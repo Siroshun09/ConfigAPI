@@ -17,7 +17,7 @@
 package dev.siroshun.configapi.format.yaml.comment;
 
 import dev.siroshun.configapi.core.comment.SimpleComment;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Objects;
 
@@ -26,7 +26,8 @@ import java.util.Objects;
  *
  * @param content the content of the comment
  */
-public record YamlInlineComment(@NotNull String content) implements SimpleComment {
+@NotNullByDefault
+public record YamlInlineComment(String content) implements SimpleComment {
 
     /**
      * The type of this comment.
@@ -43,7 +44,7 @@ public record YamlInlineComment(@NotNull String content) implements SimpleCommen
     }
 
     @Override
-    public @NotNull String type() {
+    public String type() {
         return TYPE;
     }
 }

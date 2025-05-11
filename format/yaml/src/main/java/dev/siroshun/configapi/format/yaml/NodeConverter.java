@@ -134,7 +134,7 @@ final class NodeConverter {
                 return listNode;
             }
             case ScalarNode scalarNode -> {
-                return Node.fromObject(constructor.constructObject(node));
+                return Node.fromObject(constructor.constructObject(scalarNode));
             }
             case AnchorNode anchorNode -> {
                 return toNode(anchorNode.getRealNode(), yamlHolder);
@@ -259,7 +259,7 @@ final class NodeConverter {
             case EnumValue<?>(Enum<?> value) -> {
                 return yamlHolder.representer().represent(value.name());
             }
-            case NullNode nullNode -> {
+            case NullNode ignored -> {
                 return yamlHolder.representer().represent(null);
             }
             default -> {

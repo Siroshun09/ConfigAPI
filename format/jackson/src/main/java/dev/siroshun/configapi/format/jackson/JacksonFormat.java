@@ -22,18 +22,18 @@ import com.fasterxml.jackson.core.util.Separators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import dev.siroshun.configapi.core.file.FileFormat;
+import dev.siroshun.configapi.core.node.ArrayNode;
+import dev.siroshun.configapi.core.node.CharArray;
+import dev.siroshun.configapi.core.node.CharValue;
 import dev.siroshun.configapi.core.node.CommentedNode;
 import dev.siroshun.configapi.core.node.EnumValue;
-import dev.siroshun.configapi.core.node.ArrayNode;
 import dev.siroshun.configapi.core.node.ListNode;
 import dev.siroshun.configapi.core.node.MapNode;
 import dev.siroshun.configapi.core.node.Node;
 import dev.siroshun.configapi.core.node.NullNode;
-import dev.siroshun.configapi.core.node.CharArray;
-import dev.siroshun.configapi.core.node.CharValue;
 import dev.siroshun.configapi.core.node.ValueNode;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -62,6 +62,7 @@ import java.util.Objects;
  *     <li>{@link CommentedNode} - The comment will be dropped</li>
  * </ul>
  */
+@NotNullByDefault
 public final class JacksonFormat implements FileFormat<MapNode> {
 
     /**
@@ -80,14 +81,14 @@ public final class JacksonFormat implements FileFormat<MapNode> {
      * @return a {@link DefaultPrettyPrinter}
      */
     @Contract(" -> new")
-    public static @NotNull DefaultPrettyPrinter createDefaultPrettyPrinter() {
+    public static DefaultPrettyPrinter createDefaultPrettyPrinter() {
         var printer = new DefaultPrettyPrinter(createSeparators());
         printer.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
 
         return printer;
     }
 
-    private static @NotNull Separators createSeparators() {
+    private static Separators createSeparators() {
         return Separators.createDefaultInstance().withObjectFieldValueSpacing(Separators.Spacing.AFTER);
     }
 
@@ -98,13 +99,13 @@ public final class JacksonFormat implements FileFormat<MapNode> {
      *
      * @param objectMapper an {@link ObjectMapper} that is used for serializing/deserializing json
      */
-    public JacksonFormat(@NotNull ObjectMapper objectMapper) {
+    public JacksonFormat(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         objectMapper.registerModule(NodeSerialization.createModule());
     }
 
     @Override
-    public @NotNull MapNode load(@NotNull Path filepath) throws IOException {
+    public MapNode load(Path filepath) throws IOException {
         Objects.requireNonNull(filepath);
         if (Files.isRegularFile(filepath)) {
             return this.load(Files.newBufferedReader(filepath, StandardCharsets.UTF_8));
@@ -114,12 +115,12 @@ public final class JacksonFormat implements FileFormat<MapNode> {
     }
 
     @Override
-    public @NotNull MapNode load(@NotNull Reader reader) throws IOException {
+    public MapNode load(Reader reader) throws IOException {
         return this.objectMapper.readValue(reader, MapNode.class);
     }
 
     @Override
-    public void save(@NotNull MapNode node, @NotNull Writer writer) throws IOException {
+    public void save(MapNode node, Writer writer) throws IOException {
         this.objectMapper.writeValue(writer, node);
     }
 }

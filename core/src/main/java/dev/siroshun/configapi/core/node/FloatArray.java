@@ -18,7 +18,7 @@ package dev.siroshun.configapi.core.node;
 
 import dev.siroshun.configapi.core.node.visitor.NodeVisitor;
 import dev.siroshun.configapi.core.node.visitor.VisitResult;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,7 +28,8 @@ import java.util.Objects;
  *
  * @param value a float array
  */
-public record FloatArray(float @NotNull [] value) implements ArrayNode<float[]> {
+@NotNullByDefault
+public record FloatArray(float[] value) implements ArrayNode<float[]> {
 
     /**
      * A constructor of {@link FloatArray}.
@@ -40,7 +41,7 @@ public record FloatArray(float @NotNull [] value) implements ArrayNode<float[]> 
     }
 
     @Override
-    public @NotNull VisitResult accept(@NotNull NodeVisitor visitor) {
+    public VisitResult accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -60,7 +61,7 @@ public record FloatArray(float @NotNull [] value) implements ArrayNode<float[]> 
     @Override
     public String toString() {
         return "FloatArray[" +
-                "value=" + Arrays.toString(this.value) +
-                ']';
+               "value=" + Arrays.toString(this.value) +
+               ']';
     }
 }

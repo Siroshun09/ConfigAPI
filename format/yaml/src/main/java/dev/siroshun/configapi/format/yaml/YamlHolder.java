@@ -16,14 +16,10 @@
 
 package dev.siroshun.configapi.format.yaml;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
-record YamlHolder(
-        @NotNull Yaml yaml,
-        @NotNull ObjectConstructor constructor,
-        @NotNull Representer representer,
-        @NotNull YamlParameter parameter
-) {
+@NotNullByDefault
+record YamlHolder(Yaml yaml, ObjectConstructor constructor, Representer representer, YamlParameter parameter) {
 }

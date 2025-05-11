@@ -29,7 +29,7 @@ import com.google.gson.GsonBuilder;
 import dev.siroshun.configapi.core.node.CharArray;
 import dev.siroshun.configapi.core.node.CharValue;
 import dev.siroshun.configapi.core.node.ValueNode;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * A {@link FileFormat} implementation that loading/saving {@link MapNode} from/to json files using {@link Gson}.
@@ -50,6 +50,7 @@ import org.jetbrains.annotations.NotNull;
  *     <li>{@link CommentedNode} - The comment will be dropped</li>
  * </ul>
  */
+@NotNullByDefault
 public final class GsonFormat extends AbstractGsonFormat<MapNode> {
 
     /**
@@ -67,12 +68,12 @@ public final class GsonFormat extends AbstractGsonFormat<MapNode> {
      *
      * @param gsonBuilder the {@link GsonBuilder}
      */
-    public GsonFormat(@NotNull GsonBuilder gsonBuilder) {
+    public GsonFormat(GsonBuilder gsonBuilder) {
         super(gsonBuilder, MapNode.class, NodeAdapter.MAP_NODE_ADAPTER);
     }
 
     @Override
-    protected @NotNull MapNode createEmptyNode() {
+    protected MapNode createEmptyNode() {
         return MapNode.create();
     }
 }
