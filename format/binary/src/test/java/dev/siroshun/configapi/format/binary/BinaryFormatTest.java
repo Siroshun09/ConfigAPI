@@ -41,7 +41,7 @@ import dev.siroshun.configapi.core.node.ShortValue;
 import dev.siroshun.configapi.core.node.StringValue;
 import dev.siroshun.configapi.test.shared.file.BasicFileFormatTest;
 import dev.siroshun.configapi.test.shared.util.NodeAssertion;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -57,6 +57,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+@NotNullByDefault
 class BinaryFormatTest extends BasicFileFormatTest<Node<?>, BinaryFormat> {
 
     @Override
@@ -65,12 +66,12 @@ class BinaryFormatTest extends BasicFileFormatTest<Node<?>, BinaryFormat> {
     }
 
     @Override
-    protected @NotNull String extension() {
+    protected String extension() {
         return ".dat";
     }
 
     @Override
-    protected @NotNull Node<?> emptyNode() {
+    protected Node<?> emptyNode() {
         return NullNode.NULL;
     }
 

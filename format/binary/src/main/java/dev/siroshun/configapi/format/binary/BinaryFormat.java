@@ -43,7 +43,7 @@ import dev.siroshun.configapi.core.node.ShortArray;
 import dev.siroshun.configapi.core.node.ShortValue;
 import dev.siroshun.configapi.core.node.StringValue;
 import dev.siroshun.configapi.core.node.ValueNode;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.io.DataInput;
 import java.io.DataInputStream;
@@ -74,6 +74,7 @@ import java.util.Objects;
  * <p>
  * For specifications of this format, please see the comments in the source code.
  */
+@NotNullByDefault
 public final class BinaryFormat implements FileFormat<Node<?>> {
 
     /**
@@ -164,6 +165,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
     private static final byte CHAR = 0x09;
 
     // 0x0f cannot be used as a value type because there is no difference between Array + 0x0f and Map
+    @SuppressWarnings("unused")
     @Deprecated
     private static final byte PRESERVED_VALUE_TYPE_F = 0x0f;
 
@@ -203,7 +205,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
     }
 
     @Override
-    public @NotNull Node<?> load(@NotNull Path filepath) throws IOException {
+    public Node<?> load(Path filepath) throws IOException {
         Objects.requireNonNull(filepath);
         if (Files.isRegularFile(filepath)) {
             try (InputStream in = Files.newInputStream(filepath)) {
@@ -215,12 +217,12 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
     }
 
     @Override
-    public @NotNull Node<?> load(@NotNull InputStream input) throws IOException {
+    public Node<?> load(InputStream input) throws IOException {
         return read(new DataInputStream(Objects.requireNonNull(input)));
     }
 
     @Override
-    public void save(@NotNull Node<?> node, @NotNull Path filepath) throws IOException {
+    public void save(Node<?> node, Path filepath) throws IOException {
         var parent = filepath.getParent();
 
         if (parent != null && !Files.isDirectory(parent)) {
@@ -233,7 +235,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
     }
 
     @Override
-    public void save(@NotNull Node<?> node, @NotNull OutputStream output) throws IOException {
+    public void save(Node<?> node, OutputStream output) throws IOException {
         write(node, new DataOutputStream(Objects.requireNonNull(output)));
     }
 
@@ -244,7 +246,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
      */
     @Override
     @Deprecated
-    public @NotNull Node<?> load(@NotNull Reader reader) {
+    public Node<?> load(Reader reader) {
         throw new UnsupportedOperationException();
     }
 
@@ -255,11 +257,11 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
      */
     @Override
     @Deprecated
-    public void save(@NotNull Node<?> node, @NotNull Writer writer) {
+    public void save(Node<?> node, Writer writer) {
         throw new UnsupportedOperationException();
     }
 
-    private static void write(@NotNull Node<?> node, @NotNull DataOutput out) throws IOException {
+    private static void write(Node<?> node, DataOutput out) throws IOException {
         var clazz = node.getClass();
 
         if (clazz == NullNode.class) {
@@ -356,15 +358,15 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         }
     }
 
-    private static void writeArrayHeader(@NotNull DataOutput out, byte valueType, int length) throws IOException {
+    private static void writeArrayHeader(DataOutput out, byte valueType, int length) throws IOException {
         writeHeader(out, valueType | ARRAY, length);
     }
 
-    private static void writeMapHeader(@NotNull DataOutput out, int entries) throws IOException {
+    private static void writeMapHeader(DataOutput out, int entries) throws IOException {
         writeHeader(out, MAP, entries);
     }
 
-    private static void writeHeader(@NotNull DataOutput out, int dataType, int length) throws IOException {
+    private static void writeHeader(DataOutput out, int dataType, int length) throws IOException {
         if (length < LENGTH_TYPE_BYTE) {
             out.writeByte((length << LENGTH_TYPE_SHIFT) | dataType);
         } else if (length <= MAX_UNSIGNED_BYTE) {
@@ -379,7 +381,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         }
     }
 
-    private static @NotNull Node<?> read(@NotNull DataInput in) throws IOException {
+    private static Node<?> read(DataInput in) throws IOException {
         int header = in.readUnsignedByte();
         int dataType = header & DATA_TYPE_MASK;
 
@@ -468,7 +470,7 @@ public final class BinaryFormat implements FileFormat<Node<?>> {
         };
     }
 
-    private static int readLength(@NotNull DataInput in, int header) throws IOException {
+    private static int readLength(DataInput in, int header) throws IOException {
         int lengthType = header >> LENGTH_TYPE_SHIFT;
         return switch (lengthType) {
             case LENGTH_TYPE_BYTE -> in.readUnsignedByte();
