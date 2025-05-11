@@ -31,6 +31,8 @@ import java.util.Objects;
 public record IntArray(int @NotNull [] value) implements ArrayNode<int[]> {
 
     /**
+     * A constructor of {@link IntArray}.
+     *
      * @param value an int array
      */
     public IntArray {

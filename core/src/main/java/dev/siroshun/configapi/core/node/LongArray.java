@@ -31,6 +31,8 @@ import java.util.Objects;
 public record LongArray(long @NotNull [] value) implements ArrayNode<long[]> {
 
     /**
+     * A constructor of {@link LongArray}.
+     *
      * @param value a long array
      */
     public LongArray {

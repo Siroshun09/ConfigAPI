@@ -31,6 +31,8 @@ import java.util.Objects;
 public record ByteArray(byte @NotNull [] value) implements ArrayNode<byte[]> {
 
     /**
+     * A constructor of {@link ByteArray}.
+     *
      * @param value a byte array
      */
     public ByteArray {

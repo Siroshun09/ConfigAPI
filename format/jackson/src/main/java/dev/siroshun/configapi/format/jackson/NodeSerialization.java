@@ -258,4 +258,8 @@ public final class NodeSerialization {
             }
         }
     }
+
+    private NodeSerialization() {
+        throw new UnsupportedOperationException();
+    }
 }

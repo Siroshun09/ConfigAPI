@@ -35,6 +35,8 @@ public record YamlBlockComment(@NotNull String content, int prependBlankLines) i
     public static final String TYPE = "block";
 
     /**
+     * A constructor of {@link YamlBlockComment}.
+     *
      * @param content           the content of the comment
      * @param prependBlankLines the number of blank lines before the block comments
      */

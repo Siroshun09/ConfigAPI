@@ -57,5 +57,10 @@ abstract class AbstractGsonFormat<N extends Node<?>> implements FileFormat<N> {
         }
     }
 
+    /**
+     * Creates an empty {@link Node} for {@link N}.
+     *
+     * @return the empty node
+     */
     protected abstract @NotNull N createEmptyNode();
 }

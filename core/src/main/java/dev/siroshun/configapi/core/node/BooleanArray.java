@@ -25,10 +25,14 @@ import java.util.Objects;
 
 /**
  * A {@link Node} implementation that holds a boolean array.
+ *
+ * @param value a boolean array
  */
 public record BooleanArray(boolean @NotNull [] value) implements ArrayNode<boolean[]> {
 
     /**
+     * A constructor of {@link BooleanArray}.
+     *
      * @param value a boolean array
      */
     public BooleanArray {

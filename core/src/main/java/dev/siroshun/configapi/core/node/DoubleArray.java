@@ -31,6 +31,8 @@ import java.util.Objects;
 public record DoubleArray(double @NotNull [] value) implements ArrayNode<double[]> {
 
     /**
+     * A constructor of {@link DoubleArray}.
+     *
      * @param value a double array
      */
     public DoubleArray {

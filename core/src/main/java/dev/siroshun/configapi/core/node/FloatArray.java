@@ -31,6 +31,8 @@ import java.util.Objects;
 public record FloatArray(float @NotNull [] value) implements ArrayNode<float[]> {
 
     /**
+     * A constructor of {@link FloatArray}.
+     *
      * @param value a float array
      */
     public FloatArray {

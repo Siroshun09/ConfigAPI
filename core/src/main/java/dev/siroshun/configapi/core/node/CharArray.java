@@ -25,11 +25,15 @@ import java.util.Objects;
 
 /**
  * A {@link Node} implementation that holds a char array.
+ *
+ * @param value a char array
  */
 public record CharArray(char @NotNull [] value) implements ArrayNode<char[]> {
 
     /**
-     * @param value a boolean array
+     * A constructor of {@link CharArray}.
+     *
+     * @param value a char array
      */
     public CharArray {
         Objects.requireNonNull(value);

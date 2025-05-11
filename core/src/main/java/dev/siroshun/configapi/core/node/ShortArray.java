@@ -31,6 +31,8 @@ import java.util.Objects;
 public record ShortArray(short @NotNull [] value) implements ArrayNode<short[]> {
 
     /**
+     * A constructor of {@link ShortArray}.
+     *
      * @param value a short array
      */
     public ShortArray {
