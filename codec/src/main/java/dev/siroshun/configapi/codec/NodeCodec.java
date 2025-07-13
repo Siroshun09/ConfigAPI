@@ -1,7 +1,7 @@
 package dev.siroshun.configapi.codec;
 
 import dev.siroshun.codec4j.api.codec.Codec;
-import dev.siroshun.codec4j.api.codec.Encoder;
+import dev.siroshun.codec4j.api.encoder.Encoder;
 import dev.siroshun.codec4j.api.error.DecodeError;
 import dev.siroshun.codec4j.api.error.EncodeError;
 import dev.siroshun.codec4j.api.io.In;
