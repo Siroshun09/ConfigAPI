@@ -11,7 +11,7 @@ serialization = "1.0.0-rc.1"
 junit = "5.13.4"
 
 # plugins
-gradle-plugins = "1.5.0"
+gradle-plugins = "1.5.1"
 
 [libraries]
 
