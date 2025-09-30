@@ -8,7 +8,7 @@ snakeyaml = "2.5"
 serialization = "1.0.0-rc.1"
 
 # testing tool
-junit = "5.13.4"
+junit = "5.14.0"
 
 # plugins
 gradle-plugins = "1.5.1"
