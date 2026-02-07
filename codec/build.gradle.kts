@@ -19,6 +19,10 @@ plugins {
     alias(libs.plugins.mavenPublication)
 }
 
+jcommon {
+    javaVersion = JavaVersion.VERSION_25
+}
+
 dependencies {
     api(projects.configapiCore)
     api(libs.codec4j)

@@ -4,6 +4,9 @@ import dev.siroshun.codec4j.api.codec.Codec;
 import dev.siroshun.codec4j.api.encoder.Encoder;
 import dev.siroshun.codec4j.api.error.DecodeError;
 import dev.siroshun.codec4j.api.error.EncodeError;
+import dev.siroshun.codec4j.api.io.ElementReader;
+import dev.siroshun.codec4j.api.io.EntryIn;
+import dev.siroshun.codec4j.api.io.EntryReader;
 import dev.siroshun.codec4j.api.io.In;
 import dev.siroshun.codec4j.api.io.Out;
 import dev.siroshun.codec4j.api.io.Type;
@@ -70,15 +73,35 @@ public final class NodeCodec {
                             }, EncodeError::asFailure);
                 }
             },
-            in -> in.readList(ListNode.create(), (listNode, elementIn) -> {
-                Result<Node<?>, DecodeError> result = decodeNode(elementIn);
-                if (result.isSuccess()) {
-                    listNode.add(result.unwrap());
-                    return Result.success();
-                } else {
-                    return result.asFailure();
+            in -> {
+                Result<ElementReader<? extends In>, DecodeError> readerResult = in.readList();
+                if (readerResult.isFailure()) {
+                    return readerResult.asFailure();
                 }
-            }),
+                ListNode listNode = ListNode.create();
+
+                ElementReader<?> reader = readerResult.unwrap();
+                while (reader.hasNext()) {
+                    Result<? extends In, DecodeError> elementInResult = reader.next();
+                    if (elementInResult.isFailure()) {
+                        return elementInResult.asFailure();
+                    }
+
+                    Result<Node<?>, DecodeError> result = decodeNode(elementInResult.unwrap());
+                    if (result.isFailure()) {
+                        return result.asFailure();
+                    }
+
+                    listNode.add(result.unwrap());
+                }
+
+                Result<Void, DecodeError> finishResult = reader.finish();
+                if (finishResult.isFailure()) {
+                    return finishResult.asFailure();
+                }
+
+                return Result.success(listNode);
+            },
             "ConfigAPI-ListNodeCodec"
     );
 
@@ -106,18 +129,40 @@ public final class NodeCodec {
                             }, EncodeError::asFailure);
                 }
             },
-            in -> in.readMap(MapNode.create(), (mapNode, entryIn) -> {
-                Result<String, DecodeError> key = entryIn.keyIn().readAsString();
-                if (key.isFailure()) {
-                    return key.asFailure();
+            in -> {
+                Result<EntryReader, DecodeError> readerResult = in.readMap();
+                if (readerResult.isFailure()) {
+                    return readerResult.asFailure();
                 }
-                Result<Node<?>, DecodeError> value = decodeNode(entryIn.valueIn());
-                if (value.isFailure()) {
-                    return value.asFailure();
+                MapNode mapNode = MapNode.create();
+
+                EntryReader reader = readerResult.unwrap();
+                while (reader.hasNext()) {
+                    Result<EntryIn, DecodeError> entryInResult = reader.next();
+                    if (entryInResult.isFailure()) {
+                        return entryInResult.asFailure();
+                    }
+
+                    EntryIn entryIn = entryInResult.unwrap();
+                    Result<String, DecodeError> key = entryIn.keyIn().readAsString();
+                    Result<Node<?>, DecodeError> value = decodeNode(entryIn.valueIn());
+
+                    if (key.isFailure()) {
+                        return key.asFailure();
+                    } else if (value.isFailure()) {
+                        return value.asFailure();
+                    }
+
+                    mapNode.set(key.unwrap(), value.unwrap());
                 }
-                mapNode.set(key.unwrap(), value.unwrap());
-                return Result.success();
-            }),
+
+                Result<Void, DecodeError> finishResult = reader.finish();
+                if (finishResult.isFailure()) {
+                    return finishResult.asFailure();
+                }
+
+                return Result.success(mapNode);
+            },
             "ConfigAPI-MapNodeCodec"
     );
 
