@@ -3,7 +3,7 @@
 annotations = "26.1.0"
 codec4j = "0.2.0-beta.6"
 gson = "2.13.2"
-jackson = "2.21.1"
+jackson = "2.21.2"
 snakeyaml = "2.6"
 serialization = "1.0.0-rc.1"
 
