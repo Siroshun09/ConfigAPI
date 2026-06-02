@@ -264,7 +264,7 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
      * @param key the key to set
      * @return a new {@link MapNode} to which the specified key is mapped
      */
-    @NotNull @Unmodifiable MapNode createMap(@NotNull Object key);
+    @NotNull MapNode createMap(@NotNull Object key);
 
     /**
      * Gets the {@link MapNode} to which the specified key is mapped, or creates a new {@link MapNode} using {@link #createMap(Object)}.

@@ -22,7 +22,6 @@ import dev.siroshun.configapi.core.node.visitor.VisitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
-import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collections;
@@ -170,7 +169,7 @@ final class MapNodeImpl implements MapNode {
     }
 
     @Override
-    public @NotNull @Unmodifiable MapNode createMap(@NotNull Object key) {
+    public @NotNull MapNode createMap(@NotNull Object key) {
         var newNode = MapNode.create();
         this.backing.put(key, newNode);
         return newNode;
