@@ -328,10 +328,9 @@ public sealed interface MapNode extends CommentableNode<Map<Object, Node<?>>> pe
      * @param <E> the type of the {@link Enum}
      * @return the {@link Enum} value
      */
-    @SuppressWarnings("unchecked")
     default <E extends Enum<E>> @NotNull E getEnum(@NotNull Object key, @NotNull E def) {
-        var value = this.getEnum(key, def.getClass());
-        return value != null ? (E) value : def;
+        E value = this.getEnum(key, def.getDeclaringClass());
+        return value != null ? value : def;
     }
 
     /**
