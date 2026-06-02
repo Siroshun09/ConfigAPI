@@ -192,7 +192,7 @@ final class MapNodeImpl implements MapNode {
     @Override
     public void setComment(@Nullable Comment comment) {
         if (this.view) {
-            throw new UnsupportedOperationException("Cannot change the comment of this ListNode because this is view mode.");
+            throw new UnsupportedOperationException("Cannot change the comment of this MapNode because this is view mode.");
         }
         this.commentRef.set(comment);
     }
