@@ -17,6 +17,7 @@
 package dev.siroshun.configapi.core.node;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -72,6 +73,25 @@ class MapNodeTest extends AbstractCommentableNodeTest<MapNode> {
                     assertEquals(StringValue.fromString("A"), node.set("a", null));
                     assertEquals(StringValue.fromString("2"), node.set("1", NullNode.NULL));
                     assertEquals(NullNode.NULL, node.set("b", null));
+                }),
+                nodeTest("MapNode#set(Object, Object) keeps the key order", MapNode.create(), node -> {
+                    node.set("a", "1");
+                    node.set("b", CommentableNode.withComment(StringValue.fromString("2"), COMMENT));
+                    node.set("c", "3");
+                    assertEquals(List.of("a", "b", "c"), List.copyOf(node.value().keySet()));
+
+                    // Updating the value of an existing key must keep the key at its current position.
+                    node.set("b", "B");
+                    assertEquals(List.of("a", "b", "c"), List.copyOf(node.value().keySet()));
+                    assertEquals("B", node.getString("b"));
+
+                    // The comment attached to the previous value must be carried over to the new value.
+                    assertSame(COMMENT, ((CommentableNode<?>) node.get("b")).getCommentOrNull());
+
+                    // Removing a key (by setting null) and adding it again appends it to the tail.
+                    node.set("a", null);
+                    node.set("a", "A");
+                    assertEquals(List.of("b", "c", "a"), List.copyOf(node.value().keySet()));
                 }),
                 nodeTest("MapNode#setIfAbsent(Object, Object)", MapNode.create(Map.of("a", "b")), node -> {
                     assertEquals(StringValue.fromString("b"), node.setIfAbsent("a", "c"));

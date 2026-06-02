@@ -64,17 +64,21 @@ final class MapNodeImpl implements MapNode {
     public @NotNull Node<?> set(@NotNull Object key, @Nullable Object value) {
         Objects.requireNonNull(key);
 
-        Node<?> removed = this.backing.remove(key);
-
-        if (value != null && value != NullNode.NULL) {
-            if (removed instanceof CommentableNode<?> commentableNode) {
-                this.backing.put(key, CommentableNode.withComment(Node.fromObject(value), commentableNode.getCommentOrNull()));
-            } else {
-                this.backing.put(key, Node.fromObject(value));
-            }
+        if (value == null || value == NullNode.NULL) {
+            Node<?> removed = this.backing.remove(key);
+            return removed != null ? removed : NullNode.NULL;
         }
 
-        return removed != null ? removed : NullNode.NULL;
+        // Use get (not remove) so that updating an existing key keeps its position in the backing LinkedHashMap.
+        Node<?> previous = this.backing.get(key);
+
+        if (previous instanceof CommentableNode<?> commentableNode) {
+            this.backing.put(key, CommentableNode.withComment(Node.fromObject(value), commentableNode.getCommentOrNull()));
+        } else {
+            this.backing.put(key, Node.fromObject(value));
+        }
+
+        return previous != null ? previous : NullNode.NULL;
     }
 
     @Override
